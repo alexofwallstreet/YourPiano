@@ -5,6 +5,7 @@ import Dashboard from "../views/Dashboard.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import AuthLayout from "../components/AuthLayout.vue";
 import Surveys from "../views/Surveys.vue";
+import Piano from "../views/Piano/Piano.vue";
 import Home from "../views/Home.vue";
 import store from "../store";
 
@@ -28,6 +29,11 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home
+      },
+      {
+        path: '/piano',
+        name: 'Piano',
+        component: Piano
       },
       {
         path: '/auth',
