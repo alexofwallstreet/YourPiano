@@ -1,6 +1,6 @@
 <template>
   <div class="min-h-full">
-    <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+    <Disclosure as="nav" class="bg-gray-800 z-50 relative" v-slot="{ open }">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
@@ -136,7 +136,7 @@ import {useRouter} from 'vue-router';
 
 const navigation = [
   {name: 'Главная', to: {name: 'Home'}},
-  {name: 'Пианино', to: {name: 'Dashboard'}},
+  {name: 'Пианино', to: {name: 'Piano'}},
   {name: 'Песни', to: {name: 'Surveys'}},
 ]
 

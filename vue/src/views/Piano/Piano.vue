@@ -141,12 +141,12 @@
         </ul>
       </div>
     </aside>
-    <div className="main flex">
+    <div className="main flex justify-center w-full overflow-auto">
       <!-- Piano Keyboard + Falling Notes -->
       <div className="content h-screen">
         <div className="flex" v-bind:style="{ height: 'calc(100% - 200px)' }">
-          <div className="notesColumns column" ref="notesColumns">
-            <div className="flex">
+          <div className="notesColumns" ref="notesColumns">
+            <div className="flex h-full">
               <div
                 v-for="(column, cindex) in notesColumns"
                 v-bind:key="`notesColumn_${cindex}`"
@@ -1117,7 +1117,7 @@ export default {
   user-select: none;
   height: 185px;
   position: absolute;
-  bottom: 0;
+  bottom: 15px;
 }
 
 .main .content .keyboard .whiteKey {
