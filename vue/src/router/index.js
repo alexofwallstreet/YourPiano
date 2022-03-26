@@ -5,46 +5,49 @@ import Dashboard from "../views/Dashboard.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import AuthLayout from "../components/AuthLayout.vue";
 import Surveys from "../views/Surveys.vue";
+import Home from "../views/Home.vue";
 import store from "../store";
 
 const routes = [
   {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
-  },
-  {
-    path: '/auth',
-    redirect: '/login',
-    name: 'Auth',
-    component: AuthLayout,
-    meta: {isGuest: true},
-    children: [
-      {
-        path: '/login',
-        name: 'Login',
-        component: Login
-      },
-      {
-        path: '/register',
-        name: 'Register',
-        component: Register
-      },
-    ]
-  },
-  {
     path: '/',
     redirect: '/dashboard',
     component: DefaultLayout,
-    meta: {requiresAuth: true},
     children: [
-      {path: '/dashboard', name: 'Dashboard', component: Dashboard},
-      {path: '/surveys', name: 'Surveys', component: Surveys},
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard
+      },
+      {
+        path: '/surveys',
+        name: 'Surveys',
+        component: Surveys
+      },
+      {
+        path: '/home',
+        name: 'Home',
+        component: Home
+      },
+      {
+        path: '/auth',
+        redirect: '/login',
+        name: 'Auth',
+        component: AuthLayout,
+        meta: {isGuest: true},
+        children: [
+          {
+            path: '/login',
+            name: 'Login',
+            component: Login
+          },
+          {
+            path: '/register',
+            name: 'Register',
+            component: Register
+          },
+        ]
+      },
     ]
   }
 
