@@ -38,7 +38,7 @@ const store = createStore({
 
   mutations: {
     logout: state => {
-      state.user.data = {};
+      state.user.data = null;
       state.user.token = null;
       sessionStorage.clear();
     },

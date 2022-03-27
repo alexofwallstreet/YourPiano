@@ -2,12 +2,12 @@
   <div>
     <img class="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
          alt="Workflow"/>
-    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Register for free</h2>
+    <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Зарегистрируйтесь</h2>
     <p class="mt-2 text-center text-sm text-gray-600">
-      Or
+      Или
       {{ ' ' }}
       <router-link :to="{name: 'Login'}" class="font-medium text-indigo-600 hover:text-indigo-500">
-        login to your account
+        войдите в свой аккаунт
       </router-link>
     </p>
   </div>
@@ -15,28 +15,28 @@
     <input type="hidden" name="remember" value="true"/>
     <div class="rounded-md shadow-sm -space-y-px">
       <div>
-        <label for="full-name" class="sr-only">Full name</label>
+        <label for="full-name" class="sr-only">Имя</label>
         <input id="full-name" name="name" type="text" autocomplete="name" required="" v-model="user.name"
                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-               placeholder="Full name"/>
+               placeholder="Имя"/>
       </div>
       <div>
-        <label for="email" class="sr-only">Email</label>
+        <label for="email" class="sr-only">Электронная почта</label>
         <input id="email" name="email" type="email" autocomplete="email" required="" v-model="user.email"
                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-               placeholder="Email"/>
+               placeholder="Электронная почта"/>
       </div>
       <div>
-        <label for="password" class="sr-only">Password</label>
+        <label for="password" class="sr-only">Пароль</label>
         <input id="password" name="password" type="password" autocomplete="current-password" required="" v-model="user.password"
                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-               placeholder="Password"/>
+               placeholder="Пароль"/>
       </div>
       <div>
-        <label for="password-confirm" class="sr-only">Confirm Password</label>
+        <label for="password-confirm" class="sr-only">Подтверждение пароля</label>
         <input id="password-confirm" name="password-confirm" type="password" autocomplete="current-password-confirm" required="" v-model="user.password_confirm"
                class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-               placeholder="Confirm Password"/>
+               placeholder="Подтверждение пароля"/>
       </div>
 
     </div>
@@ -47,7 +47,7 @@
             <span class="absolute left-0 inset-y-0 flex items-center pl-3">
               <LockClosedIcon class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true"/>
             </span>
-        Sign up
+        Зарегистрироваться
       </button>
     </div>
   </form>

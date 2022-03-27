@@ -1,185 +1,201 @@
 <template>
-  <div class="flex">
-    <aside class="w-64" aria-label="Sidebar">
-      <div class="overflow-y-auto py-4 px-3 bg-gray-50 rounded dark:bg-gray-800 h-full">
-        <ul class="space-y-2">
-          <li>
-            <a href="#" class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              <svg class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
-              <span class="ml-3">Dashboard</span>
-            </a>
-          </li>
-          <div className="title is-2">YourPiano</div>
+  <div class="flex gap-x-11">
 
-          <div className="songName">{{ midiFile ? midiFile.songName : "" }}</div>
-
-          <!--      <b-field-->
-          <!--        label="Speed"-->
-          <!--        v-bind:horizontal="true"-->
-          <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-          <!--      >-->
-          <!--        <b-slider-->
-          <!--          type="is-primary"-->
-          <!--          size="is-large"-->
-          <!--          v-model="songSpeed"-->
-          <!--          v-bind:min="0.25"-->
-          <!--          v-bind:max="2"-->
-          <!--          v-bind:value="1"-->
-          <!--          v-bind:step="0.25"-->
-          <!--          ticks-->
-          <!--        />-->
-          <!--      </b-field>-->
-
-          <!--      <b-field-->
-          <!--        label="Pianola"-->
-          <!--        v-bind:horizontal="true"-->
-          <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-          <!--      >-->
-          <!--        <b-switch-->
-          <!--          v-bind:rounded="false"-->
-          <!--          type="is-primary"-->
-          <!--          v-model="inPianolaMode"-->
-          <!--        />-->
-          <!--      </b-field>-->
-
-          <!--      <b-field-->
-          <!--        label="MIDI Device"-->
-          <!--        v-bind:horizontal="true"-->
-          <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-          <!--      >-->
-          <!--        <b-dropdown-->
-          <!--          v-bind:disabled="midiDevices.devices.length === 0"-->
-          <!--          v-model="midiDeviceSelected"-->
-          <!--          aria-role="list"-->
-          <!--        >-->
-          <!--          <button-->
-          <!--            class="button is-primary"-->
-          <!--            slot="trigger"-->
-          <!--            slot-scope="{ active }"-->
-          <!--          >-->
-          <!--            <span>{{-->
-          <!--              midiDeviceSelected !== null-->
-          <!--                ? midiDeviceSelected-->
-          <!--                : "Select a device"-->
-          <!--            }}</span>-->
-          <!--            <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>-->
-          <!--          </button>-->
-
-          <!--          <b-dropdown-item-->
-          <!--            v-for="device in midiDevices.devices"-->
-          <!--            v-bind:value="device.name"-->
-          <!--            v-bind:key="device.id"-->
-          <!--            aria-role="listitem"-->
-          <!--          >-->
-          <!--            {{ device.name }}-->
-          <!--          </b-dropdown-item>-->
-          <!--        </b-dropdown>-->
-          <!--      </b-field>-->
-
-          <!--      <b-field-->
-          <!--        label="Instrument"-->
-          <!--        v-bind:horizontal="true"-->
-          <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-          <!--      >-->
-          <!--        <b-select-->
-          <!--          placeholder="Select an instrument"-->
-          <!--          v-bind:disabled="midiInstruments.length === 0"-->
-          <!--          v-model="selectedMidiInstrument"-->
-          <!--          @input="onInstrumentChange"-->
-          <!--        >-->
-          <!--          <option-->
-          <!--            v-for="instrument in midiInstruments"-->
-          <!--            :value="instrument"-->
-          <!--            :key="instrument"-->
-          <!--          >-->
-          <!--            {{ instrument }}-->
-          <!--          </option>-->
-          <!--        </b-select>-->
-          <!--      </b-field>-->
-
-          <!--      <b-field class="file">-->
-          <!--        <b-upload v-on:input="loadMidiFile">-->
-          <!--          <a class="button is-primary">-->
-          <!--            <span>Load Song</span>-->
-          <!--          </a>-->
-          <!--        </b-upload>-->
-          <!--      </b-field>-->
-
-          <!--      <button class="button is-primary" v-on:click="loadFurElise">-->
-          <!--        <span>Load Fur Elise</span>-->
-          <!--      </button>-->
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-on:click="loadFurElise">Load</button>
-
-          <!--      <div class="buttons">-->
-          <!--        <b-button-->
-          <!--          type="is-primary"-->
-          <!--          size="is-large"-->
-          <!--          v-bind:disabled="!midiFile || gameState === 2 || gameState === 3"-->
-          <!--          v-on:click="playSong"-->
-          <!--        >-->
-          <!--          &#9654;-->
-          <!--        </b-button>-->
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" v-on:click.prevent="playSong">Play</button>
-          <!--        <b-button-->
-          <!--          type="is-primary"-->
-          <!--          size="is-large"-->
-          <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
-          <!--          v-on:click="pauseSong"-->
-          <!--        >-->
-          <!--          &#10074;&#10074;-->
-          <!--        </b-button>-->
-
-          <!--        <b-button-->
-          <!--          type="is-primary"-->
-          <!--          size="is-large"-->
-          <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
-          <!--          v-on:click="stopSong"-->
-          <!--        >-->
-          <!--          &#9724;-->
-          <!--        </b-button>-->
-          <!--      </div>-->
-        </ul>
+    <!-- Sidebar Start -->
+    <div
+      class="sidebar flex flex-col h-screen relative bg-blue-600 text-white"
+      :style="{ width: sidebarWidth }">
+      <!-- Toggle button with Arrows -->
+      <div
+        class="collapse-icon right-0 top-0 bottom-0 m-auto flex items-center justify-center
+      absolute bg-blue-300 hover:bg-blue-600 text-white font-bold rounded-r cursor-pointer"
+        @click="toggleSidebar">
+        <a class="arrow-icon" :class="{'open' : collapsed}">
+          <span class="left-bar"></span>
+          <span class="right-bar"></span>
+        </a>
       </div>
-    </aside>
-    <div className="main flex justify-center w-full overflow-auto">
-      <!-- Piano Keyboard + Falling Notes -->
-      <div className="content h-screen">
-        <div className="flex" v-bind:style="{ height: 'calc(100% - 200px)' }">
-          <div className="notesColumns" ref="notesColumns">
-            <div className="flex h-full">
-              <div
-                v-for="(column, cindex) in notesColumns"
-                v-bind:key="`notesColumn_${cindex}`"
-                v-bind:class="{
+      <!-- End Toggle button with Arrows -->
+      <div className="title is-2">YourPiano</div>
+
+      <div className="songName">{{ midiFile ? midiFile.songName : "" }}</div>
+
+      <!--      <b-field-->
+      <!--        label="Speed"-->
+      <!--        v-bind:horizontal="true"-->
+      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+      <!--      >-->
+      <!--        <b-slider-->
+      <!--          type="is-primary"-->
+      <!--          size="is-large"-->
+      <!--          v-model="songSpeed"-->
+      <!--          v-bind:min="0.25"-->
+      <!--          v-bind:max="2"-->
+      <!--          v-bind:value="1"-->
+      <!--          v-bind:step="0.25"-->
+      <!--          ticks-->
+      <!--        />-->
+      <!--      </b-field>-->
+
+      <!--      <b-field-->
+      <!--        label="Pianola"-->
+      <!--        v-bind:horizontal="true"-->
+      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+      <!--      >-->
+      <!--        <b-switch-->
+      <!--          v-bind:rounded="false"-->
+      <!--          type="is-primary"-->
+      <!--          v-model="inPianolaMode"-->
+      <!--        />-->
+      <!--      </b-field>-->
+
+      <!--      <b-field-->
+      <!--        label="MIDI Device"-->
+      <!--        v-bind:horizontal="true"-->
+      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+      <!--      >-->
+      <!--        <b-dropdown-->
+      <!--          v-bind:disabled="midiDevices.devices.length === 0"-->
+      <!--          v-model="midiDeviceSelected"-->
+      <!--          aria-role="list"-->
+      <!--        >-->
+      <!--          <button-->
+      <!--            class="button is-primary"-->
+      <!--            slot="trigger"-->
+      <!--            slot-scope="{ active }"-->
+      <!--          >-->
+      <!--            <span>{{-->
+      <!--              midiDeviceSelected !== null-->
+      <!--                ? midiDeviceSelected-->
+      <!--                : "Select a device"-->
+      <!--            }}</span>-->
+      <!--            <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>-->
+      <!--          </button>-->
+
+      <!--          <b-dropdown-item-->
+      <!--            v-for="device in midiDevices.devices"-->
+      <!--            v-bind:value="device.name"-->
+      <!--            v-bind:key="device.id"-->
+      <!--            aria-role="listitem"-->
+      <!--          >-->
+      <!--            {{ device.name }}-->
+      <!--          </b-dropdown-item>-->
+      <!--        </b-dropdown>-->
+      <!--      </b-field>-->
+
+      <!--      <b-field-->
+      <!--        label="Instrument"-->
+      <!--        v-bind:horizontal="true"-->
+      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+      <!--      >-->
+      <!--        <b-select-->
+      <!--          placeholder="Select an instrument"-->
+      <!--          v-bind:disabled="midiInstruments.length === 0"-->
+      <!--          v-model="selectedMidiInstrument"-->
+      <!--          @input="onInstrumentChange"-->
+      <!--        >-->
+      <!--          <option-->
+      <!--            v-for="instrument in midiInstruments"-->
+      <!--            :value="instrument"-->
+      <!--            :key="instrument"-->
+      <!--          >-->
+      <!--            {{ instrument }}-->
+      <!--          </option>-->
+      <!--        </b-select>-->
+      <!--      </b-field>-->
+
+      <!--      <b-field class="file">-->
+      <!--        <b-upload v-on:input="loadMidiFile">-->
+      <!--          <a class="button is-primary">-->
+      <!--            <span>Load Song</span>-->
+      <!--          </a>-->
+      <!--        </b-upload>-->
+      <!--      </b-field>-->
+
+      <!--      <button class="button is-primary" v-on:click="loadFurElise">-->
+      <!--        <span>Load Fur Elise</span>-->
+      <!--      </button>-->
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              v-on:click="loadFurElise">Load
+      </button>
+
+      <!--      <div class="buttons">-->
+      <!--        <b-button-->
+      <!--          type="is-primary"-->
+      <!--          size="is-large"-->
+      <!--          v-bind:disabled="!midiFile || gameState === 2 || gameState === 3"-->
+      <!--          v-on:click="playSong"-->
+      <!--        >-->
+      <!--          &#9654;-->
+      <!--        </b-button>-->
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              v-on:click.prevent="playSong">Play
+      </button>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              v-on:click.prevent="pauseSong">Stop
+      </button>
+      <!--        <b-button-->
+      <!--          type="is-primary"-->
+      <!--          size="is-large"-->
+      <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
+      <!--          v-on:click="pauseSong"-->
+      <!--        >-->
+      <!--          &#10074;&#10074;-->
+      <!--        </b-button>-->
+
+      <!--        <b-button-->
+      <!--          type="is-primary"-->
+      <!--          size="is-large"-->
+      <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
+      <!--          v-on:click="stopSong"-->
+      <!--        >-->
+      <!--          &#9724;-->
+      <!--        </b-button>-->
+      <!--      </div>-->
+    </div>
+    <!-- Sidebar End -->
+
+    <div class="flex-1 overflow-auto">
+      <div className="main flex lg:justify-center md:justify-start w-full">
+        <!-- Piano Keyboard + Falling Notes -->
+        <div className="content flex flex-col justify-start h-full">
+          <div className="flex h-full">
+            <div className="notesColumns" ref="notesColumns">
+              <div className="flex h-full">
+                <div
+                  v-for="(column, cindex) in notesColumns"
+                  v-bind:key="`notesColumn_${cindex}`"
+                  v-bind:class="{
                 notesColumn: !column.isNarrow,
                 narrowNotesColumn: column.isNarrow,
               }"
-                v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(cindex) }"
-              >
-                <div
-                  className="note"
-                  v-for="(time, nindex) in column.visibleNotes"
-                  v-bind:key="`note_${cindex}_${nindex}`"
-                  v-bind:style="{ top: getScreenYPosByTime(time) }"
-                />
-                <div className="dropArea"/>
+                  v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(cindex) }"
+                >
+                  <div
+                    className="note"
+                    v-for="(time, nindex) in column.visibleNotes"
+                    v-bind:key="`note_${cindex}_${nindex}`"
+                    v-bind:style="{ top: getScreenYPosByTime(time) }"
+                  />
+                  <div className="dropArea"/>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="keyboard flex">
-          <div
-            v-for="(key, index) in keys"
-            v-bind:key="key[0] + key[1]"
-            v-bind:class="{
+          <div className="keyboard flex z-0">
+            <div
+              v-for="(key, index) in keys"
+              v-bind:key="key[0] + key[1]"
+              v-bind:class="{
             whiteKey: isWhiteKey(key[0]),
             blackKey: !isWhiteKey(key[0]),
             pressed: isKeyPressed(key[0], key[1]),
           }"
-            v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(index) }"
-            v-on:mousedown="playNote(key[0], key[1])"
-          >
-            <div className="keySign text-center">{{ getKeySign(key[0], key[1]) }}</div>
+              v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(index) }"
+              v-on:mousedown="playNote(key[0], key[1])"
+            >
+              <div className="keySign text-center">{{ getKeySign(key[0], key[1]) }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -191,6 +207,10 @@
 import MidiDevices from "./midi_devices";
 import MidiFile from "./midi_file";
 import Soundfont from "soundfont-player";
+import {ref, computed} from 'vue'
+import {Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
+import {XIcon} from '@heroicons/vue/outline'
+import Sidebar from "../ui/Sidebar.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -597,16 +617,6 @@ export default {
       keys.push([key.note, key.octave]);
     });
 
-    // let octave = OCTAVE_BASE;
-    // let keys = [];
-    // for (let o = 0; o < 3; ++o) {
-    //   for (const n of NOTES) {
-    //     keys.push([n, octave]);
-    //   }
-    //   ++octave;
-    // }
-    // keys.push(["C", 6]);
-
     let notesColumns = [];
 
     for (let k of keys) {
@@ -656,13 +666,13 @@ export default {
     //   onConfirm: this.onWelcomeDialogClosed,
     // });
   },
-  destroyed: function () {
+  unmounted: function () {
     if (this.animFrameId) {
       window.cancelAnimationFrame(this.animFrameId);
     }
-
     window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("keydown", this.onKeyDown);
+    this.unsetAudio();
   },
   methods: {
     tick: function () {
@@ -722,6 +732,7 @@ export default {
     },
     initAudio: function () {
       console.log("Start init");
+      console.log(this)
       this.audioContext = new window.AudioContext();
       this.soundfont = Soundfont.instrument(
         this.audioContext,
@@ -730,6 +741,9 @@ export default {
         console.log("Init complete");
         return instrument;
       });
+    },
+    unsetAudio: function () {
+      this.audioContext.close();
     },
     onInstrumentChange: function (newInstrument) {
       this.selectedMidiInstrument = newInstrument;
@@ -894,9 +908,6 @@ export default {
       };
       reader.readAsArrayBuffer(file);
     },
-    onWelcomeDialogClosed: function () {
-      this.initAudio();
-    },
     setGameState: function (state) {
       this.prevGameState = this.gameState;
       this.gameState = state;
@@ -944,8 +955,7 @@ export default {
     getScreenYPosByTime: function (time) {
       return `${
         (1 - (time - this.playTime) / VISIBILITY_RANGE) *
-        this.$refs.notesColumns.clientHeight -
-        NOTE_HEIGHT
+        this.$refs.notesColumns.clientHeight - NOTE_HEIGHT
       }px`;
     },
     getMarginLeftNotesColumn: function (index) {
@@ -1024,6 +1034,17 @@ export default {
       this.prevGameState = GAME_STATE.idle;
     },
   },
+  components: {Sidebar},
+  setup() {
+    const collapsed = ref(false);
+    const toggleSidebar = () => (collapsed.value = !collapsed.value);
+    const SIDEBAR_WIDTH = 250;
+    const SIDEBAR_WIDTH_COLLAPSED = 0;
+    const sidebarWidth = computed(
+      () => `${collapsed.value ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH}px`
+    )
+    return {collapsed, toggleSidebar, sidebarWidth}
+  },
 };
 </script>
 
@@ -1062,26 +1083,18 @@ export default {
   margin-top: 30px;
 }
 
-.main .content .columns {
-  margin-bottom: 0px;
-}
-
-.main .content .notesColumns .columns {
-  height: 100%;
-}
-
 .main .content .notesColumns .dropArea {
   position: absolute;
-  bottom: 200px;
+  bottom: 0;
   width: 38px;
   height: 38px;
   background: #efe0bc;
 }
 
 .main .content .notesColumns .notesColumn {
+  position: relative;
   width: 38px;
   height: 100%;
-  overflow: hidden;
   background: black;
   border-right: 1px solid white;
 }
@@ -1097,6 +1110,7 @@ export default {
 }
 
 .main .content .notesColumns .narrowNotesColumn {
+  position: relative;
   width: 22px;
   height: 100%;
   z-index: 1;
@@ -1116,8 +1130,6 @@ export default {
 .main .content .keyboard {
   user-select: none;
   height: 185px;
-  position: absolute;
-  bottom: 15px;
 }
 
 .main .content .keyboard .whiteKey {
@@ -1134,7 +1146,6 @@ export default {
 }
 
 .main .content .keyboard .whiteKey.pressed {
-  height: 185px;
   box-shadow: none;
   transition: height 30ms linear, box-shadow 30ms linear;
   background: yellow;
@@ -1146,8 +1157,8 @@ export default {
 }
 
 .main .content .keyboard .whiteKey .keySign {
-  position: absolute;
-  bottom: 25px;
+  position: relative;
+  top: 140px;
   color: black;
   width: 38px;
 }
@@ -1180,10 +1191,91 @@ export default {
 }
 
 .main .content .keyboard .blackKey .keySign {
-  position: absolute;
-  bottom: 100px;
+  position: relative;
+  top: 60px;
   color: white;
   width: 22px;
+}
+
+.sidebar {
+  transition: 0.3s ease;
+  z-index: 2;
+}
+
+.collapse-icon {
+  transform: translateX(100%);
+  transition: 0.3s ease;
+  z-index: 1;
+}
+
+.arrow-icon {
+  transform: translate(-40%) rotate(90deg);
+  height: 2.8em;
+  width: 2.8em;
+  display: block;
+  position: relative;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.left-bar {
+  position: absolute;
+  background-color: transparent;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 10px;
+  display: block;
+  transform: rotate(35deg);
+  float: right;
+  border-radius: 2px;
+}
+
+.left-bar:after {
+  content: "";
+  background-color: white;
+  width: 40px;
+  height: 10px;
+  display: block;
+  float: right;
+  border-radius: 6px 10px 10px 6px;
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.right-bar {
+  position: absolute;
+  background-color: transparent;
+  top: 0px;
+  left: 26px;
+  width: 40px;
+  height: 10px;
+  display: block;
+  transform: rotate(-35deg);
+  float: right;
+  border-radius: 2px;
+}
+
+.right-bar:after {
+  content: "";
+  background-color: white;
+  width: 40px;
+  height: 10px;
+  display: block;
+  float: right;
+  border-radius: 10px 6px 6px 10px;
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+.open .left-bar:after {
+  transform-origin: center center;
+  transform: rotate(-70deg);
+}
+
+.open .right-bar:after {
+  transform-origin: center center;
+  transform: rotate(70deg);
 }
 
 </style>
