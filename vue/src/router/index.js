@@ -12,7 +12,7 @@ import store from "../store";
 const routes = [
   {
     path: '/',
-    redirect: '/dashboard',
+    redirect: '/home',
     component: DefaultLayout,
     children: [
       {

@@ -19,7 +19,6 @@ export default class {
                             id: input.id,
                             name: input.name
                         })
-
                         input.onmidimessage = self.onMidiMessage.bind(self)
                     }
                 })
@@ -27,6 +26,7 @@ export default class {
     }
 
     onMidiMessage(message) {
+      console.log(message)
         if (message.data[0] === NOTE_ON_EVENT) {
             this.noteOnCallback(message.target.name, message.data[1])
         } else if (message.data[0] === NOTE_OFF_EVENT) {

@@ -68,7 +68,7 @@
                         :class="[
                           'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                         ]"
-                      >Profile</a>
+                      >Мой профиль</a>
                     </MenuItem>
                     <MenuItem v-if="user" v-slot="{ active }">
                       <a
@@ -110,7 +110,7 @@
         <div class="pt-4 pb-3 border-t border-gray-700">
           <div class="flex items-center px-5">
             <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" v-if="user" :src="user.imageUrl" alt=""/>
+              <img class="h-10 w-10 rounded-full" v-if="user" :src="'http://localhost:8000/user_profile_photos/'+user.profile_photo" alt=""/>
             </div>
             <div class="ml-3" v-if="user">
               <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>
@@ -123,7 +123,7 @@
               as="a"
               @click="logout"
               class="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700 cursor-pointer"
-            >Sign Out
+            >Выйти
             </DisclosureButton>
             <DisclosureButton v-if="!user">
               <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
@@ -135,8 +135,7 @@
                   this.$route.name !== 'Login'
                   ? ''
                   : '', 'hover:bg-gray-700 hover:text-white text-gray-300 block px-3 py-2 rounded-md text-base font-medium'
-                ]">Войти
-                </router-link>
+                ]">Войти</router-link>
               </div>
             </DisclosureButton>
             <DisclosureButton v-if="!user">
@@ -149,8 +148,7 @@
                   this.$route.name !== 'Register'
                   ? ''
                   : '', 'hover:bg-gray-700 hover:text-white text-gray-300 block px-3 py-2 rounded-md text-base font-medium'
-                ]">Регистрация
-                </router-link>
+                ]">Регистрация</router-link>
               </div>
             </DisclosureButton>
           </div>

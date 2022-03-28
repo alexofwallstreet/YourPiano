@@ -77,11 +77,11 @@ function login() {
   store.dispatch('login', user)
     .then(() => {
       router.push({
-        name: 'Dashboard'
+        name: 'Home'
       })
     })
     .catch(err => {
-      errorMsg.value = err.response.data.error;
+      errorMsg.value = 'Неверный логин или пароль';
     })
 }
 </script>

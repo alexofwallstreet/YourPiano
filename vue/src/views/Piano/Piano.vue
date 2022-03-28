@@ -1,162 +1,213 @@
 <template>
-  <div class="flex gap-x-11">
+  <div class="flex min-h-screen">
 
     <!-- Sidebar Start -->
     <div
-      class="sidebar flex flex-col h-screen relative bg-blue-600 text-white"
+      class="sidebar flex flex-col relative bg-indigo-600 text-white"
       :style="{ width: sidebarWidth }">
       <!-- Toggle button with Arrows -->
       <div
         class="collapse-icon right-0 top-0 bottom-0 m-auto flex items-center justify-center
-      absolute bg-blue-300 hover:bg-blue-600 text-white font-bold rounded-r cursor-pointer"
+      absolute bg-indigo-300 hover:bg-indigo-600 text-white font-bold cursor-pointer"
         @click="toggleSidebar">
         <a class="arrow-icon" :class="{'open' : collapsed}">
-          <span class="left-bar"></span>
-          <span class="right-bar"></span>
         </a>
       </div>
-      <!-- End Toggle button with Arrows -->
-      <div className="title is-2">YourPiano</div>
+      <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
+        <!-- End Toggle button with Arrows -->
+        <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
+          <img class="w-full h-full" src="/images/promo.svg" alt="Sunset in the mountains">
+        </div>
+        <div class="pt-4">
+          <div class="font-bold text-sm text-blue-200 whitespace-nowrap">Неизвестный</div>
+          <div class="font-bold text-xl mb-2 whitespace-nowrap">Без названия</div>
+        </div>
+        <div class="pb-2 flex justify-start">
+          <svg v-on:click.prevent="playSong" xmlns="http://www.w3.org/2000/svg"
+               class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clip-rule="evenodd"/>
+          </svg>
+          <svg v-on:click.prevent="pauseSong" xmlns="http://www.w3.org/2000/svg"
+               class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clip-rule="evenodd"/>
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+               fill="currentColor">
+            <path fill-rule="evenodd"
+                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                  clip-rule="evenodd"/>
+          </svg>
+        </div>
 
-      <div className="songName">{{ midiFile ? midiFile.songName : "" }}</div>
+        <!-- MIDI Instrument select -->
+        <div class="col-span-6 sm:col-span-3 mt-2">
+          <label for="instrument" class="block text-sm font-medium text-white whitespace-nowrap">Инструмент</label>
+          <select id="instrument" name="country" autocomplete="country-name" v-model="selectedMidiInstrument"
+                  @change="onInstrumentChange"
+                  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white text-indigo-600 font-bold rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option class="text-indigo-600 font-bold" v-for="instrument in midiInstruments" v-bind:value="instrument">{{
+                instrument
+              }}
+            </option>
+          </select>
+        </div>
 
-      <!--      <b-field-->
-      <!--        label="Speed"-->
-      <!--        v-bind:horizontal="true"-->
-      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-      <!--      >-->
-      <!--        <b-slider-->
-      <!--          type="is-primary"-->
-      <!--          size="is-large"-->
-      <!--          v-model="songSpeed"-->
-      <!--          v-bind:min="0.25"-->
-      <!--          v-bind:max="2"-->
-      <!--          v-bind:value="1"-->
-      <!--          v-bind:step="0.25"-->
-      <!--          ticks-->
-      <!--        />-->
-      <!--      </b-field>-->
+        <!-- MIDI Device select -->
+        <div class="col-span-6 sm:col-span-3 mt-2">
+          <label for="device" class="block text-sm font-medium text-white whitespace-nowrap">MIDI Устройство</label>
+          <select id="device" name="device" autocomplete="Выберите устройство"
+                  @change="midiDeviceSelected = $event.target.value"
+                  v-bind:disabled="midiDevices.devices.length === 0"
+                  class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white text-indigo-600 font-bold rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <option class="text-indigo-600 font-bold" selected disabled hidden>
+              {{ midiDevices.devices.length === 0 ? 'Нет доступный устройств' : 'Выберите устройство' }}
+            </option>
+            <option class="text-indigo-600 font-bold" v-for="device in midiDevices.devices" v-bind:key="device.id"
+                    v-bind:value="device.name">{{
+                device.name
+              }}
+            </option>
+          </select>
+        </div>
 
-      <!--      <b-field-->
-      <!--        label="Pianola"-->
-      <!--        v-bind:horizontal="true"-->
-      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-      <!--      >-->
-      <!--        <b-switch-->
-      <!--          v-bind:rounded="false"-->
-      <!--          type="is-primary"-->
-      <!--          v-model="inPianolaMode"-->
-      <!--        />-->
-      <!--      </b-field>-->
 
-      <!--      <b-field-->
-      <!--        label="MIDI Device"-->
-      <!--        v-bind:horizontal="true"-->
-      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-      <!--      >-->
-      <!--        <b-dropdown-->
-      <!--          v-bind:disabled="midiDevices.devices.length === 0"-->
-      <!--          v-model="midiDeviceSelected"-->
-      <!--          aria-role="list"-->
-      <!--        >-->
-      <!--          <button-->
-      <!--            class="button is-primary"-->
-      <!--            slot="trigger"-->
-      <!--            slot-scope="{ active }"-->
-      <!--          >-->
-      <!--            <span>{{-->
-      <!--              midiDeviceSelected !== null-->
-      <!--                ? midiDeviceSelected-->
-      <!--                : "Select a device"-->
-      <!--            }}</span>-->
-      <!--            <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>-->
-      <!--          </button>-->
+        <!--      <b-field-->
+        <!--        label="Speed"-->
+        <!--        v-bind:horizontal="true"-->
+        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+        <!--      >-->
+        <!--        <b-slider-->
+        <!--          type="is-primary"-->
+        <!--          size="is-large"-->
+        <!--          v-model="songSpeed"-->
+        <!--          v-bind:min="0.25"-->
+        <!--          v-bind:max="2"-->
+        <!--          v-bind:value="1"-->
+        <!--          v-bind:step="0.25"-->
+        <!--          ticks-->
+        <!--        />-->
+        <!--      </b-field>-->
 
-      <!--          <b-dropdown-item-->
-      <!--            v-for="device in midiDevices.devices"-->
-      <!--            v-bind:value="device.name"-->
-      <!--            v-bind:key="device.id"-->
-      <!--            aria-role="listitem"-->
-      <!--          >-->
-      <!--            {{ device.name }}-->
-      <!--          </b-dropdown-item>-->
-      <!--        </b-dropdown>-->
-      <!--      </b-field>-->
+        <!--      <b-field-->
+        <!--        label="Pianola"-->
+        <!--        v-bind:horizontal="true"-->
+        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+        <!--      >-->
+        <!--        <b-switch-->
+        <!--          v-bind:rounded="false"-->
+        <!--          type="is-primary"-->
+        <!--          v-model="inPianolaMode"-->
+        <!--        />-->
+        <!--      </b-field>-->
 
-      <!--      <b-field-->
-      <!--        label="Instrument"-->
-      <!--        v-bind:horizontal="true"-->
-      <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-      <!--      >-->
-      <!--        <b-select-->
-      <!--          placeholder="Select an instrument"-->
-      <!--          v-bind:disabled="midiInstruments.length === 0"-->
-      <!--          v-model="selectedMidiInstrument"-->
-      <!--          @input="onInstrumentChange"-->
-      <!--        >-->
-      <!--          <option-->
-      <!--            v-for="instrument in midiInstruments"-->
-      <!--            :value="instrument"-->
-      <!--            :key="instrument"-->
-      <!--          >-->
-      <!--            {{ instrument }}-->
-      <!--          </option>-->
-      <!--        </b-select>-->
-      <!--      </b-field>-->
+        <!--      <b-field-->
+        <!--        label="MIDI Device"-->
+        <!--        v-bind:horizontal="true"-->
+        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+        <!--      >-->
+        <!--        <b-dropdown-->
+        <!--          v-bind:disabled="midiDevices.devices.length === 0"-->
+        <!--          v-model="midiDeviceSelected"-->
+        <!--          aria-role="list"-->
+        <!--        >-->
+        <!--          <button-->
+        <!--            class="button is-primary"-->
+        <!--            slot="trigger"-->
+        <!--            slot-scope="{ active }"-->
+        <!--          >-->
+        <!--            <span>{{-->
+        <!--              midiDeviceSelected !== null-->
+        <!--                ? midiDeviceSelected-->
+        <!--                : "Select a device"-->
+        <!--            }}</span>-->
+        <!--            <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>-->
+        <!--          </button>-->
 
-      <!--      <b-field class="file">-->
-      <!--        <b-upload v-on:input="loadMidiFile">-->
-      <!--          <a class="button is-primary">-->
-      <!--            <span>Load Song</span>-->
-      <!--          </a>-->
-      <!--        </b-upload>-->
-      <!--      </b-field>-->
+        <!--          <b-dropdown-item-->
+        <!--            v-for="device in midiDevices.devices"-->
+        <!--            v-bind:value="device.name"-->
+        <!--            v-bind:key="device.id"-->
+        <!--            aria-role="listitem"-->
+        <!--          >-->
+        <!--            {{ device.name }}-->
+        <!--          </b-dropdown-item>-->
+        <!--        </b-dropdown>-->
+        <!--      </b-field>-->
 
-      <!--      <button class="button is-primary" v-on:click="loadFurElise">-->
-      <!--        <span>Load Fur Elise</span>-->
-      <!--      </button>-->
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              v-on:click="loadFurElise">Load
-      </button>
+        <!--      <b-field-->
+        <!--        label="Instrument"-->
+        <!--        v-bind:horizontal="true"-->
+        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
+        <!--      >-->
+        <!--        <b-select-->
+        <!--          placeholder="Select an instrument"-->
+        <!--          v-bind:disabled="midiInstruments.length === 0"-->
+        <!--          v-model="selectedMidiInstrument"-->
+        <!--          @input="onInstrumentChange"-->
+        <!--        >-->
+        <!--          <option-->
+        <!--            v-for="instrument in midiInstruments"-->
+        <!--            :value="instrument"-->
+        <!--            :key="instrument"-->
+        <!--          >-->
+        <!--            {{ instrument }}-->
+        <!--          </option>-->
+        <!--        </b-select>-->
+        <!--      </b-field>-->
 
-      <!--      <div class="buttons">-->
-      <!--        <b-button-->
-      <!--          type="is-primary"-->
-      <!--          size="is-large"-->
-      <!--          v-bind:disabled="!midiFile || gameState === 2 || gameState === 3"-->
-      <!--          v-on:click="playSong"-->
-      <!--        >-->
-      <!--          &#9654;-->
-      <!--        </b-button>-->
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              v-on:click.prevent="playSong">Play
-      </button>
-      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              v-on:click.prevent="pauseSong">Stop
-      </button>
-      <!--        <b-button-->
-      <!--          type="is-primary"-->
-      <!--          size="is-large"-->
-      <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
-      <!--          v-on:click="pauseSong"-->
-      <!--        >-->
-      <!--          &#10074;&#10074;-->
-      <!--        </b-button>-->
+        <!--      <b-field class="file">-->
+        <!--        <b-upload v-on:input="loadMidiFile">-->
+        <!--          <a class="button is-primary">-->
+        <!--            <span>Load Song</span>-->
+        <!--          </a>-->
+        <!--        </b-upload>-->
+        <!--      </b-field>-->
 
-      <!--        <b-button-->
-      <!--          type="is-primary"-->
-      <!--          size="is-large"-->
-      <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
-      <!--          v-on:click="stopSong"-->
-      <!--        >-->
-      <!--          &#9724;-->
-      <!--        </b-button>-->
-      <!--      </div>-->
+        <!--      <button class="button is-primary" v-on:click="loadFurElise">-->
+        <!--        <span>Load Fur Elise</span>-->
+        <!--      </button>-->
+        <button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+                v-on:click="loadFurElise">Load
+        </button>
+
+        <!--      <div class="buttons">-->
+        <!--        <b-button-->
+        <!--          type="is-primary"-->
+        <!--          size="is-large"-->
+        <!--          v-bind:disabled="!midiFile || gameState === 2 || gameState === 3"-->
+        <!--          v-on:click="playSong"-->
+        <!--        >-->
+        <!--          &#9654;-->
+        <!--        </b-button>-->
+        <!--        <b-button-->
+        <!--          type="is-primary"-->
+        <!--          size="is-large"-->
+        <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
+        <!--          v-on:click="pauseSong"-->
+        <!--        >-->
+        <!--          &#10074;&#10074;-->
+        <!--        </b-button>-->
+
+        <!--        <b-button-->
+        <!--          type="is-primary"-->
+        <!--          size="is-large"-->
+        <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
+        <!--          v-on:click="stopSong"-->
+        <!--        >-->
+        <!--          &#9724;-->
+        <!--        </b-button>-->
+        <!--      </div>-->
+      </div>
+
     </div>
     <!-- Sidebar End -->
 
     <div class="flex-1 overflow-auto">
-      <div className="main flex lg:justify-center md:justify-start w-full">
+      <div className="main flex lg:justify-center md:justify-start w-full bg-indigo-100">
         <!-- Piano Keyboard + Falling Notes -->
         <div className="content flex flex-col justify-start h-full">
           <div className="flex h-full">
@@ -206,11 +257,11 @@
 <script>
 import MidiDevices from "./midi_devices";
 import MidiFile from "./midi_file";
-import Soundfont from "soundfont-player";
 import {ref, computed} from 'vue'
-import {Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot} from '@headlessui/vue'
-import {XIcon} from '@heroicons/vue/outline'
+import Soundfont from "soundfont-player";
 import Sidebar from "../ui/Sidebar.vue";
+import KEYBOARD_NOTES from './notes';
+import INSTRUMENTS from './instruments';
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -221,379 +272,6 @@ const NOTE_EXTRA_TIME = 0.3; // seconds = extra time before note is computed as 
 const MIDI_VALUE_C2 = 36;
 const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-let idIncrement = 0;
-
-const KEYBOARD_NOTES = {
-  /*
-   ** 1 OCTAVE
-   */
-  81: {
-    keyCode: "Q",
-    note: "C",
-    octave: 3,
-    id: idIncrement++,
-  },
-  50: {
-    keyCode: "2",
-    note: "C#",
-    octave: 3,
-    id: idIncrement++,
-  },
-  87: {
-    keyCode: "W",
-    note: "D",
-    octave: 3,
-    id: idIncrement++,
-  },
-  51: {
-    keyCode: "3",
-    note: "D#",
-    octave: 3,
-    id: idIncrement++,
-  },
-  69: {
-    keyCode: "E",
-    note: "E",
-    octave: 3,
-    id: idIncrement++,
-  },
-  82: {
-    keyCode: "R",
-    note: "F",
-    octave: 3,
-    id: idIncrement++,
-  },
-  53: {
-    keyCode: "5",
-    note: "F#",
-    octave: 3,
-    id: idIncrement++,
-  },
-  84: {
-    keyCode: "T",
-    note: "G",
-    octave: 3,
-    id: idIncrement++,
-  },
-  54: {
-    keyCode: "6",
-    note: "G#",
-    octave: 3,
-    id: idIncrement++,
-  },
-  89: {
-    keyCode: "Y",
-    note: "A",
-    octave: 3,
-    id: idIncrement++,
-  },
-  55: {
-    keyCode: "7",
-    note: "A#",
-    octave: 3,
-    id: idIncrement++,
-  },
-  85: {
-    keyCode: "U",
-    note: "B",
-    octave: 3,
-    id: idIncrement++,
-  },
-
-  /*
-   ** 2 OCTAVE
-   */
-
-  73: {
-    keyCode: "I",
-    note: "C",
-    octave: 4,
-    id: idIncrement++,
-  },
-  57: {
-    keyCode: "9",
-    note: "C#",
-    octave: 4,
-    id: idIncrement++,
-  },
-  79: {
-    keyCode: "O",
-    note: "D",
-    octave: 4,
-    id: idIncrement++,
-  },
-  48: {
-    keyCode: "0",
-    note: "D#",
-    octave: 4,
-    id: idIncrement++,
-  },
-  80: {
-    keyCode: "P",
-    note: "E",
-    octave: 4,
-    id: idIncrement++,
-  },
-  219: {
-    keyCode: "[",
-    note: "F",
-    octave: 4,
-    id: idIncrement++,
-  },
-  [navigator.userAgent.toLowerCase().indexOf("firefox") > -1 ? 61 : 187]: {
-    keyCode: "+",
-    note: "F#",
-    octave: 4,
-    id: idIncrement++,
-  },
-  221: {
-    keyCode: "]",
-    note: "G",
-    octave: 4,
-    id: idIncrement++,
-  },
-  65: {
-    keyCode: "A",
-    note: "G#",
-    octave: 4,
-    id: idIncrement++,
-  },
-  90: {
-    keyCode: "Z",
-    note: "A",
-    octave: 4,
-    id: idIncrement++,
-  },
-  83: {
-    keyCode: "S",
-    note: "A#",
-    octave: 4,
-    id: idIncrement++,
-  },
-  88: {
-    keyCode: "X",
-    note: "B",
-    octave: 4,
-    id: idIncrement++,
-  },
-
-  /*
-   ** 3 OCTAVE
-   */
-
-  67: {
-    keyCode: "C",
-    note: "C",
-    octave: 5,
-    id: idIncrement++,
-  },
-  70: {
-    keyCode: "F",
-    note: "C#",
-    octave: 5,
-    id: idIncrement++,
-  },
-  86: {
-    keyCode: "V",
-    note: "D",
-    octave: 5,
-    id: idIncrement++,
-  },
-  71: {
-    keyCode: "G",
-    note: "D#",
-    octave: 5,
-    id: idIncrement++,
-  },
-  66: {
-    keyCode: "B",
-    note: "E",
-    octave: 5,
-    id: idIncrement++,
-  },
-  78: {
-    keyCode: "N",
-    note: "F",
-    octave: 5,
-    id: idIncrement++,
-  },
-  74: {
-    keyCode: "J",
-    note: "F#",
-    octave: 5,
-    id: idIncrement++,
-  },
-  77: {
-    keyCode: "M",
-    note: "G",
-    octave: 5,
-    id: idIncrement++,
-  },
-  75: {
-    keyCode: "K",
-    note: "G#",
-    octave: 5,
-    id: idIncrement++,
-  },
-  188: {
-    keyCode: ",",
-    note: "A",
-    octave: 5,
-    id: idIncrement++,
-  },
-  76: {
-    keyCode: "L",
-    note: "A#",
-    octave: 5,
-    id: idIncrement++,
-  },
-  190: {
-    keyCode: ".",
-    note: "B",
-    octave: 5,
-    id: idIncrement++,
-  },
-  /*
-   ** OCTAVE 6
-   */
-  191: {
-    keyCode: "/",
-    note: "C",
-    octave: 6,
-    id: idIncrement++,
-  },
-};
-
-const INSTRUMENTS = [
-  "accordion",
-  "acoustic_bass",
-  "acoustic_grand_piano",
-  "acoustic_guitar_nylon",
-  "acoustic_guitar_steel",
-  "agogo",
-  "alto_sax",
-  "applause",
-  "bagpipe",
-  "banjo",
-  "baritone_sax",
-  "bassoon",
-  "bird_tweet",
-  "blown_bottle",
-  "brass_section",
-  "breath_noise",
-  "bright_acoustic_piano",
-  "celesta",
-  "cello",
-  "choir_aahs",
-  "church_organ",
-  "clarinet",
-  "clavinet",
-  "contrabass",
-  "distortion_guitar",
-  "drawbar_organ",
-  "dulcimer",
-  "electric_bass_finger",
-  "electric_bass_pick",
-  "electric_grand_piano",
-  "electric_guitar_clean",
-  "electric_guitar_jazz",
-  "electric_guitar_muted",
-  "electric_piano_1",
-  "electric_piano_2",
-  "english_horn",
-  "fiddle",
-  "flute",
-  "french_horn",
-  "fretless_bass",
-  "fx_1_rain",
-  "fx_2_soundtrack",
-  "fx_3_crystal",
-  "fx_4_atmosphere",
-  "fx_5_brightness",
-  "fx_6_goblins",
-  "fx_7_echoes",
-  "fx_8_scifi",
-  "glockenspiel",
-  "guitar_fret_noise",
-  "guitar_harmonics",
-  "gunshot",
-  "harmonica",
-  "harpsichord",
-  "helicopter",
-  "honkytonk_piano",
-  "kalimba",
-  "koto",
-  "lead_1_square",
-  "lead_2_sawtooth",
-  "lead_3_calliope",
-  "lead_4_chiff",
-  "lead_5_charang",
-  "lead_6_voice",
-  "lead_7_fifths",
-  "lead_8_bass__lead",
-  "marimba",
-  "melodic_tom",
-  "music_box",
-  "muted_trumpet",
-  "oboe",
-  "ocarina",
-  "orchestra_hit",
-  "orchestral_harp",
-  "overdriven_guitar",
-  "pad_1_new_age",
-  "pad_2_warm",
-  "pad_3_polysynth",
-  "pad_4_choir",
-  "pad_5_bowed",
-  "pad_6_metallic",
-  "pad_7_halo",
-  "pad_8_sweep",
-  "pan_flute",
-  "percussive_organ",
-  "piccolo",
-  "pizzicato_strings",
-  "recorder",
-  "reed_organ",
-  "reverse_cymbal",
-  "rock_organ",
-  "seashore",
-  "shakuhachi",
-  "shamisen",
-  "shanai",
-  "sitar",
-  "slap_bass_1",
-  "slap_bass_2",
-  "soprano_sax",
-  "steel_drums",
-  "string_ensemble_1",
-  "string_ensemble_2",
-  "synth_bass_1",
-  "synth_bass_2",
-  "synth_brass_1",
-  "synth_brass_2",
-  "synth_choir",
-  "synth_drum",
-  "synth_strings_1",
-  "synth_strings_2",
-  "taiko_drum",
-  "tango_accordion",
-  "telephone_ring",
-  "tenor_sax",
-  "timpani",
-  "tinkle_bell",
-  "tremolo_strings",
-  "trombone",
-  "trumpet",
-  "tuba",
-  "tubular_bells",
-  "vibraphone",
-  "viola",
-  "violin",
-  "voice_oohs",
-  "whistle",
-  "woodblock",
-  "xylophone",
-];
 
 const COUNTDOWN_TIME = 3; // seconds
 const GAME_STATE = {
@@ -636,7 +314,7 @@ export default {
       gameState: GAME_STATE.idle,
       midiFile: null,
       midiDevices: new MidiDevices(this.onDeviceKeyDown, this.onDeviceKeyUp),
-      midiDeviceSelected: null,
+      midiDeviceSelected: "Выберите устройство",
       songSpeed: 1,
       inPianolaMode: true,
       stats: {
@@ -648,7 +326,7 @@ export default {
       selectedMidiInstrument: INSTRUMENTS[2],
     };
   },
-  created: function () {
+  mounted: function () {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
 
@@ -657,7 +335,7 @@ export default {
     this.prevPlayTime = 0;
     this.animFrameId = window.requestAnimationFrame(this.tick);
     this.initAudio();
-    this.loadFurElise();
+    this.setGameState(GAME_STATE.countdown)
     // this.$buefy.dialog.alert({
     //   title: "Welcome!",
     //   message:
@@ -693,7 +371,6 @@ export default {
           break;
 
         case GAME_STATE.playing:
-          console.log('HERE')
           this.computeNotesState();
           this.computeMissingNotes();
 
@@ -732,11 +409,9 @@ export default {
     },
     initAudio: function () {
       console.log("Start init");
-      console.log(this)
       this.audioContext = new window.AudioContext();
       this.soundfont = Soundfont.instrument(
-        this.audioContext,
-        this.selectedMidiInstrument
+        this.audioContext, this.selectedMidiInstrument
       ).then(function (instrument) {
         console.log("Init complete");
         return instrument;
@@ -746,7 +421,7 @@ export default {
       this.audioContext.close();
     },
     onInstrumentChange: function (newInstrument) {
-      this.selectedMidiInstrument = newInstrument;
+      this.selectedMidiInstrument = newInstrument.target.value;
       this.initAudio();
     },
     isWhiteKey: function (note) {
@@ -1039,7 +714,7 @@ export default {
     const collapsed = ref(false);
     const toggleSidebar = () => (collapsed.value = !collapsed.value);
     const SIDEBAR_WIDTH = 250;
-    const SIDEBAR_WIDTH_COLLAPSED = 0;
+    const SIDEBAR_WIDTH_COLLAPSED = 20;
     const sidebarWidth = computed(
       () => `${collapsed.value ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH}px`
     )
@@ -1053,11 +728,11 @@ export default {
 .main {
   display: flex;
   height: 100%;
-  background: white;
 }
 
-.main .menu {
-  width: 300px;
+.menu-visible {
+  opacity: 0;
+  transition: 0.3s all ease;
 }
 
 .main .menu .title {
@@ -1088,14 +763,15 @@ export default {
   bottom: 0;
   width: 38px;
   height: 38px;
-  background: #efe0bc;
+  background: rgb(165, 180, 252);
+
 }
 
 .main .content .notesColumns .notesColumn {
   position: relative;
   width: 38px;
   height: 100%;
-  background: black;
+  background: rgb(31, 41, 55);
   border-right: 1px solid white;
 }
 
@@ -1114,7 +790,7 @@ export default {
   width: 22px;
   height: 100%;
   z-index: 1;
-  background: black;
+  background: rgb(31, 41, 55);
 }
 
 .main .content .notesColumns .narrowNotesColumn .note {
@@ -1146,9 +822,9 @@ export default {
 }
 
 .main .content .keyboard .whiteKey.pressed {
-  box-shadow: none;
-  transition: height 30ms linear, box-shadow 30ms linear;
-  background: yellow;
+  transition: background-color, transform 0.1s ease-out;
+  transform: rotateX(-10deg) translateY(-2px);
+  background-color: rgba(199, 210, 254);
 }
 
 .main .content .keyboard .whiteKey.pressed .keySign {
@@ -1159,14 +835,14 @@ export default {
 .main .content .keyboard .whiteKey .keySign {
   position: relative;
   top: 140px;
-  color: black;
+  color: rgb(31, 41, 55);
   width: 38px;
 }
 
 .main .content .keyboard .blackKey {
   width: 22px;
   height: 100px;
-  background: black;
+  background: rgb(31, 41, 55);
   border: 1px solid transparent;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
@@ -1177,15 +853,12 @@ export default {
 }
 
 .main .content .keyboard .blackKey.pressed {
-  height: 105px;
-  box-shadow: none;
-  border: 1px solid grey;
-  transition: height 30ms linear, box-shadow 30ms linear;
-  background: yellow;
+  transition: background-color, transform 0.1s ease-out;
+  transform: rotateX(-10deg);
+  background-color: rgba(55, 48, 163);
 }
 
 .main .content .keyboard .blackKey.pressed .keySign {
-  color: black;
   bottom: 95px;
   transition: bottom 30ms linear;
 }
@@ -1210,72 +883,12 @@ export default {
 
 .arrow-icon {
   transform: translate(-40%) rotate(90deg);
-  height: 2.8em;
-  width: 2.8em;
+  height: 2em;
+  width: 2em;
   display: block;
   position: relative;
   cursor: pointer;
   border-radius: 4px;
-}
-
-.left-bar {
-  position: absolute;
-  background-color: transparent;
-  top: 0;
-  left: 0;
-  width: 40px;
-  height: 10px;
-  display: block;
-  transform: rotate(35deg);
-  float: right;
-  border-radius: 2px;
-}
-
-.left-bar:after {
-  content: "";
-  background-color: white;
-  width: 40px;
-  height: 10px;
-  display: block;
-  float: right;
-  border-radius: 6px 10px 10px 6px;
-  transition: all 0.5s ease;
-  z-index: -1;
-}
-
-.right-bar {
-  position: absolute;
-  background-color: transparent;
-  top: 0px;
-  left: 26px;
-  width: 40px;
-  height: 10px;
-  display: block;
-  transform: rotate(-35deg);
-  float: right;
-  border-radius: 2px;
-}
-
-.right-bar:after {
-  content: "";
-  background-color: white;
-  width: 40px;
-  height: 10px;
-  display: block;
-  float: right;
-  border-radius: 10px 6px 6px 10px;
-  transition: all 0.5s ease;
-  z-index: -1;
-}
-
-.open .left-bar:after {
-  transform-origin: center center;
-  transform: rotate(-70deg);
-}
-
-.open .right-bar:after {
-  transform-origin: center center;
-  transform: rotate(70deg);
 }
 
 </style>
