@@ -3,20 +3,23 @@
 
     <!-- Sidebar Start -->
     <div
-      class="sidebar flex flex-col relative bg-indigo-600 text-white"
+      class="sidebar flex flex-col relative bg-indigo-600 text-white "
       :style="{ width: sidebarWidth }">
       <!-- Toggle button with Arrows -->
       <div
-        class="collapse-icon right-0 top-0 bottom-0 m-auto flex items-center justify-center
-      absolute bg-indigo-300 hover:bg-indigo-600 text-white font-bold cursor-pointer"
+        class="collapse-icon right-0 top-10 flex items-center justify-center
+      absolute bg-indigo-300 hover:bg-indigo-600 text-white font-bold cursor-pointer rounded-r-2xl"
         @click="toggleSidebar">
-        <a class="arrow-icon" :class="{'open' : collapsed}">
-        </a>
+        <div class="arrow-container" :class="{'open': !collapsed}">
+          <div class="arrow bg-indigo-900"></div>
+          <div class="arrow bg-indigo-600"></div>
+          <div class="arrow bg-indigo-300"></div>
+        </div>
       </div>
       <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
         <!-- End Toggle button with Arrows -->
         <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
-          <img class="w-full h-full" src="/images/promo.svg" alt="Sunset in the mountains">
+          <img class="w-full h-full object-cover" src="/images/banner.jpg" alt="Sunset in the mountains">
         </div>
         <div class="pt-4">
           <div class="font-bold text-sm text-blue-200 whitespace-nowrap">Неизвестный</div>
@@ -64,7 +67,7 @@
                   v-bind:disabled="midiDevices.devices.length === 0"
                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white text-indigo-600 font-bold rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             <option class="text-indigo-600 font-bold" selected disabled hidden>
-              {{ midiDevices.devices.length === 0 ? 'Нет доступный устройств' : 'Выберите устройство' }}
+              {{ midiDevices.devices.length === 0 ? 'Нет доступных' : 'Выберите устройство' }}
             </option>
             <option class="text-indigo-600 font-bold" v-for="device in midiDevices.devices" v-bind:key="device.id"
                     v-bind:value="device.name">{{
@@ -210,6 +213,10 @@
       <div className="main flex lg:justify-center md:justify-start w-full bg-indigo-100">
         <!-- Piano Keyboard + Falling Notes -->
         <div className="content flex flex-col justify-start h-full">
+          <!-- Slider -->
+          <div v-if="totalSongNotes" class="w-full h-4 bg-gray-300 dark:bg-gray-700 relative z-10">
+            <div class="h-4 bg-indigo-500 dark:bg-gray-300 song-slider"  :style="{ width: currentSongNote / totalSongNotes * 100 + '%' }"></div>
+          </div>
           <div className="flex h-full">
             <div className="notesColumns" ref="notesColumns">
               <div className="flex h-full">
@@ -324,6 +331,8 @@ export default {
       },
       midiInstruments: INSTRUMENTS,
       selectedMidiInstrument: INSTRUMENTS[2],
+      totalSongNotes: null,
+      currentSongNote: null,
     };
   },
   mounted: function () {
@@ -383,6 +392,7 @@ export default {
                   note.time > this.prevPlayTime
                 ) {
                   this.onNoteOn(note.note, note.octave);
+                  this.currentSongNote++;
                   setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
                 }
               }
@@ -516,6 +526,10 @@ export default {
     },
     onMidiFileLoaded: function (midiContent) {
       this.midiFile = new MidiFile(midiContent);
+      this.totalSongNotes = this.midiFile.events.length;
+      console.log(this.lastNoteTime);
+      console.log(this.playTime);
+      this.currentSongNote = 0;
       this.lastNoteTime = 0;
 
       for (let noteColumn of this.notesColumns) {
@@ -705,6 +719,7 @@ export default {
       this.setGameState(GAME_STATE.paused);
     },
     stopSong: function () {
+      this.currentSongNote = 0;
       this.setGameState(GAME_STATE.idle);
       this.prevGameState = GAME_STATE.idle;
     },
@@ -714,7 +729,7 @@ export default {
     const collapsed = ref(false);
     const toggleSidebar = () => (collapsed.value = !collapsed.value);
     const SIDEBAR_WIDTH = 250;
-    const SIDEBAR_WIDTH_COLLAPSED = 20;
+    const SIDEBAR_WIDTH_COLLAPSED = 0;
     const sidebarWidth = computed(
       () => `${collapsed.value ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH}px`
     )
@@ -889,6 +904,67 @@ export default {
   position: relative;
   cursor: pointer;
   border-radius: 4px;
+}
+
+.arrow-container {
+  display: block;
+  width: 50px;
+  height: 50px;
+  transform: translate(-10%, 0%) rotateZ(-90deg);
+  transition: all 0.3s ease;
+}
+.arrow-container.open {
+  transform: translate(10%, 0%) rotateZ(90deg);
+  transition: all 0.3s ease;
+}
+.arrow-container:hover {
+  cursor: pointer;
+}
+.arrow-container:hover .arrow {
+  top: 50%;
+}
+.arrow-container:hover .arrow:before {
+  transform: translate(-50%, -50%) rotateZ(-30deg);
+}
+.arrow-container:hover .arrow:after {
+  transform: translate(-50%, -50%) rotateZ(30deg);
+}
+.arrow {
+  position: absolute;
+  left: 50%;
+  transition: all 0.4s ease;
+}
+.arrow:before, .arrow:after {
+  transition: all 0.4s ease;
+  content: '';
+  display: block;
+  position: absolute;
+  transform-origin: bottom right;
+  background: #fff;
+  width: 4px;
+  height: 15px;
+  border-radius: 10px;
+  transform: translate(-50%, -50%) rotateZ(-45deg);
+}
+.arrow:after {
+  transform-origin: bottom left;
+  transform: translate(-50%, -50%) rotateZ(45deg);
+}
+.arrow:nth-child(1) {
+  opacity: 0.3;
+  top: 35%;
+}
+.arrow:nth-child(2) {
+  opacity: 0.6;
+  top: 55%;
+}
+.arrow:nth-child(3) {
+  opacity: 0.9;
+  top: 75%;
+}
+
+.song-slider {
+  transition: width 1s ease-in-out;
 }
 
 </style>
