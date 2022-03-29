@@ -177,6 +177,10 @@
                 v-on:click="loadFurElise">Load
         </button>
 
+        <div>Perfect: {{stats.perfect}}</div>
+        <div>Good: {{stats.good}}</div>
+        <div>Bad: {{stats.bad}}</div>
+
         <!--      <div class="buttons">-->
         <!--        <b-button-->
         <!--          type="is-primary"-->
@@ -323,7 +327,7 @@ export default {
       midiDevices: new MidiDevices(this.onDeviceKeyDown, this.onDeviceKeyUp),
       midiDeviceSelected: "Выберите устройство",
       songSpeed: 1,
-      inPianolaMode: true,
+      inPianolaMode: false,
       stats: {
         perfect: 0,
         good: 0,
@@ -367,7 +371,6 @@ export default {
       const delta = ((current - this.start) / 1000) * this.songSpeed;
 
       this.start = current;
-
       switch (this.gameState) {
         case GAME_STATE.countdown:
           this.computeNotesState();
@@ -484,9 +487,10 @@ export default {
       }
 
       this.playNote(note, octave);
-      // Vue.set(this.keysPressed, noteId, true);
+
       this.keysPressed[noteId] = true;
 
+      //PIANOLA = TUTORIAL MODE
       if (this.gameState === GAME_STATE.playing && !this.inPianolaMode) {
         const notesColumnIdx =
           (octave - OCTAVE_BASE) * NOTES.length + NOTES.indexOf(note);
@@ -494,7 +498,6 @@ export default {
           if (note.processed) {
             continue;
           }
-
           const diff = Math.abs(note.time - this.playTime);
           if (diff <= 0.5) {
             note.processed = true;
@@ -572,7 +575,7 @@ export default {
       const self = this;
       let request = new XMLHttpRequest();
 
-      const filePath = "/static/beethoven_fur_elise.mid";
+      const filePath = "/static/midi_example.mid";
 
       request.open("GET", filePath, true);
       request.responseType = "arraybuffer";
