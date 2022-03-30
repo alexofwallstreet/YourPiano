@@ -380,7 +380,7 @@ export default {
           this.playTime += delta;
           this.timer -= delta;
 
-          if (this.timer <= 0) {
+          if (this.timer <= NOTE_EXTRA_TIME) {
             this.setGameState(GAME_STATE.playing);
           }
           break;
@@ -408,7 +408,7 @@ export default {
           this.prevPlayTime = this.playTime;
           this.playTime += delta;
 
-          if (this.playTime > this.lastNoteTime + NOTE_EXTRA_TIME) {
+          if (this.playTime > this.lastNoteTime + NOTE_EXTRA_TIME + 1) {
             this.stopSong();
 
             // if (!this.inPianolaMode) {
@@ -455,17 +455,17 @@ export default {
       });
     },
     onKeyDown: function (event) {
-      event.preventDefault();
       const key = event.keyCode;
       if (key in KEYBOARD_NOTES) {
+        event.preventDefault();
         const noteInfo = KEYBOARD_NOTES[key];
         this.onNoteOn(noteInfo.note, noteInfo.octave);
       }
     },
     onKeyUp: function (event) {
-      event.preventDefault();
       const key = event.keyCode;
       if (key in KEYBOARD_NOTES) {
+        event.preventDefault();
         const noteInfo = KEYBOARD_NOTES[key];
         this.onNoteOff(noteInfo.note, noteInfo.octave);
       }
@@ -501,7 +501,6 @@ export default {
             continue;
           }
           const diff = Math.abs(note.time - this.playTime);
-          console.log(diff);
           if (diff <= 0.5) {
             note.processed = true;
             if (diff < 0.1) {
