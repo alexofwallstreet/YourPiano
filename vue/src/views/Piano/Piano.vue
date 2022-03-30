@@ -490,8 +490,7 @@ export default {
 
       this.keysPressed[noteId] = true;
 
-      //PIANOLA = TUTORIAL MODE
-      if (this.gameState === GAME_STATE.playing && !this.inPianolaMode) {
+      if (this.gameState === GAME_STATE.playing ||this.gameState === GAME_STATE.playing  && !this.inPianolaMode) {
         const notesColumnIdx =
           (octave - OCTAVE_BASE) * NOTES.length + NOTES.indexOf(note);
         for (const note of this.notesColumns[notesColumnIdx].notes) {
@@ -499,6 +498,7 @@ export default {
             continue;
           }
           const diff = Math.abs(note.time - this.playTime);
+          console.log(diff);
           if (diff <= 0.5) {
             note.processed = true;
             if (diff < 0.1) {
