@@ -77,8 +77,11 @@
           </select>
         </div>
 
-
-        <!--      <b-field-->
+        <div class="w-full">
+          <label for="speed" class="font-bold text-white">Скорость: {{ (songSpeed * 100).toFixed() }}%</label>
+          <input type="range" id="speed" name="range" min="0" max="2" step="0.01" class="w-full h-2 bg-blue-100 appearance-none" v-model="songSpeed" />
+        </div>
+        <!--      <b-field-->`
         <!--        label="Speed"-->
         <!--        v-bind:horizontal="true"-->
         <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
