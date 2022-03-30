@@ -4,10 +4,10 @@ import Register from "../views/Register.vue";
 import Dashboard from "../views/Dashboard.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import AuthLayout from "../components/AuthLayout.vue";
-import Surveys from "../views/Surveys.vue";
 import Piano from "../views/Piano/Piano.vue";
 import Home from "../views/Home.vue";
 import store from "../store";
+import Songs from "../views/Songs.vue";
 
 const routes = [
   {
@@ -21,9 +21,9 @@ const routes = [
         component: Dashboard
       },
       {
-        path: '/surveys',
-        name: 'Surveys',
-        component: Surveys
+        path: '/songs',
+        name: 'Songs',
+        component: Songs
       },
       {
         path: '/home',

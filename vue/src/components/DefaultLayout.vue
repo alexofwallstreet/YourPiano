@@ -170,7 +170,7 @@ import {useRouter} from 'vue-router';
 const navigation = [
   {name: 'Главная', to: {name: 'Home'}},
   {name: 'Пианино', to: {name: 'Piano'}},
-  {name: 'Песни', to: {name: 'Surveys'}},
+  {name: 'Песни', to: {name: 'Songs'}},
 ]
 
 export default {
