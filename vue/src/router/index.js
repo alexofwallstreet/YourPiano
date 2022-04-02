@@ -33,6 +33,22 @@ const routes = [
         },
       },
       {
+        path: '/piano/tutorial-play',
+        name: 'PianoTutorialPlay',
+        component: Piano,
+        props: {
+          gameMode: store.state.gameModes.TUTORIAL_MODE
+        },
+      },
+      {
+        path: '/piano/rating-play',
+        name: 'PianoRatingPlay',
+        component: Piano,
+        props: {
+          gameMode: store.state.gameModes.RATING_GAME_MODE
+        },
+      },
+      {
         path: '/auth',
         redirect: '/login',
         name: 'Auth',

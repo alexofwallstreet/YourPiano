@@ -1,9 +1,9 @@
 <template>
   <SpinnerOverlay :is-loading="isLoading"></SpinnerOverlay>
-  <div class="flex" :style="{ minHeight: `calc(100vh - ${store.state.uiElements.navbarHeight})`}">
+  <div class="flex bg-indigo-50" :style="{ minHeight: `calc(100vh - ${store.state.uiElements.navbarHeight})`}">
     <!-- Sidebar Start -->
     <div
-      class="sidebar flex flex-col relative bg-indigo-600 text-white "
+      class="sidebar flex flex-col relative bg-indigo-900 text-white pb-10"
       :style="{ width: sidebarWidth }">
       <!-- Toggle button with Arrows -->
       <div
@@ -27,38 +27,42 @@
             <div class="font-bold text-xl mb-2 whitespace-nowrap">Без названия</div>
           </div>
           <!-- Slider -->
-          <div v-if="totalSongNotes" class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-2">
+          <div class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-2">
             <div class="h-full bg-white song-slider rounded"
-                 :style="{ width: currentSongNote / totalSongNotes * 100 + '%' }"></div>
+                 :style="{ width: lastNoteTime > playTime ? (playTime / lastNoteTime * 100 + '%') : ('100%') }"></div>
           </div>
+
           <div class="pb-2 flex justify-start">
-            <svg v-on:click.prevent="playSong" xmlns="http://www.w3.org/2000/svg"
-                 class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
-                 :class="{'fill-indigo-400' : gameState === states.playing || gameState === states.countdown,
-          'fill-white' : gameState !== states.playing && gameState !== states.countdown}">
+            <svg
+              v-on:click.prevent="playSong"
+              xmlns="http://www.w3.org/2000/svg"
+              class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+              :class="{'fill-indigo-400' : isPlaying() || isCountdown(), 'fill-white' : !isPlaying() && !isCountdown()}">
               <path fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
                     clip-rule="evenodd"/>
             </svg>
             <svg v-on:click.prevent="pauseSong" xmlns="http://www.w3.org/2000/svg"
-                 class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor"
-                 :class="{'fill-white' : gameState === states.playing,
-                    'fill-indigo-400' : gameState !== states.playing}">
+                 class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor"
+                 :class="{'fill-white' : isPlaying() && !isCountdown() ,
+                    'fill-indigo-400' : !isPlaying() || isCountdown()}">
               <path fill-rule="evenodd"
                     d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
                     clip-rule="evenodd"/>
             </svg>
             <svg v-on:click.prevent="stopSong" xmlns="http://www.w3.org/2000/svg"
-                 class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
-                 :class="{'fill-white' : gameState === states.playing,
-                    'fill-indigo-400' : gameState !== states.playing}">
+                 class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+                 :class="{'fill-white' : isPlaying() && !isCountdown() ,
+                    'fill-indigo-400' : !isPlaying() || isCountdown()}">
               <path fill-rule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
                     clip-rule="evenodd"/>
             </svg>
             <div class="flex justify-end ml-auto">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
-                   fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+                   fill="currentColor"
+                   :class="{'fill-indigo-400' : isPlaying() && !isCountdown() ,
+                    'fill-red-400' : !isPlaying() || isCountdown()}">>
                 <path fill-rule="evenodd"
                       d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
                       clip-rule="evenodd"/>
@@ -75,9 +79,9 @@
 
 
         <!-- MIDI Instrument select -->
-        <div class="col-span-6 sm:col-span-3 mt-2">
+        <div class="col-span-6 sm:col-span-3 mt-2" v-if="isFreePlayMode()">
           <label for="instrument" class="block text-sm font-medium text-white whitespace-nowrap">Инструмент</label>
-          <select id="instrument" name="country" autocomplete="country-name" v-model="selectedMidiInstrument"
+          <select id="instrument" name="instrument" autocomplete="instrument-name" v-model="selectedMidiInstrument"
                   @change="onInstrumentChange"
                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white text-indigo-600 font-bold rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             <option class="text-indigo-600 font-bold" v-for="instrument in midiInstruments" v-bind:value="instrument">{{
@@ -109,13 +113,14 @@
     <!-- Sidebar End -->
 
     <div class="flex-1 overflow-auto">
-      <div className="main flex lg:justify-center md:justify-start w-full bg-indigo-100">
+      <div className="main flex lg:justify-center md:justify-start w-full">
         <!-- Piano Keyboard + Falling Notes -->
-        <div className="content flex flex-col justify-start h-full">
+        <div className="content flex flex-col justify-between h-full">
           <div className="flex h-full">
             <div className="notesColumns" ref="notesColumns">
               <div className="flex h-full">
                 <div
+                  class="bg-gray-700"
                   v-for="(column, cindex) in notesColumns"
                   v-bind:key="`notesColumn_${cindex}`"
                   v-bind:class="{
@@ -125,7 +130,7 @@
                   v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(cindex) }"
                 >
                   <div
-                    className="note"
+                    class="note bg-blue-500 border-2 rounded-lg"
                     v-for="(time, nindex) in column.visibleNotes"
                     v-bind:key="`note_${cindex}_${nindex}`"
                     v-bind:style="{ top: getScreenYPosByTime(time) }"
@@ -135,7 +140,7 @@
               </div>
             </div>
           </div>
-          <div className="keyboard flex z-0">
+          <div className="keyboard flex pb-3">
             <div
               v-for="(key, index) in keys"
               v-bind:key="key[0] + key[1]"
@@ -223,7 +228,7 @@ export default {
       prevGameState: null,
       midiFile: null,
       midiDevices: new MidiDevices(this.onDeviceKeyDown, this.onDeviceKeyUp),
-      midiDeviceSelected: "Выберите устройство",
+      midiDeviceSelected: null,
       songSpeed: 1,
       inPianolaMode: false,
       stats: {
@@ -235,6 +240,9 @@ export default {
       selectedMidiInstrument: INSTRUMENTS[2],
       totalSongNotes: null,
       currentSongNote: null,
+      playTime: 0,
+      prevPlayTime: 0,
+      lastNoteTime: 0
     };
   },
   async mounted() {
@@ -247,6 +255,7 @@ export default {
     this.animFrameId = window.requestAnimationFrame(this.tick);
     await this.initAudio();
     this.loadingComplete();
+    this.loadFurElise();
   },
   unmounted: function () {
     if (this.animFrameId) {
@@ -268,7 +277,7 @@ export default {
           this.playTime += delta;
           this.timer -= delta;
 
-          if (this.timer <= NOTE_EXTRA_TIME) {
+          if (this.timer <= 3) {
             this.setGameState(GAME_STATE.playing);
           }
           break;
@@ -285,9 +294,11 @@ export default {
                 this.playTime >= note.time &&
                 note.time > this.prevPlayTime
               ) {
-                this.onNoteOn(note.note, note.octave);
+                if (!note.processed) {
+                  this.onNoteOn(note.note, note.octave);
+                  setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
+                }
                 this.currentSongNote++;
-                setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
               }
             }
           }
@@ -464,12 +475,9 @@ export default {
 
       const self = this;
       let request = new XMLHttpRequest();
-
-      const filePath = "/static/midi_example.mid";
-
+      const filePath = "/static/fur_elise.mid";
       request.open("GET", filePath, true);
       request.responseType = "arraybuffer";
-
       request.onload = function () {
         if (request.response) {
           self.onMidiFileLoaded(new Uint8Array(request.response));
@@ -598,6 +606,14 @@ export default {
       }
     },
     playSong: function () {
+      switch (this.gameState) {
+        case GAME_STATE.playing:
+        case GAME_STATE.countdown:
+          return;
+        default:
+          break;
+      }
+
       switch (this.prevGameState) {
         case GAME_STATE.idle:
         case GAME_STATE.countdown:
@@ -609,10 +625,16 @@ export default {
       }
     },
     pauseSong: function () {
-      this.setGameState(GAME_STATE.paused);
+      switch (this.gameState) {
+        case GAME_STATE.countdown:
+        case GAME_STATE.paused:
+          return;
+        default:
+          this.setGameState(GAME_STATE.paused);
+      }
     },
     stopSong: function () {
-      this.currentSongNote = 0;
+      this.playTime = 0;
       this.setGameState(GAME_STATE.idle);
       this.prevGameState = GAME_STATE.idle;
     },
@@ -624,6 +646,15 @@ export default {
     },
     isRatingPlayMode: function () {
       return this.gameMode === this.store.state.gameModes.RATING_GAME_MODE;
+    },
+    isPlaying: function () {
+      return this.gameState === GAME_STATE.playing;
+    },
+    isCountdown: function () {
+      return this.gameState === GAME_STATE.countdown;
+    },
+    isIdle: function () {
+      return this.gameState === GAME_STATE.idle;
     }
   },
   components: {SpinnerOverlay, Sidebar},
@@ -691,7 +722,6 @@ export default {
   position: relative;
   width: 38px;
   height: 100%;
-  background: rgb(31, 41, 55);
   border-right: 1px solid white;
 }
 
@@ -699,9 +729,6 @@ export default {
   position: absolute;
   height: 38px;
   width: 38px;
-  border: 2px solid #ebdec4;
-  border-radius: 8px;
-  background: #f05e3b;
   z-index: 2;
 }
 
@@ -709,23 +736,18 @@ export default {
   position: relative;
   width: 22px;
   height: 100%;
-  z-index: 1;
-  background: rgb(31, 41, 55);
 }
 
 .main .content .notesColumns .narrowNotesColumn .note {
   position: absolute;
   height: 38px;
   width: 22px;
-  border: 2px solid #ebdec4;
-  border-radius: 6px;
-  background: #4bae8c;
-  z-index: 2;
+  z-index: 3;
+  background: rgb(30,64,175);
 }
 
 .main .content .keyboard {
   user-select: none;
-  height: 185px;
 }
 
 .main .content .keyboard .whiteKey {
@@ -880,7 +902,11 @@ export default {
 }
 
 .song-slider {
-  transition: width 1s ease-in-out;
+  transition: width 0.5s ease-in-out;
+}
+
+.song-control-btn {
+  transition: all 0.2s ease;
 }
 
 </style>
