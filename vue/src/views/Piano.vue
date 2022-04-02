@@ -814,7 +814,6 @@ export default {
 
 .sidebar {
   transition: 0.3s ease;
-  z-index: 2;
 }
 
 .collapse-icon {
