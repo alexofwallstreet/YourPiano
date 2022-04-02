@@ -2,8 +2,8 @@
 <template>
   <Hero></Hero>
   <About></About>
-  <Stats></Stats>
   <BestSongs></BestSongs>
+  <Stats></Stats>
   <FAQ></FAQ>
 </template>
 

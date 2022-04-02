@@ -1,10 +1,9 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
-import Dashboard from "../views/Dashboard.vue";
 import DefaultLayout from "../components/DefaultLayout.vue";
 import AuthLayout from "../components/AuthLayout.vue";
-import Piano from "../views/Piano/Piano.vue";
+import Piano from "../views/Piano.vue";
 import Home from "../views/Home.vue";
 import store from "../store";
 import Songs from "../views/Songs.vue";
@@ -16,11 +15,6 @@ const routes = [
     component: DefaultLayout,
     children: [
       {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: Dashboard
-      },
-      {
         path: '/songs',
         name: 'Songs',
         component: Songs
@@ -31,9 +25,12 @@ const routes = [
         component: Home
       },
       {
-        path: '/piano',
-        name: 'Piano',
-        component: Piano
+        path: '/piano/free-play',
+        name: 'PianoFreePlay',
+        component: Piano,
+        props: {
+          gameMode: store.state.gameModes.FREE_PLAY_MODE
+        },
       },
       {
         path: '/auth',
@@ -67,8 +64,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !store.state.user.token) {
     next({name: 'Login'})
-  } else if (store.state.user.token && to.meta.isGuest) {
-    next({name: 'Dashboard'});
   } else {
     next();
   }

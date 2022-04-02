@@ -13,7 +13,6 @@
                 <circle cx="1" cy="1" r=".7"></circle>
               </pattern>
             </defs>
-            <rect fill="url(#7b568941-9ed0-4f49-85a0-5e21ca6c7ad6)" width="52" height="24"></rect>
           </svg>
           <span class="relative">The</span>
         </span>

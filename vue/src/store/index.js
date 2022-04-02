@@ -6,6 +6,14 @@ const store = createStore({
     user: {
       data: JSON.parse(sessionStorage.getItem('user')),
       token: sessionStorage.getItem('TOKEN')
+    },
+    gameModes: {
+      FREE_PLAY_MODE: 'free-play-mode',
+      TUTORIAL_MODE: 'tutorial-mode',
+      RATING_GAME_MODE: 'rating-game-mode'
+    },
+    uiElements: {
+      navbarHeight: '4rem'
     }
   },
   getters: {},

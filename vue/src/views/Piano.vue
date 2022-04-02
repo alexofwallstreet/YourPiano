@@ -1,6 +1,6 @@
 <template>
-  <div class="flex min-h-screen">
-
+  <SpinnerOverlay :is-loading="isLoading"></SpinnerOverlay>
+  <div class="flex" :style="{ minHeight: `calc(100vh - ${store.state.uiElements.navbarHeight})`}">
     <!-- Sidebar Start -->
     <div
       class="sidebar flex flex-col relative bg-indigo-600 text-white "
@@ -18,33 +18,61 @@
       </div>
       <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
         <!-- End Toggle button with Arrows -->
-        <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
-          <img class="w-full h-full object-cover" src="/images/banner.jpg" alt="Sunset in the mountains">
+        <div class="song-wrapper" v-if="!isFreePlayMode()">
+          <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
+            <img class="w-full h-full object-cover" src="/images/banner.jpg" alt="Sunset in the mountains">
+          </div>
+          <div class="pt-4">
+            <div class="font-bold text-sm text-blue-200 whitespace-nowrap">Неизвестный</div>
+            <div class="font-bold text-xl mb-2 whitespace-nowrap">Без названия</div>
+          </div>
+          <!-- Slider -->
+          <div v-if="totalSongNotes" class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-2">
+            <div class="h-full bg-white song-slider rounded"
+                 :style="{ width: currentSongNote / totalSongNotes * 100 + '%' }"></div>
+          </div>
+          <div class="pb-2 flex justify-start">
+            <svg v-on:click.prevent="playSong" xmlns="http://www.w3.org/2000/svg"
+                 class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+                 :class="{'fill-indigo-400' : gameState === states.playing || gameState === states.countdown,
+          'fill-white' : gameState !== states.playing && gameState !== states.countdown}">
+              <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                    clip-rule="evenodd"/>
+            </svg>
+            <svg v-on:click.prevent="pauseSong" xmlns="http://www.w3.org/2000/svg"
+                 class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor"
+                 :class="{'fill-white' : gameState === states.playing,
+                    'fill-indigo-400' : gameState !== states.playing}">
+              <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                    clip-rule="evenodd"/>
+            </svg>
+            <svg v-on:click.prevent="stopSong" xmlns="http://www.w3.org/2000/svg"
+                 class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+                 :class="{'fill-white' : gameState === states.playing,
+                    'fill-indigo-400' : gameState !== states.playing}">
+              <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+                    clip-rule="evenodd"/>
+            </svg>
+            <div class="flex justify-end ml-auto">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+                   fill="currentColor">
+                <path fill-rule="evenodd"
+                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                      clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="w-full" v-if="isTutorialMode()">
+            <label for="speed" class="font-bold text-white whitespace-nowrap">Скорость: {{ songSpeed }}</label>
+            <input type="range" id="speed" name="range" min="0" max="2" step="0.01"
+                   class="w-full h-2 bg-indigo-100 appearance-none" v-model="songSpeed"/>
+          </div>
         </div>
-        <div class="pt-4">
-          <div class="font-bold text-sm text-blue-200 whitespace-nowrap">Неизвестный</div>
-          <div class="font-bold text-xl mb-2 whitespace-nowrap">Без названия</div>
-        </div>
-        <div class="pb-2 flex justify-start">
-          <svg v-on:click.prevent="playSong" xmlns="http://www.w3.org/2000/svg"
-               class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clip-rule="evenodd"/>
-          </svg>
-          <svg v-on:click.prevent="pauseSong" xmlns="http://www.w3.org/2000/svg"
-               class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                  clip-rule="evenodd"/>
-          </svg>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
-               fill="currentColor">
-            <path fill-rule="evenodd"
-                  d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                  clip-rule="evenodd"/>
-          </svg>
-        </div>
+
 
         <!-- MIDI Instrument select -->
         <div class="col-span-6 sm:col-span-3 mt-2">
@@ -76,143 +104,7 @@
             </option>
           </select>
         </div>
-
-        <div class="w-full">
-          <label for="speed" class="font-bold text-white">Скорость: {{ (songSpeed * 100).toFixed() }}%</label>
-          <input type="range" id="speed" name="range" min="0" max="2" step="0.01" class="w-full h-2 bg-blue-100 appearance-none" v-model="songSpeed" />
-        </div>
-        <!--      <b-field-->`
-        <!--        label="Speed"-->
-        <!--        v-bind:horizontal="true"-->
-        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-        <!--      >-->
-        <!--        <b-slider-->
-        <!--          type="is-primary"-->
-        <!--          size="is-large"-->
-        <!--          v-model="songSpeed"-->
-        <!--          v-bind:min="0.25"-->
-        <!--          v-bind:max="2"-->
-        <!--          v-bind:value="1"-->
-        <!--          v-bind:step="0.25"-->
-        <!--          ticks-->
-        <!--        />-->
-        <!--      </b-field>-->
-
-        <!--      <b-field-->
-        <!--        label="Pianola"-->
-        <!--        v-bind:horizontal="true"-->
-        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-        <!--      >-->
-        <!--        <b-switch-->
-        <!--          v-bind:rounded="false"-->
-        <!--          type="is-primary"-->
-        <!--          v-model="inPianolaMode"-->
-        <!--        />-->
-        <!--      </b-field>-->
-
-        <!--      <b-field-->
-        <!--        label="MIDI Device"-->
-        <!--        v-bind:horizontal="true"-->
-        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-        <!--      >-->
-        <!--        <b-dropdown-->
-        <!--          v-bind:disabled="midiDevices.devices.length === 0"-->
-        <!--          v-model="midiDeviceSelected"-->
-        <!--          aria-role="list"-->
-        <!--        >-->
-        <!--          <button-->
-        <!--            class="button is-primary"-->
-        <!--            slot="trigger"-->
-        <!--            slot-scope="{ active }"-->
-        <!--          >-->
-        <!--            <span>{{-->
-        <!--              midiDeviceSelected !== null-->
-        <!--                ? midiDeviceSelected-->
-        <!--                : "Select a device"-->
-        <!--            }}</span>-->
-        <!--            <b-icon :icon="active ? 'menu-up' : 'menu-down'"></b-icon>-->
-        <!--          </button>-->
-
-        <!--          <b-dropdown-item-->
-        <!--            v-for="device in midiDevices.devices"-->
-        <!--            v-bind:value="device.name"-->
-        <!--            v-bind:key="device.id"-->
-        <!--            aria-role="listitem"-->
-        <!--          >-->
-        <!--            {{ device.name }}-->
-        <!--          </b-dropdown-item>-->
-        <!--        </b-dropdown>-->
-        <!--      </b-field>-->
-
-        <!--      <b-field-->
-        <!--        label="Instrument"-->
-        <!--        v-bind:horizontal="true"-->
-        <!--        v-bind:style="{ 'padding-left': '20px', 'padding-right': '20px' }"-->
-        <!--      >-->
-        <!--        <b-select-->
-        <!--          placeholder="Select an instrument"-->
-        <!--          v-bind:disabled="midiInstruments.length === 0"-->
-        <!--          v-model="selectedMidiInstrument"-->
-        <!--          @input="onInstrumentChange"-->
-        <!--        >-->
-        <!--          <option-->
-        <!--            v-for="instrument in midiInstruments"-->
-        <!--            :value="instrument"-->
-        <!--            :key="instrument"-->
-        <!--          >-->
-        <!--            {{ instrument }}-->
-        <!--          </option>-->
-        <!--        </b-select>-->
-        <!--      </b-field>-->
-
-        <!--      <b-field class="file">-->
-        <!--        <b-upload v-on:input="loadMidiFile">-->
-        <!--          <a class="button is-primary">-->
-        <!--            <span>Load Song</span>-->
-        <!--          </a>-->
-        <!--        </b-upload>-->
-        <!--      </b-field>-->
-
-        <!--      <button class="button is-primary" v-on:click="loadFurElise">-->
-        <!--        <span>Load Fur Elise</span>-->
-        <!--      </button>-->
-        <button class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
-                v-on:click="loadFurElise">Load
-        </button>
-
-        <div>Perfect: {{stats.perfect}}</div>
-        <div>Good: {{stats.good}}</div>
-        <div>Bad: {{stats.bad}}</div>
-
-        <!--      <div class="buttons">-->
-        <!--        <b-button-->
-        <!--          type="is-primary"-->
-        <!--          size="is-large"-->
-        <!--          v-bind:disabled="!midiFile || gameState === 2 || gameState === 3"-->
-        <!--          v-on:click="playSong"-->
-        <!--        >-->
-        <!--          &#9654;-->
-        <!--        </b-button>-->
-        <!--        <b-button-->
-        <!--          type="is-primary"-->
-        <!--          size="is-large"-->
-        <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
-        <!--          v-on:click="pauseSong"-->
-        <!--        >-->
-        <!--          &#10074;&#10074;-->
-        <!--        </b-button>-->
-
-        <!--        <b-button-->
-        <!--          type="is-primary"-->
-        <!--          size="is-large"-->
-        <!--          v-bind:disabled="!midiFile || gameState === 1 || gameState === 4"-->
-        <!--          v-on:click="stopSong"-->
-        <!--        >-->
-        <!--          &#9724;-->
-        <!--        </b-button>-->
-        <!--      </div>-->
       </div>
-
     </div>
     <!-- Sidebar End -->
 
@@ -220,10 +112,6 @@
       <div className="main flex lg:justify-center md:justify-start w-full bg-indigo-100">
         <!-- Piano Keyboard + Falling Notes -->
         <div className="content flex flex-col justify-start h-full">
-          <!-- Slider -->
-          <div v-if="totalSongNotes" class="w-full h-4 bg-gray-300 dark:bg-gray-700 relative z-10">
-            <div class="h-4 bg-indigo-500 dark:bg-gray-300 song-slider"  :style="{ width: currentSongNote / totalSongNotes * 100 + '%' }"></div>
-          </div>
           <div className="flex h-full">
             <div className="notesColumns" ref="notesColumns">
               <div className="flex h-full">
@@ -269,13 +157,15 @@
 </template>
 
 <script>
-import MidiDevices from "./midi_devices";
-import MidiFile from "./midi_file";
+import store from "../store";
+import MidiDevices from "../piano/midi_devices";
+import MidiFile from "../piano/midi_file";
 import {ref, computed} from 'vue'
 import Soundfont from "soundfont-player";
-import Sidebar from "../ui/Sidebar.vue";
-import KEYBOARD_NOTES from './notes';
-import INSTRUMENTS from './instruments';
+import Sidebar from "./ui/Sidebar.vue";
+import KEYBOARD_NOTES from '../piano/notes';
+import INSTRUMENTS from '../piano/instruments';
+import SpinnerOverlay from "./ui/SpinnerOverlay.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -311,6 +201,8 @@ export default {
 
     let notesColumns = [];
 
+    let isLoading = true;
+
     for (let k of keys) {
       notesColumns.push({
         isNarrow: !this.isWhiteKey(k[0]),
@@ -321,11 +213,14 @@ export default {
     }
 
     return {
+      store,
+      isLoading: isLoading,
+      states: GAME_STATE,
+      gameState: GAME_STATE.idle,
       keys: keys,
       keysPressed: {},
       notesColumns: notesColumns,
       prevGameState: null,
-      gameState: GAME_STATE.idle,
       midiFile: null,
       midiDevices: new MidiDevices(this.onDeviceKeyDown, this.onDeviceKeyUp),
       midiDeviceSelected: "Выберите устройство",
@@ -342,7 +237,7 @@ export default {
       currentSongNote: null,
     };
   },
-  mounted: function () {
+  async mounted() {
     window.addEventListener("keydown", this.onKeyDown);
     window.addEventListener("keyup", this.onKeyUp);
 
@@ -350,15 +245,8 @@ export default {
     this.playTime = 0;
     this.prevPlayTime = 0;
     this.animFrameId = window.requestAnimationFrame(this.tick);
-    this.initAudio();
-    this.setGameState(GAME_STATE.countdown)
-    // this.$buefy.dialog.alert({
-    //   title: "Welcome!",
-    //   message:
-    //     "OK" +
-    //     "Piano Hero enables you to play the piano freely or following a pattern. It´s just an experiment, so probably it contains some bugs.",
-    //   onConfirm: this.onWelcomeDialogClosed,
-    // });
+    await this.initAudio();
+    this.loadingComplete();
   },
   unmounted: function () {
     if (this.animFrameId) {
@@ -389,56 +277,54 @@ export default {
           this.computeNotesState();
           this.computeMissingNotes();
 
-          if (this.inPianolaMode) {
-            const self = this;
-            for (const column of this.notesColumns) {
-              for (const note of column.notes) {
-                if (
-                  this.playTime >= note.time &&
-                  note.time > this.prevPlayTime
-                ) {
-                  this.onNoteOn(note.note, note.octave);
-                  this.currentSongNote++;
-                  setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
-                }
+          // if (this.inPianolaMode) {
+          const self = this;
+          for (const column of this.notesColumns) {
+            for (const note of column.notes) {
+              if (
+                this.playTime >= note.time &&
+                note.time > this.prevPlayTime
+              ) {
+                this.onNoteOn(note.note, note.octave);
+                this.currentSongNote++;
+                setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
               }
             }
           }
+
+          // }
 
           this.prevPlayTime = this.playTime;
           this.playTime += delta;
 
           if (this.playTime > this.lastNoteTime + NOTE_EXTRA_TIME + 1) {
             this.stopSong();
-
-            // if (!this.inPianolaMode) {
-            //   this.$buefy.dialog.alert({
-            //     title: "Game Over",
-            //     message: `Notes - Perfect: ${this.stats.perfect} | Good: ${this.stats.good} | Bad: ${this.stats.bad}`,
-            //   });
-            // }
+            //END OF SONG
           }
           break;
       }
 
       this.animFrameId = window.requestAnimationFrame(this.tick);
     },
-    initAudio: function () {
-      console.log("Start init");
+    async initAudio() {
+      this.loadingStart();
+      console.log('Loading start...')
       this.audioContext = new window.AudioContext();
-      this.soundfont = Soundfont.instrument(
+      this.soundfont = await Soundfont.instrument(
         this.audioContext, this.selectedMidiInstrument
       ).then(function (instrument) {
-        console.log("Init complete");
         return instrument;
+      }).finally(function () {
+        console.log('Loading complete');
       });
+      this.loadingComplete();
     },
     unsetAudio: function () {
       this.audioContext.close();
     },
-    onInstrumentChange: function (newInstrument) {
+    async onInstrumentChange(newInstrument) {
       this.selectedMidiInstrument = newInstrument.target.value;
-      this.initAudio();
+      await this.initAudio();
     },
     isWhiteKey: function (note) {
       return note.length === 1;
@@ -446,12 +332,16 @@ export default {
     isKeyPressed: function (note, octave) {
       return this.keysPressed[this.getNoteId(note, octave)];
     },
-    playNote: function (note, octave) {
-      this.soundfont.then(function (instrument) {
-        instrument.play(`${note}${octave}`, null, {
-          duration: 1,
-          gain: 2, //TODO: Implemets volume changing
-        });
+    loadingStart: function () {
+      this.isLoading = true;
+    },
+    loadingComplete: function () {
+      this.isLoading = false;
+    },
+    playNote(note, octave) {
+      this.soundfont.play(`${note}${octave}`, null, {
+        duration: 1,
+        gain: 2
       });
     },
     onKeyDown: function (event) {
@@ -493,7 +383,7 @@ export default {
 
       this.keysPressed[noteId] = true;
 
-      if (this.gameState === GAME_STATE.playing ||this.gameState === GAME_STATE.playing  && !this.inPianolaMode) {
+      if (this.gameState === GAME_STATE.playing || this.gameState === GAME_STATE.playing && !this.inPianolaMode) {
         const notesColumnIdx =
           (octave - OCTAVE_BASE) * NOTES.length + NOTES.indexOf(note);
         for (const note of this.notesColumns[notesColumnIdx].notes) {
@@ -532,8 +422,6 @@ export default {
     onMidiFileLoaded: function (midiContent) {
       this.midiFile = new MidiFile(midiContent);
       this.totalSongNotes = this.midiFile.events.length;
-      console.log(this.lastNoteTime);
-      console.log(this.playTime);
       this.currentSongNote = 0;
       this.lastNoteTime = 0;
 
@@ -728,8 +616,17 @@ export default {
       this.setGameState(GAME_STATE.idle);
       this.prevGameState = GAME_STATE.idle;
     },
+    isFreePlayMode: function () {
+      return this.gameMode === this.store.state.gameModes.FREE_PLAY_MODE;
+    },
+    isTutorialMode: function () {
+      return this.gameMode === this.store.state.gameModes.TUTORIAL_MODE;
+    },
+    isRatingPlayMode: function () {
+      return this.gameMode === this.store.state.gameModes.RATING_GAME_MODE;
+    }
   },
-  components: {Sidebar},
+  components: {SpinnerOverlay, Sidebar},
   setup() {
     const collapsed = ref(false);
     const toggleSidebar = () => (collapsed.value = !collapsed.value);
@@ -740,6 +637,9 @@ export default {
     )
     return {collapsed, toggleSidebar, sidebarWidth}
   },
+  props: {
+    gameMode: String
+  }
 };
 </script>
 
@@ -918,27 +818,34 @@ export default {
   transform: translate(-10%, 0%) rotateZ(-90deg);
   transition: all 0.3s ease;
 }
+
 .arrow-container.open {
   transform: translate(10%, 0%) rotateZ(90deg);
   transition: all 0.3s ease;
 }
+
 .arrow-container:hover {
   cursor: pointer;
 }
+
 .arrow-container:hover .arrow {
   top: 50%;
 }
+
 .arrow-container:hover .arrow:before {
   transform: translate(-50%, -50%) rotateZ(-30deg);
 }
+
 .arrow-container:hover .arrow:after {
   transform: translate(-50%, -50%) rotateZ(30deg);
 }
+
 .arrow {
   position: absolute;
   left: 50%;
   transition: all 0.4s ease;
 }
+
 .arrow:before, .arrow:after {
   transition: all 0.4s ease;
   content: '';
@@ -951,18 +858,22 @@ export default {
   border-radius: 10px;
   transform: translate(-50%, -50%) rotateZ(-45deg);
 }
+
 .arrow:after {
   transform-origin: bottom left;
   transform: translate(-50%, -50%) rotateZ(45deg);
 }
+
 .arrow:nth-child(1) {
   opacity: 0.3;
   top: 35%;
 }
+
 .arrow:nth-child(2) {
   opacity: 0.6;
   top: 55%;
 }
+
 .arrow:nth-child(3) {
   opacity: 0.9;
   top: 75%;
