@@ -7,6 +7,7 @@ import Piano from "../views/Piano.vue";
 import Home from "../views/Home.vue";
 import store from "../store";
 import Songs from "../views/Songs.vue";
+import SingleSong from "../views/SingleSong.vue";
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
         path: '/songs',
         name: 'Songs',
         component: Songs
+      },
+      {
+        path: '/songs/:id',
+        name: 'SingleSong',
+        component: SingleSong
       },
       {
         path: '/home',
@@ -33,7 +39,7 @@ const routes = [
         },
       },
       {
-        path: '/piano/tutorial-play',
+        path: '/piano/tutorial-play/:id',
         name: 'PianoTutorialPlay',
         component: Piano,
         props: {
@@ -41,7 +47,7 @@ const routes = [
         },
       },
       {
-        path: '/piano/rating-play',
+        path: '/piano/rating-play/:id',
         name: 'PianoRatingPlay',
         component: Piano,
         props: {

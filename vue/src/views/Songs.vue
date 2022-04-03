@@ -168,7 +168,7 @@
               </Disclosure>
             </form>
 
-            <SongList :songs="products"></SongList>
+            <SongList :songs="songs.data"></SongList>
           </div>
         </section>
       </main>
@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import {
   Dialog,
   DialogOverlay,
@@ -194,6 +194,7 @@ import {
 import {XIcon} from '@heroicons/vue/outline'
 import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from '@heroicons/vue/solid'
 import SongList from "./sections/SongList.vue";
+import store from "../store";
 
 const products = [
   {
@@ -289,14 +290,19 @@ export default {
     XIcon,
   },
   setup() {
-    const mobileFiltersOpen = ref(false)
+    const mobileFiltersOpen = ref(false);
+
+    const songs = computed(() => store.state.songs);
+
+    store.dispatch('getSongs');
 
     return {
       sortOptions,
       subCategories,
       filters,
       mobileFiltersOpen,
-      products
+      products,
+      songs
     }
   },
 }

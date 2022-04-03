@@ -23,8 +23,8 @@
             <img class="w-full h-full object-cover" src="/images/banner.jpg" alt="Sunset in the mountains">
           </div>
           <div class="pt-4">
-            <div class="font-bold text-sm text-blue-200 whitespace-nowrap">Неизвестный</div>
-            <div class="font-bold text-xl mb-2 whitespace-nowrap">Без названия</div>
+            <div class="font-bold text-sm text-blue-200 whitespace-nowrap">{{ song.data.author }}</div>
+            <div class="font-bold text-xl mb-2 whitespace-nowrap">{{ song.data.title }}</div>
           </div>
           <!-- Slider -->
           <div class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-2">
@@ -59,7 +59,8 @@
                     clip-rule="evenodd"/>
             </svg>
             <div class="flex justify-end ml-auto">
-              <svg xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
+              <svg xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative"
+                   viewBox="0 0 20 20"
                    fill="currentColor"
                    :class="{'fill-indigo-400' : isPlaying() && !isCountdown() ,
                     'fill-red-400' : !isPlaying() || isCountdown()}">>
@@ -171,6 +172,8 @@ import Sidebar from "./ui/Sidebar.vue";
 import KEYBOARD_NOTES from '../piano/notes';
 import INSTRUMENTS from '../piano/instruments';
 import SpinnerOverlay from "./ui/SpinnerOverlay.vue";
+import router from "../router";
+import axiosClient from "../axios";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -219,6 +222,8 @@ export default {
 
     return {
       store,
+      song: computed(() => store.state.song),
+      midi: [],
       isLoading: isLoading,
       states: GAME_STATE,
       gameState: GAME_STATE.idle,
@@ -254,8 +259,14 @@ export default {
     this.prevPlayTime = 0;
     this.animFrameId = window.requestAnimationFrame(this.tick);
     await this.initAudio();
+
+    if (router.currentRoute.value.params.id) {
+      await store.dispatch('getSong', router.currentRoute.value.params.id);
+      await this.loadMidiSong();
+      this.onMidiFileLoaded(new Uint8Array(this.midi.data));
+    }
+
     this.loadingComplete();
-    this.loadFurElise();
   },
   unmounted: function () {
     if (this.animFrameId) {
@@ -352,7 +363,7 @@ export default {
     playNote(note, octave) {
       this.soundfont.play(`${note}${octave}`, null, {
         duration: 1,
-        gain: 2
+        gain: 10
       });
     },
     onKeyDown: function (event) {
@@ -397,21 +408,24 @@ export default {
       if (this.gameState === GAME_STATE.playing || this.gameState === GAME_STATE.playing && !this.inPianolaMode) {
         const notesColumnIdx =
           (octave - OCTAVE_BASE) * NOTES.length + NOTES.indexOf(note);
-        for (const note of this.notesColumns[notesColumnIdx].notes) {
-          if (note.processed) {
-            continue;
-          }
-          const diff = Math.abs(note.time - this.playTime);
-          if (diff <= 0.5) {
-            note.processed = true;
-            if (diff < 0.1) {
-              ++this.stats.perfect;
-            } else {
-              ++this.stats.good;
+        if (this.notesColumns[notesColumnIdx]) {
+          for (const note of this.notesColumns[notesColumnIdx].notes) {
+            if (note.processed) {
+              continue;
             }
-            break;
+            const diff = Math.abs(note.time - this.playTime);
+            if (diff <= 0.5) {
+              note.processed = true;
+              if (diff < 0.1) {
+                ++this.stats.perfect;
+              } else {
+                ++this.stats.good;
+              }
+              break;
+            }
           }
         }
+
       }
     },
     onNoteOff: function (note, octave) {
@@ -470,20 +484,9 @@ export default {
         });
       }
     },
-    loadFurElise: function () {
+    async loadMidiSong() {
       this.stopSong();
-
-      const self = this;
-      let request = new XMLHttpRequest();
-      const filePath = "/static/fur_elise.mid";
-      request.open("GET", filePath, true);
-      request.responseType = "arraybuffer";
-      request.onload = function () {
-        if (request.response) {
-          self.onMidiFileLoaded(new Uint8Array(request.response));
-        }
-      };
-      request.send(null);
+      this.midi = await store.dispatch('getSongMidi', this.song.data.id);
     },
     loadMidiFile: function (file) {
       this.stopSong();
@@ -666,6 +669,7 @@ export default {
     const sidebarWidth = computed(
       () => `${collapsed.value ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH}px`
     )
+
     return {collapsed, toggleSidebar, sidebarWidth}
   },
   props: {
@@ -743,7 +747,7 @@ export default {
   height: 38px;
   width: 22px;
   z-index: 3;
-  background: rgb(30,64,175);
+  background: rgb(30, 64, 175);
 }
 
 .main .content .keyboard {

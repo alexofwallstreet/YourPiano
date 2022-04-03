@@ -7,6 +7,23 @@ const store = createStore({
       data: JSON.parse(sessionStorage.getItem('user')),
       token: sessionStorage.getItem('TOKEN')
     },
+    song: {
+      loading: false,
+      data: {
+        id: Number,
+        title: '',
+        author: '',
+        description: '',
+        difficulty: Number,
+        genre: Number,
+        imagePath: '',
+        midiPath: ''
+      }
+    },
+    songs: {
+      loading: false,
+      data: []
+    },
     gameModes: {
       FREE_PLAY_MODE: 'free-play-mode',
       TUTORIAL_MODE: 'tutorial-mode',
@@ -18,6 +35,28 @@ const store = createStore({
   },
   getters: {},
   actions: {
+    getSong({commit}, id) {
+      commit('setSongLoading', true);
+      return axiosClient.get(`/songs/${id}`).then(res => {
+        commit('setSongLoading', false);
+        commit('setSong', res.data);
+        return res;
+      })
+    },
+    getSongMidi({commit},id) {
+      console.log(id);
+      return axiosClient.get(`/songs/${id}/midi`, {
+        responseType: 'arraybuffer',
+      });
+    },
+    getSongs({commit}) {
+      commit('setSongsLoading', true);
+      return axiosClient.get('/songs').then(res => {
+        commit('setSongsLoading', false);
+        commit('setSongs', res.data);
+        return res;
+      })
+    },
     register({ commit }, user) {
       return axiosClient.post('/register', user)
         .then(({data}) => {
@@ -55,6 +94,18 @@ const store = createStore({
       state.user.data = userData.user;
       sessionStorage.setItem('TOKEN', userData.token);
       sessionStorage.setItem('user', JSON.stringify(userData.user));
+    },
+    setSongsLoading: (state, loading) => {
+      state.songs.loading = loading;
+    },
+    setSongLoading: (state, loading) => {
+      state.song.loading = loading;
+    },
+    setSong: (state, songs) => {
+      state.song.data = songs.data;
+    },
+    setSongs: (state, songs) => {
+      state.songs.data = songs.data;
     }
   },
   modules: {}

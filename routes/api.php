@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SongController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,15 +17,22 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
-    Route::post('logout', [AuthController::class, 'logout']);
+  Route::get('/user', function (Request $request) {
+    return $request->user();
+  });
+  Route::post('logout', [AuthController::class, 'logout']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/songs', [SongController::class, 'index']);
+Route::get('/songs/{id}', [SongController::class, 'show']);
+Route::get('/songs/{id}/midi', function ($id) {
+  $song = \App\Models\Song::findOrFail($id);
+  return file_get_contents(public_path('/storage/songs-midi/'.$song->midi_file));
+});
+
 
 Route::get('/test', function () {
-  var_dump(storage_path());
+  var_dump(file_exists(storage_path('app/public/user_profile_photos/default.jpg')));
 });
