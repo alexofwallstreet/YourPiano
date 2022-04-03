@@ -45,6 +45,7 @@ const routes = [
         props: {
           gameMode: store.state.gameModes.TUTORIAL_MODE
         },
+        meta: {requiresAuth: false},
       },
       {
         path: '/piano/rating-play/:id',
@@ -53,6 +54,7 @@ const routes = [
         props: {
           gameMode: store.state.gameModes.RATING_GAME_MODE
         },
+        meta: {requiresAuth: true},
       },
       {
         path: '/auth',
@@ -84,6 +86,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to.meta.requiresAuth)
   if (to.meta.requiresAuth && !store.state.user.token) {
     next({name: 'Login'})
   } else {

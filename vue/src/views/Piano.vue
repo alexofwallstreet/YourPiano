@@ -3,7 +3,7 @@
   <div class="flex bg-indigo-50" :style="{ minHeight: `calc(100vh - ${store.state.uiElements.navbarHeight})`}">
     <!-- Sidebar Start -->
     <div
-      class="sidebar flex flex-col relative bg-indigo-900 text-white pb-10 opacity-0 animate-fade-in-right z-10"
+      class="sidebar flex flex-col relative bg-gray-900 text-white pb-10 opacity-0 animate-fade-in-right z-10"
       :style="{ width: sidebarWidth }">
       <!-- Toggle button with Arrows -->
       <div
@@ -17,6 +17,13 @@
         </div>
       </div>
       <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
+
+        <div v-if="!store.state.user.token" class="pt-4 text-sm text-gray-200 mb-4 relative whitespace-nowrap font-bold">
+          <router-link :to="{name: 'Login'}" class="underline">Войдите</router-link>
+          или
+          <router-link :to="{name: 'Register'}" class="underline">зарегистрируйтесь</router-link>,<wbr>
+          чтобы играть песни
+        </div>
         <!-- End Toggle button with Arrows -->
         <div class="song-wrapper" v-if="!isFreePlayMode()">
           <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">

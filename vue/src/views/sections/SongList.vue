@@ -33,7 +33,7 @@ export default {
   name: "SongList",
   components: {SongListSkeleton},
   props: {
-    songs: Array
+    songs: Object
   }
 }
 </script>

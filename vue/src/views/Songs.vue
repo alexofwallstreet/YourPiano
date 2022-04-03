@@ -3,7 +3,7 @@
     <div>
       <!-- Mobile filter dialog -->
       <TransitionRoot as="template" :show="mobileFiltersOpen">
-        <Dialog as="div" class="fixed inset-0 flex z-40 lg:hidden" @close="mobileFiltersOpen = false">
+        <Dialog as="div" class="fixed inset-0 flex z-50 lg:hidden" @close="mobileFiltersOpen = false">
           <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0"
                            enter-to="opacity-100" leave="transition-opacity ease-linear duration-300"
                            leave-from="opacity-100" leave-to="opacity-0">
@@ -17,7 +17,7 @@
             <div
               class="ml-auto relative max-w-xs w-full h-full bg-white shadow-xl py-4 pb-12 flex flex-col overflow-y-auto">
               <div class="px-4 flex items-center justify-between">
-                <h2 class="text-lg font-medium text-gray-900">Filters</h2>
+                <h2 class="text-lg font-medium text-gray-900">Поиск песни</h2>
                 <button type="button"
                         class="-mr-2 w-10 h-10 bg-white p-2 rounded-md flex items-center justify-center text-gray-400"
                         @click="mobileFiltersOpen = false">
@@ -28,12 +28,27 @@
 
               <!-- Filters -->
               <form class="mt-4 border-t border-gray-200">
-                <h3 class="sr-only">Categories</h3>
+                <h3 class="sr-only">Поиск песни</h3>
                 <ul role="list" class="font-medium text-gray-900 px-2 py-3">
-                  <li v-for="category in subCategories" :key="category.name">
-                    <a :href="category.href" class="block px-2 py-3">
-                      {{ category.name }}
-                    </a>
+                  <li>
+                    <div class="border-b border-gray-200 py-6">
+                      <label for="song-name-mobile" class="block font-medium text-gray-700">Название композиции</label>
+                      <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="text" name="song-name" id="song-name-mobile"
+                               class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
+                               placeholder="Название композиции"/>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="border-b border-gray-200 py-4">
+                      <label for="song-author-mobile" class="block font-medium text-gray-900">Исполнитель</label>
+                      <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="text" name="song-author" id="song-author-mobile"
+                               class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
+                               placeholder="Исполнитель"/>
+                      </div>
+                    </div>
                   </li>
                 </ul>
 
@@ -120,7 +135,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-4 gap-x-8 gap-y-10">
             <!-- Filters -->
             <form class="hidden lg:block">
-              <h3 class="sr-only">Categories</h3>
+              <h3 class="sr-only">Поиск песни</h3>
               <div class="border-b border-gray-200 py-6">
                 <label for="song-name" class="block text-sm font-medium text-gray-700">Название композиции</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
@@ -196,53 +211,10 @@ import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from
 import SongList from "./sections/SongList.vue";
 import store from "../store";
 
-const products = [
-  {
-    id: 1,
-    name: 'Earthen Bottle',
-    href: '#',
-    price: '$48',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
-    imageAlt: 'Tall slender porcelain bottle with natural clay textured body and cork stopper.',
-  },
-  {
-    id: 2,
-    name: 'Nomad Tumbler',
-    href: '#',
-    price: '$35',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
-    imageAlt: 'Olive drab green insulated bottle with flared screw lid and flat top.',
-  },
-  {
-    id: 3,
-    name: 'Focus Paper Refill',
-    href: '#',
-    price: '$89',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg',
-    imageAlt: 'Person using a pen to cross a task off a productivity paper card.',
-  },
-  {
-    id: 4,
-    name: 'Machined Mechanical Pencil',
-    href: '#',
-    price: '$35',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg',
-    imageAlt: 'Hand holding black machined steel mechanical pencil with brass tip and top.',
-  },
-  // More products...
-]
-
 const sortOptions = [
   {name: 'Сначала популярные', href: '#', current: true},
   {name: 'Сначала новые', href: '#', current: false},
   {name: 'Сначала старые', href: '#', current: false},
-]
-const subCategories = [
-  {name: 'Totes', href: '#'},
-  {name: 'Backpacks', href: '#'},
-  {name: 'Travel Bags', href: '#'},
-  {name: 'Hip Bags', href: '#'},
-  {name: 'Laptop Sleeves', href: '#'},
 ]
 const filters = [
   {
@@ -298,10 +270,8 @@ export default {
 
     return {
       sortOptions,
-      subCategories,
       filters,
       mobileFiltersOpen,
-      products,
       songs
     }
   },

@@ -5,7 +5,7 @@
       <div class="space-y-4">
         <div class="border rounded shadow-sm" v-for="item in questions">
           <button type="button" aria-label="Open item" title="Open item" @click="item.isOpen = !item.isOpen"
-                  class="flex items-center justify-between w-full p-4 focus:outline-none">
+                  class="flex items-center justify-between w-full p-4 focus:outline-none rounded-xl">
             <p class="text-lg font-medium">{{ item.question }}</p>
             <div class="flex items-center justify-center w-8 h-8 border rounded-full">
               <!-- Add "transform rotate-180" classes on svg, if is ope" -->
@@ -16,7 +16,7 @@
               </svg>
             </div>
           </button>
-          <div class="p-4 pt-0" v-if="item.isOpen"><p class="text-gray-700">{{ item.answer }}</p></div>
+          <div class="p-4 pt-0 opacity-0 animate-fade-in-down" v-if="item.isOpen"><p class="text-gray-700">{{ item.answer }}</p></div>
         </div>
       </div>
     </div>
