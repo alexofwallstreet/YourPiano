@@ -27,10 +27,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/songs', [SongController::class, 'index']);
 Route::get('/songs/{id}', [SongController::class, 'show']);
-Route::get('/songs/{id}/midi', function ($id) {
-  $song = \App\Models\Song::findOrFail($id);
-  return file_get_contents(public_path('/storage/songs-midi/'.$song->midi_file));
-});
+Route::get('/songs/{id}/midi', [SongController::class, 'midi']);
 
 
 Route::get('/test', function () {

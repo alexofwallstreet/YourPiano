@@ -4,7 +4,56 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      keyframes: {
+        'fade-in-down': {
+          'from': {
+            transform: 'translateY(-0.75rem)',
+            opacity: '0'
+          },
+          'to': {
+            transform: 'translateY(0rem)',
+            opacity: '1'
+          }
+        },
+        'fade-in-up': {
+          'from': {
+            transform: 'translateY(0.75rem)',
+            opacity: '0'
+          },
+          'to': {
+            transform: 'translateY(0rem)',
+            opacity: '1'
+          }
+        },
+        'fade-in-right': {
+          'from': {
+            transform: 'translateX(-0.75rem)',
+            opacity: '0'
+          },
+          'to': {
+            transform: 'translateY(0rem)',
+            opacity: '1'
+          }
+        },
+        'fade-in-left': {
+          'from': {
+            transform: 'translateX(0.75rem)',
+            opacity: '0'
+          },
+          'to': {
+            transform: 'translateY(0rem)',
+            opacity: '1'
+          }
+        },
+      },
+      animation: {
+        'fade-in-down': 'fade-in-down 0.2s ease-in-out both',
+        'fade-in-up': 'fade-in-up 0.2s ease-in-out both',
+        'fade-in-left': 'fade-in-left 0.2s ease-in-out both',
+        'fade-in-right': 'fade-in-right 0.2s ease-in-out both',
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

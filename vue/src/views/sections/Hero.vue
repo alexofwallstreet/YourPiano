@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-indigo-50">
-    <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+  <div class="bg-indigo-50 transition-opacity">
+    <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 opacity-0 animate-fade-in-down">
       <div class="grid gap-10 lg:grid-cols-2">
         <div class="lg:pr-10">
           <h1 class="text-4xl font font-extrabold tracking-tight text-gray-900 sm:text-6xl">

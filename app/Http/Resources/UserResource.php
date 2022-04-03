@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\URL;
 
 class UserResource extends JsonResource
 {
@@ -14,6 +15,12 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+          'id' => $this->id,
+          'name' =>$this->name,
+          'email' => $this->email,
+          'imagePath' => URL::to('/') . '/storage/user-profile-images/' . $this->profile_photo,
+          'isAdmin' => $this->is_admin
+        ];
     }
 }

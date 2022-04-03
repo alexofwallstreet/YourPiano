@@ -1,8 +1,10 @@
 <template>
   <section class="text-gray-600 body-font overflow-hidden">
     <div class="container px-5 py-24 mx-auto">
-      <div class="lg:w-4/5 mx-auto flex flex-wrap">
-        <img :alt="song.data.title" class="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded"
+      <SongItemSkeleton v-if="song.loading"></SongItemSkeleton>
+      <div v-if="!song.loading" class="lg:w-4/5 mx-auto flex flex-wrap">
+        <img
+          :alt="song.data.title" class="lg:w-1/2 w-full lg:h-96 h-64 object-cover object-center rounded"
              :src="song.data.imagePath">
         <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
           <h2 class="text-sm title-font text-gray-500 tracking-widest">{{song.data.author}}</h2>
@@ -24,11 +26,11 @@
               Играть
             </router-link>
             <router-link :to="{name: 'PianoTutorialPlay'}"
-              class="flex text-white bg-indigo-500 border-0 py-2 px-6 mx-2 focus:outline-none hover:bg-indigo-600 rounded">
+              class="flex text-white bg-indigo-400 border-0 py-2 px-6 mx-2 focus:outline-none hover:bg-indigo-600 rounded">
               Пройти обучение
             </router-link>
             <button
-              class="rounded-full ml-auto w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-4">
+              class="rounded-full ml-auto w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500">
               <svg fill="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5"
                    viewBox="0 0 24 24">
                 <path
@@ -46,11 +48,14 @@
 import {computed} from "vue";
 import store from "../store";
 import router from "../router";
+import SongItemSkeleton from "./ui/skeletons/sogn-item-skeleton.vue";
 
 export default {
+  components: {SongItemSkeleton},
   setup() {
     const song = computed(() => store.state.song);
     store.dispatch('getSong', router.currentRoute.value.params.id);
+    console.log(song)
     return {
       song
     }

@@ -21,7 +21,7 @@ class SongResource extends JsonResource
         'author' => $this->author,
         'genre' => $this->genre_id,
         'difficulty' => $this->difficulty_level_id,
-        'description' => $this->difficulty_level_id,
+        'description' => $this->description,
         'midiPath' => $this->midi_file,
         'imagePath' => URL::to('/') . '/storage/songs-images/' . $this->image_file,
       ];

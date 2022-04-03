@@ -31,7 +31,7 @@
                   class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                   <span class="sr-only">Open user menu</span>
                   <img class="h-8 w-8 rounded-full" v-if="user"
-                       :src="'http://localhost:8000/user_profile_photos/'+user.profile_photo" alt=""/>
+                       :src="user.imagePath" alt=""/>
                 </MenuButton>
                 <router-link :to="{name: 'Login'}"
                              v-if="!user"
@@ -111,7 +111,7 @@
         <div class="flex items-center px-5">
           <div class="flex-shrink-0">
             <img class="h-10 w-10 rounded-full" v-if="user"
-                 :src="'http://localhost:8000/user_profile_photos/'+user.profile_photo" alt=""/>
+                 :src="user.imagePath" alt=""/>
           </div>
           <div class="ml-3" v-if="user">
             <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>

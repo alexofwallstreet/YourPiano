@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,7 +51,7 @@ class AuthController extends Controller
                 'error' => 'Provided credentials are incorrect'
             ], 422);
         }
-        $user = Auth::user();
+        $user = new UserResource(Auth::user()) ;
         $token = $user->createToken('main')->plainTextToken;
 
         return response([

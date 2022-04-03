@@ -168,7 +168,7 @@
               </Disclosure>
             </form>
 
-            <SongList :songs="songs.data"></SongList>
+            <SongList :songs="songs"></SongList>
           </div>
         </section>
       </main>

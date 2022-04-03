@@ -3,12 +3,12 @@
   <div class="flex bg-indigo-50" :style="{ minHeight: `calc(100vh - ${store.state.uiElements.navbarHeight})`}">
     <!-- Sidebar Start -->
     <div
-      class="sidebar flex flex-col relative bg-indigo-900 text-white pb-10"
+      class="sidebar flex flex-col relative bg-indigo-900 text-white pb-10 opacity-0 animate-fade-in-right z-10"
       :style="{ width: sidebarWidth }">
       <!-- Toggle button with Arrows -->
       <div
         class="collapse-icon right-0 top-10 flex items-center justify-center
-      absolute bg-indigo-300 hover:bg-indigo-600 text-white font-bold cursor-pointer rounded-r-2xl"
+      absolute bg-indigo-300 hover:bg-indigo-600 text-white font-bold cursor-pointer rounded-r-2xl z-50"
         @click="toggleSidebar">
         <div class="arrow-container" :class="{'open': !collapsed}">
           <div class="arrow bg-indigo-900"></div>
@@ -20,7 +20,7 @@
         <!-- End Toggle button with Arrows -->
         <div class="song-wrapper" v-if="!isFreePlayMode()">
           <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
-            <img class="w-full h-full object-cover" src="/images/banner.jpg" alt="Sunset in the mountains">
+            <img class="w-full h-full object-cover" :src="song.data.imagePath" alt="Sunset in the mountains">
           </div>
           <div class="pt-4">
             <div class="font-bold text-sm text-blue-200 whitespace-nowrap">{{ song.data.author }}</div>
@@ -114,7 +114,7 @@
     <!-- Sidebar End -->
 
     <div class="flex-1 overflow-auto">
-      <div className="main flex lg:justify-center md:justify-start w-full">
+      <div class="main flex lg:justify-center md:justify-start w-full opacity-0 animate-fade-in-down ">
         <!-- Piano Keyboard + Falling Notes -->
         <div className="content flex flex-col justify-between h-full">
           <div className="flex h-full">
@@ -261,6 +261,7 @@ export default {
     await this.initAudio();
 
     if (router.currentRoute.value.params.id) {
+      this.loadingStart();
       await store.dispatch('getSong', router.currentRoute.value.params.id);
       await this.loadMidiSong();
       this.onMidiFileLoaded(new Uint8Array(this.midi.data));
@@ -905,7 +906,7 @@ export default {
 }
 
 .song-slider {
-  transition: width 0.5s ease-in-out;
+  transition: width 5ms ease-in-out;
 }
 
 .song-control-btn {
