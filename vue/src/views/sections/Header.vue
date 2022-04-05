@@ -193,10 +193,11 @@ export default {
     function logout() {
       store.dispatch('logout')
         .then(() => {
-          router.push({
-            name: 'Login'
-          })
-        });
+        }).finally(() => {
+        router.push({
+          name: 'Login'
+        })
+      });
     }
 
     return {

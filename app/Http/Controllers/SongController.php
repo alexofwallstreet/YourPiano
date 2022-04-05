@@ -50,10 +50,11 @@ class SongController extends Controller
   public function midi(int $id)
   {
     $song = Song::findOrFail($id);
-    $path = public_path('/storage/songs-midi/'.$song->midi_file);
+    $path = public_path('storage/songs-midi/'.$song->midi_file);
     if (file_exists($path)) {
       return file_get_contents($path);
     }
+    return public_path('/storage/songs-midi/'.$song->midi_file);
     return response('Cannot load MIDI File', ResponseAlias::HTTP_BAD_REQUEST);
   }
 

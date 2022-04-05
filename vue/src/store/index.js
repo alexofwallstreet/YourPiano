@@ -31,9 +31,14 @@ const store = createStore({
     },
     uiElements: {
       navbarHeight: '4rem'
+    },
+    adminSideBarOpen: false
+  },
+  getters: {
+    adminSideBarOpen: state => {
+      return state.adminSideBarOpen
     }
   },
-  getters: {},
   actions: {
     getSong({commit}, id) {
       commit('setSongLoading', true);
@@ -76,9 +81,14 @@ const store = createStore({
     logout({ commit }) {
       return axiosClient.post('/logout')
         .then(res => {
-          commit('logout');
           return res;
+        }).finally(() => {
+          commit('logout');
         })
+    },
+
+    toggleAdminSidebar(context) {
+      context.commit('toggleAdminSidebar')
     }
 
   },
@@ -106,6 +116,10 @@ const store = createStore({
     },
     setSongs: (state, songs) => {
       state.songs.data = songs.data;
+    },
+    toggleAdminSidebar (state) {
+      console.log(state.adminSideBarOpen)
+      state.adminSideBarOpen = !state.adminSideBarOpen
     }
   },
   modules: {}
