@@ -8,6 +8,8 @@ import Home from "../views/Home.vue";
 import store from "../store";
 import Songs from "../views/Songs.vue";
 import SingleSong from "../views/SingleSong.vue";
+import AdminLayout from "../components/AdminLayout.vue";
+import Dashboard from "../views/admin/Dashboard.vue";
 
 const routes = [
   {
@@ -45,7 +47,7 @@ const routes = [
         props: {
           gameMode: store.state.gameModes.TUTORIAL_MODE
         },
-        meta: {requiresAuth: false},
+        meta: {requiresAuth: true},
       },
       {
         path: '/piano/rating-play/:id',
@@ -76,19 +78,31 @@ const routes = [
         ]
       },
     ]
+  },
+  {
+    path: '/admin',
+    component: AdminLayout,
+    redirect: '/admin/dashboard',
+    meta: {requiresAdmin: true},
+    children: [
+      { path: 'dashboard', name: 'Dashboard', component: Dashboard }
+    ]
   }
-
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    return savedPosition || {top: 0}
+  }
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to.meta.requiresAuth)
   if (to.meta.requiresAuth && !store.state.user.token) {
     next({name: 'Login'})
+  } else if (to.meta.requiresAdmin && !store.state.user.data?.isAdmin) {
+    next({name: 'Home'})
   } else {
     next();
   }

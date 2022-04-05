@@ -21,6 +21,7 @@ class CreateSongsTable extends Migration
             $table->foreignIdFor(\App\Models\DifficultyLevel::class);
             $table->string('midi_file');
             $table->text('description');
+            $table->integer('rating_points')->default(100);
             $table->string('image_file')->default('default.jpg');
             $table->timestamps();
         });

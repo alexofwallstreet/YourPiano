@@ -21,7 +21,7 @@
         <div v-if="!store.state.user.token" class="pt-4 text-sm text-gray-200 mb-4 relative whitespace-nowrap font-bold">
           <router-link :to="{name: 'Login'}" class="underline">Войдите</router-link>
           или
-          <router-link :to="{name: 'Register'}" class="underline">зарегистрируйтесь</router-link>,<wbr>
+          <router-link :to="{name: 'Register'}" class="underline">зарегистрируйтесь</router-link>,<br>
           чтобы играть песни
         </div>
         <!-- End Toggle button with Arrows -->
@@ -160,7 +160,7 @@
               v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(index) }"
               v-on:mousedown="playNote(key[0], key[1])"
             >
-              <div className="keySign text-center">{{ getKeySign(key[0], key[1]) }}</div>
+              <div className="keySign text-center font-medium">{{ getKeySign(key[0], key[1]) }}</div>
             </div>
           </div>
         </div>
