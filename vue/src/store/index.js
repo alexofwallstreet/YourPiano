@@ -17,7 +17,8 @@ const store = createStore({
         difficulty: Number,
         genre: Number,
         imagePath: '',
-        midiPath: ''
+        midiPath: '',
+        speed: 1
       }
     },
     songs: {

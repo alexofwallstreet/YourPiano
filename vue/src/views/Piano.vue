@@ -190,7 +190,7 @@ const OCTAVE_BASE = 3;
 const NOTE_EXTRA_TIME = 0.3; // seconds = extra time before note is computed as missing
 const MIDI_VALUE_C2 = 36;
 const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-
+const DEFAULT_BPM = 90;
 
 const COUNTDOWN_TIME = 3; // seconds
 const GAME_STATE = {
@@ -235,6 +235,7 @@ export default {
       states: GAME_STATE,
       gameState: GAME_STATE.idle,
       keys: keys,
+      bpm: DEFAULT_BPM,
       keysPressed: {},
       notesColumns: notesColumns,
       prevGameState: null,
@@ -287,8 +288,7 @@ export default {
   methods: {
     tick: function () {
       const current = Date.now();
-      const delta = ((current - this.start) / 1000) * this.songSpeed;
-
+      const delta = ((current - this.start) / 1000) * this.songSpeed * this.bpm / 160;
       this.start = current;
       switch (this.gameState) {
         case GAME_STATE.countdown:
@@ -454,6 +454,7 @@ export default {
     },
     onMidiFileLoaded: function (midiContent) {
       this.midiFile = new MidiFile(midiContent);
+      this.bpm = this.midiFile.ticksPerBeat;
       this.totalSongNotes = this.midiFile.events.length;
       this.currentSongNote = 0;
       this.lastNoteTime = 0;

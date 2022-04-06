@@ -29,6 +29,8 @@ Route::get('/songs', [SongController::class, 'index']);
 Route::get('/songs/{id}', [SongController::class, 'show']);
 Route::get('/songs/{id}/midi', [SongController::class, 'midi']);
 
+Route::post('/songs', [SongController::class, 'store']);
+
 
 Route::get('/test', function () {
   var_dump(file_exists(storage_path('app/public/user_profile_photos/default.jpg')));
