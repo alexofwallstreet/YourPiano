@@ -10,6 +10,7 @@ import Songs from "../views/Songs.vue";
 import SingleSong from "../views/SingleSong.vue";
 import AdminLayout from "../components/AdminLayout.vue";
 import Dashboard from "../views/admin/Dashboard.vue";
+import Profile from "../views/Profile.vue";
 
 const routes = [
   {
@@ -56,6 +57,12 @@ const routes = [
         props: {
           gameMode: store.state.gameModes.RATING_GAME_MODE
         },
+        meta: {requiresAuth: true},
+      },
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: Profile,
         meta: {requiresAuth: true},
       },
       {

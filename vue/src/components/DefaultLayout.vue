@@ -1,7 +1,9 @@
 <template>
-  <div class="min-h-full">
+  <div class="min-h-screen flex flex-col justify-between">
     <Header></Header>
-    <router-view></router-view>
+    <div id="content">
+      <router-view></router-view>
+    </div>
     <Footer></Footer>
   </div>
 </template>

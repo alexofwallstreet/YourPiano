@@ -63,12 +63,12 @@
                   class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <MenuItem
                     v-slot="{ active }">
-                    <a
-                      @click="logout"
+                    <router-link
+                      :to="{name: 'Profile'}"
                       :class="[
                           'block px-4 py-2 text-sm text-gray-700 cursor-pointer'
                         ]"
-                    >Мой профиль</a>
+                    >Мой профиль</router-link>
                   </MenuItem>
                   <MenuItem v-if="user" v-slot="{ active }">
                     <a

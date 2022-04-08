@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Song extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['title', 'author', 'description', 'genre_id', 'difficulty_level_id', 'rating_points'];
 }

@@ -66,15 +66,7 @@
                     clip-rule="evenodd"/>
             </svg>
             <div class="flex justify-end ml-auto">
-              <svg xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative"
-                   viewBox="0 0 20 20"
-                   fill="currentColor"
-                   :class="{'fill-indigo-400' : isPlaying() && !isCountdown() ,
-                    'fill-red-400' : !isPlaying() || isCountdown()}">>
-                <path fill-rule="evenodd"
-                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                      clip-rule="evenodd"/>
-              </svg>
+              <LikeButton @click="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
             </div>
           </div>
 
@@ -180,7 +172,7 @@ import KEYBOARD_NOTES from '../piano/notes';
 import INSTRUMENTS from '../piano/instruments';
 import SpinnerOverlay from "./ui/SpinnerOverlay.vue";
 import router from "../router";
-import axiosClient from "../axios";
+import LikeButton from "./ui/LikeButton.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -288,7 +280,7 @@ export default {
   methods: {
     tick: function () {
       const current = Date.now();
-      const delta = ((current - this.start) / 1000) * this.songSpeed * this.bpm / 160;
+      const delta = ((current - this.start) / 1000) * this.songSpeed;
       this.start = current;
       switch (this.gameState) {
         case GAME_STATE.countdown:
@@ -496,6 +488,7 @@ export default {
     async loadMidiSong() {
       this.stopSong();
       this.midi = await store.dispatch('getSongMidi', this.song.data.id);
+      console.log(this.song)
     },
     loadMidiFile: function (file) {
       this.stopSong();
@@ -665,11 +658,27 @@ export default {
     isCountdown: function () {
       return this.gameState === GAME_STATE.countdown;
     },
-    isIdle: function () {
-      return this.gameState === GAME_STATE.idle;
+    toggleLike(song) {
+      if (!this.isLoading) {
+        this.isLoading = true;
+        const user = store.state.user.data;
+        if (song.isFavorite) {
+          store.dispatch('dislikeSong', {song, user})
+            .then(() => {
+              song.isFavorite = false;
+              this.isLoading = false;
+            })
+        } else {
+          store.dispatch('likeSong', {song, user})
+            .then(() => {
+              song.isFavorite = true;
+              this.isLoading = false;
+            })
+        }
+      }
     }
   },
-  components: {SpinnerOverlay, Sidebar},
+  components: {LikeButton, SpinnerOverlay, Sidebar},
   setup() {
     const collapsed = ref(false);
     const toggleSidebar = () => (collapsed.value = !collapsed.value);

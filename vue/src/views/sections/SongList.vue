@@ -11,8 +11,11 @@
           class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           <router-link v-for="song in songs.data" :to="{name: 'SingleSong', params: {id: song.id}, props: {song: song}}" :key="song.id" class="group">
             <div
-              class="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-              <img :src="song.imagePath" :alt="song.title" class="w-full h-full object-center object-cover group-hover:opacity-75"/>
+              class="relative w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
+              <img :src="song.imagePath" :alt="song.title" class="w-full h-full object-center object-cover"/>
+              <div class="absolute flex justify-end items-end p-2">
+                <LikeButton :is-favorite="song.isFavorite"></LikeButton>
+              </div>
             </div>
             <h3 class="mt-4 text-sm text-gray-700">
               {{ song.author }}
@@ -29,9 +32,10 @@
 
 <script>
 import SongListSkeleton from "../ui/skeletons/song-list-skeleton.vue";
+import LikeButton from "../ui/LikeButton.vue";
 export default {
   name: "SongList",
-  components: {SongListSkeleton},
+  components: {LikeButton, SongListSkeleton},
   props: {
     songs: Object
   }

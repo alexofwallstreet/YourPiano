@@ -18,7 +18,7 @@ const store = createStore({
         genre: Number,
         imagePath: '',
         midiPath: '',
-        speed: 1
+        isFavorite: Boolean
       }
     },
     songs: {
@@ -38,12 +38,12 @@ const store = createStore({
   getters: {
     adminSideBarOpen: state => {
       return state.adminSideBarOpen
-    }
+    },
   },
   actions: {
     getSong({commit}, id) {
       commit('setSongLoading', true);
-      return axiosClient.get(`/songs/${id}`).then(res => {
+      return axiosClient.get(`/songs/${id}?user_id=${store.state.user.data.id}`).then(res => {
         commit('setSongLoading', false);
         commit('setSong', res.data);
         return res;
@@ -57,11 +57,23 @@ const store = createStore({
     },
     getSongs({commit}) {
       commit('setSongsLoading', true);
-      return axiosClient.get('/songs').then(res => {
+      return axiosClient.get(`/songs?user_id=${store.state.user.data.id}`).then(res => {
         commit('setSongsLoading', false);
         commit('setSongs', res.data);
         return res;
       })
+    },
+    likeSong({ commit }, {song, user}) {
+      return axiosClient.post(`/songs/${song.id}/like`, {"user_id": user.id})
+        .then(() => {
+          return true;
+        })
+    },
+    dislikeSong({ commit }, {song, user}) {
+      return axiosClient.post(`/songs/${song.id}/dislike`, {"user_id": user.id})
+        .then(() => {
+          return true;
+        })
     },
     register({ commit }, user) {
       return axiosClient.post('/register', user)
