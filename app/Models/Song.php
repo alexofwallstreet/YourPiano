@@ -15,4 +15,9 @@ class Song extends Model
      * @var array
      */
     protected $fillable = ['title', 'author', 'description', 'genre_id', 'difficulty_level_id', 'rating_points'];
+
+    public function userSongRatingPlay(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(UserSongRatingPlay::class, 'user_song_rating_plays', 'id', 'song_id');
+    }
 }

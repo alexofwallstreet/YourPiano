@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SongResource;
 use App\Http\Requests;
 use App\Models\Song;
+use App\Models\UserSongRatingPlay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -32,9 +33,40 @@ class SongController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return SongResource::collection(Song::all());
+        $songQuery = Song::with([]);
+        if ($request->title) {
+            $songQuery->where('title', 'LIKE', '%'.$request->title.'%');
+        }
+        if ($request->author) {
+            $songQuery->where('author', 'LIKE', '%'.$request->author.'%');
+        }
+        if ($request->difficultyLevel) {
+            if (is_array($request->difficultyLevel)) {
+                $songQuery->where(function ($query) use ($request) {
+                    return $query->whereIn('difficulty_level_id', $request->difficultyLevel);
+                });
+            }
+        }
+        if ($request->genre) {
+            if (is_array($request->genre)) {
+                $songQuery->where(function ($query) use ($request) {
+                    return $query->whereIn('difficulty_level_id', $request->genre);
+                });
+            }
+        }
+
+        if ($request->orderBy) {
+            switch ($request->orderBy) {
+                case 'popularity':
+                    $songQuery->selectRaw('songs.*, COUNT(user_song_rating_plays.id) AS plays_count')
+                        ->leftJoin('user_song_rating_plays', 'songs.id', '=', 'user_song_rating_plays.song_id')
+                        ->groupBy('songs.id')
+                        ->orderBy('plays_count', 'desc');
+            }
+        }
+        return SongResource::collection($songQuery->get());
     }
 
     /**
