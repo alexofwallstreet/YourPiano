@@ -28,6 +28,7 @@ class SongController extends Controller
             return $next($request);
         });
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -37,10 +38,10 @@ class SongController extends Controller
     {
         $songQuery = Song::with([]);
         if ($request->title) {
-            $songQuery->where('title', 'LIKE', '%'.$request->title.'%');
+            $songQuery->where('title', 'LIKE', '%' . $request->title . '%');
         }
         if ($request->author) {
-            $songQuery->where('author', 'LIKE', '%'.$request->author.'%');
+            $songQuery->where('author', 'LIKE', '%' . $request->author . '%');
         }
         if ($request->difficultyLevel) {
             if (is_array($request->difficultyLevel)) {
@@ -52,7 +53,7 @@ class SongController extends Controller
         if ($request->genre) {
             if (is_array($request->genre)) {
                 $songQuery->where(function ($query) use ($request) {
-                    return $query->whereIn('difficulty_level_id', $request->genre);
+                    return $query->whereIn('genre_id', $request->genre);
                 });
             }
         }
@@ -64,9 +65,16 @@ class SongController extends Controller
                         ->leftJoin('user_song_rating_plays', 'songs.id', '=', 'user_song_rating_plays.song_id')
                         ->groupBy('songs.id')
                         ->orderBy('plays_count', 'desc');
+                    break;
+                case 'oldest':
+                    $songQuery->orderBy('id', 'ASC');
+                    break;
+                default:
+                    $songQuery->orderBy('id', 'DESC');
+                    break;
             }
         }
-        return SongResource::collection($songQuery->get());
+        return SongResource::collection($songQuery->paginate(8));
     }
 
     /**

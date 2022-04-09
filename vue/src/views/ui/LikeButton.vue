@@ -1,5 +1,5 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative"
+  <svg v-if="user" xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative"
        viewBox="0 0 20 20"
        fill="currentColor"
        :class="{'fill-indigo-400' : !isFavorite,
@@ -11,8 +11,14 @@
 </template>
 
 <script>
+import store from "../../store";
 export default {
   name: "LikeButton",
+  data() {
+    return {
+      user: store.state.user.data
+    }
+  },
   props: {
     isFavorite: Boolean
   }

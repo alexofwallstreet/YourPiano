@@ -46,8 +46,10 @@ class SongSeeder extends Seeder
      */
     public function run()
     {
-        foreach (self::SONGS as $SONG) {
-            DB::table('songs')->insert([$SONG]);
+        for ($i = 0; $i < 100; $i++) {
+            foreach (self::SONGS as $SONG) {
+                DB::table('songs')->insert([$SONG]);
+            }
         }
     }
 }

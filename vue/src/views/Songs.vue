@@ -34,7 +34,7 @@
                     <div class="border-b border-gray-200 py-6">
                       <label for="song-name-mobile" class="block font-medium text-gray-700">Название композиции</label>
                       <div class="mt-1 relative rounded-md shadow-sm">
-                        <input type="text" name="song-name" id="song-name-mobile"
+                        <input type="text" name="song-name" id="song-name-mobile" v-model="searchTitleInput"
                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
                                placeholder="Название композиции"/>
                       </div>
@@ -44,7 +44,7 @@
                     <div class="border-b border-gray-200 py-4">
                       <label for="song-author-mobile" class="block font-medium text-gray-900">Исполнитель</label>
                       <div class="mt-1 relative rounded-md shadow-sm">
-                        <input type="text" name="song-author" id="song-author-mobile"
+                        <input type="text" name="song-author" id="song-author-mobile" v-model="searchAuthorInput"
                                class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
                                placeholder="Исполнитель"/>
                       </div>
@@ -111,10 +111,12 @@
                   class="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-2xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div class="py-1">
                     <MenuItem v-for="option in sortOptions" :key="option.name" v-slot="{ active }">
-                      <a :href="option.href"
-                         :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">
+                      <div
+                        @click="updateSortingOrder(option)"
+                        :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                        active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">
                         {{ option.name }}
-                      </a>
+                      </div>
                     </MenuItem>
                   </div>
                 </MenuItems>
@@ -139,7 +141,7 @@
               <div class="border-b border-gray-200 py-6">
                 <label for="song-name" class="block text-sm font-medium text-gray-700">Название композиции</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
-                  <input type="text" name="song-name" id="song-name"
+                  <input type="text" name="song-name" id="song-name" v-model="searchTitleInput"
                          class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
                          placeholder="Название композиции"/>
                 </div>
@@ -148,7 +150,7 @@
               <div class="border-b border-gray-200 py-4">
                 <label for="song-author" class="block text-sm font-medium text-gray-700">Исполнитель</label>
                 <div class="mt-1 relative rounded-md shadow-sm">
-                  <input type="text" name="song-author" id="song-author"
+                  <input type="text" name="song-author" id="song-author" v-model="searchAuthorInput"
                          class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pr-12 sm:text-sm border-gray-300 rounded-md"
                          placeholder="Исполнитель"/>
                 </div>
@@ -172,7 +174,7 @@
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                       <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
-                             type="checkbox" :checked="option.checked"
+                             type="checkbox" v-model="option.checked"
                              class="h-4 w-4 border-gray-300 rounded text-indigo-600 focus:ring-indigo-500"/>
                       <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">
                         {{ option.label }}
@@ -181,9 +183,19 @@
                   </div>
                 </DisclosurePanel>
               </Disclosure>
+              <button
+                @click.prevent="getSongs()"
+                class="flex justify-center text-white mt-6 bg-indigo-500 border-0
+                py-2 w-full px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                Поиск
+              </button>
             </form>
 
-            <SongList :songs="songs"></SongList>
+            <SongList :songs="songs" v-if="songs.loading || songs.data.length > 1">
+              <Pagination :links="songs.links" :get-for-page="getForPage"></Pagination>
+            </SongList>
+            <NothingFound v-else></NothingFound>
+
           </div>
         </section>
       </main>
@@ -210,38 +222,13 @@ import {XIcon} from '@heroicons/vue/outline'
 import {ChevronDownIcon, FilterIcon, MinusSmIcon, PlusSmIcon, ViewGridIcon} from '@heroicons/vue/solid'
 import SongList from "./sections/SongList.vue";
 import store from "../store";
-
-const sortOptions = [
-  {name: 'Сначала популярные', href: '#', current: true},
-  {name: 'Сначала новые', href: '#', current: false},
-  {name: 'Сначала старые', href: '#', current: false},
-]
-const filters = [
-  {
-    id: 'genre',
-    name: 'Жанр',
-    options: [
-      {value: 'white', label: 'White', checked: false},
-      {value: 'beige', label: 'Beige', checked: false},
-      {value: 'blue', label: 'Blue', checked: true},
-      {value: 'brown', label: 'Brown', checked: false},
-      {value: 'green', label: 'Green', checked: false},
-      {value: 'purple', label: 'Purple', checked: false},
-    ],
-  },
-  {
-    id: 'difficulty',
-    name: 'Сложность',
-    options: [
-      {value: 'easy', label: 'Легко', checked: false},
-      {value: 'medium', label: 'Средне', checked: false},
-      {value: 'high', label: 'Сложно', checked: true},
-    ],
-  },
-]
+import Pagination from "./ui/Pagination.vue";
+import NothingFound from "./ui/NothingFound.vue";
 
 export default {
   components: {
+    NothingFound,
+    Pagination,
     SongList,
     Dialog,
     DialogOverlay,
@@ -261,18 +248,60 @@ export default {
     ViewGridIcon,
     XIcon,
   },
+  computed: {
+    searchTitleInput: {
+      get() {
+        return store.state.searchOptions.searchTitleInput
+      },
+      set(value) {
+        store.commit('updateSearchTitleInput', value);
+      }
+    },
+    searchAuthorInput: {
+      get() {
+        return store.state.searchOptions.searchAuthorInput
+      },
+      set(value) {
+        store.commit('updateSearchAuthorInput', value);
+      }
+    }
+  },
+  unmounted() {
+    store.dispatch('resetSearchOptions');
+  },
   setup() {
     const mobileFiltersOpen = ref(false);
-
+    const searchOptions = computed(() => store.state.searchOptions);
     const songs = computed(() => store.state.songs);
 
     store.dispatch('getSongs');
 
+    function getSongs() {
+      store.dispatch('getSongs');
+    }
+
+    function updateSortingOrder(option) {
+      console.log(option)
+      store.commit('updateSortingOrder', option);
+      this.getSongs();
+    }
+
+    function getForPage(link) {
+      if (!link.url || link.active) {
+        return;
+      }
+      store.dispatch('getSongs', {url: link.url});
+    }
+
     return {
-      sortOptions,
-      filters,
+      store,
+      getSongs,
+      updateSortingOrder,
+      getForPage,
+      sortOptions: searchOptions.value.sorting,
+      filters: searchOptions.value.filters,
       mobileFiltersOpen,
-      songs
+      songs,
     }
   },
 }

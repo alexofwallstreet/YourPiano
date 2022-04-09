@@ -4,20 +4,23 @@
       <SongItemSkeleton v-if="song.loading"></SongItemSkeleton>
       <div v-if="!song.loading" class="lg:w-4/5 mx-auto flex flex-wrap">
         <img
-          :alt="song.data.title" class="lg:w-1/2 w-full lg:h-96 h-64 object-cover object-center rounded"
+          :alt="song.data.title" class="lg:w-1/2 w-full lg:h-full h-64 object-cover object-center rounded"
           :src="song.data.imagePath">
-        <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-          <h2 class="text-sm title-font text-gray-500 tracking-widest">{{ song.data.author }}</h2>
-          <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{ song.data.title }}</h1>
-          <p class="leading-relaxed">{{ song.data.description }}</p>
+        <div class="justify-between lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+          <div>
+            <h2 class="text-sm title-font text-gray-500 tracking-widest">{{ song.data.author }}</h2>
+            <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{ song.data.title }}</h1>
+            <p class="leading-relaxed">{{ song.data.description }}</p>
+          </div>
+
           <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
             <div class="flex">
               <span class="mr-3">Жанр</span>
-              {{ song.data.genre }}
+              <GenreLabel :genre-id="song.data.genre"></GenreLabel>
             </div>
-            <div class="flex ml-6 items-center">
+            <div class="flex ml-6">
               <span class="mr-3">Сложность</span>
-              {{ song.data.difficulty }}
+              <DifficultyLabel :level-id="song.data.difficulty"></DifficultyLabel>
             </div>
           </div>
           <div class="flex">
@@ -30,7 +33,7 @@
               Пройти обучение
             </router-link>
             <button
-              @click="toggleLike(song.data)"
+              @click.prevent="toggleLike(song.data)"
               class="ml-auto w-10 h-10 p-0 border-0 inline-flex items-center justify-center text-gray-500">
               <LikeButton :is-favorite="song.data.isFavorite"></LikeButton>
             </button>
@@ -47,6 +50,8 @@ import store from "../store";
 import router from "../router";
 import SongItemSkeleton from "./ui/skeletons/sogn-item-skeleton.vue";
 import LikeButton from "./ui/LikeButton.vue";
+import DifficultyLabel from "./ui/DifficultyLabel.vue";
+import GenreLabel from "./ui/GenreLabel.vue";
 
 const loading = ref(false);
 

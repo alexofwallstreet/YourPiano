@@ -66,7 +66,7 @@
                     clip-rule="evenodd"/>
             </svg>
             <div class="flex justify-end ml-auto">
-              <LikeButton @click="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
+              <LikeButton @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
             </div>
           </div>
 

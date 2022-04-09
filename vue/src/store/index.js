@@ -23,6 +23,7 @@ const store = createStore({
     },
     songs: {
       loading: false,
+      links: [],
       data: []
     },
     gameModes: {
@@ -33,7 +34,76 @@ const store = createStore({
     uiElements: {
       navbarHeight: '4rem'
     },
-    adminSideBarOpen: false
+    adminSideBarOpen: false,
+    searchOptions: {
+      filters: [
+        {
+          id: 'genre',
+          name: 'Жанр',
+          options: [
+            {label: 'Поп', value: 1, checked: false},
+            {label: 'Рок', value: 2, checked: false},
+            {label: 'Хип-хоп', value: 3, checked: false},
+            {label: 'Рэп', value: 4, checked: false},
+            {label: 'Электронная', value: 5, checked: false},
+            {label: 'Классическая', value: 6, checked: false},
+            {label: 'Джаз', value: 7, checked: false},
+            {label: 'R&B', value: 8, checked: false},
+          ],
+        },
+        {
+          id: 'difficulty',
+          name: 'Сложность',
+          options: [
+            {label: "Простой", value: 1, checked: false},
+            {label: "Средний", value: 2, checked: false},
+            {label: "Сложный", value: 3, checked: false},
+          ],
+        },
+      ],
+      searchTitleInput: '',
+      searchAuthorInput: '',
+      sorting: [
+        {name: 'Сначала популярные', value: 'popularity', current: true},
+        {name: 'Сначала новые', value: 'newest', current: false},
+        {name: 'Сначала старые', value: 'oldest', current: false},
+      ]
+    },
+    defaultSearchOptions: {
+      filters: [
+        {
+          id: 'genre',
+          name: 'Жанр',
+          options: [
+            {label: 'Поп', value: 1, checked: false},
+            {label: 'Рок', value: 2, checked: false},
+            {label: 'Хип-хоп', value: 3, checked: false},
+            {label: 'Рэп', value: 4, checked: false},
+            {label: 'Электронная', value: 5, checked: false},
+            {label: 'Классическая', value: 6, checked: false},
+            {label: 'Джаз', value: 7, checked: false},
+            {label: 'R&B', value: 8, checked: false},
+          ],
+        },
+        {
+          id: 'difficulty',
+          name: 'Сложность',
+          options: [
+            {label: "Простой", value: 1, checked: false},
+            {label: "Средний", value: 2, checked: false},
+            {label: "Сложный", value: 3, checked: false},
+          ],
+        },
+      ],
+      searchTitleInput: '',
+      searchAuthorInput: '',
+      sorting: [
+        {name: 'Сначала популярные', value: 'popularity', current: true},
+        {name: 'Сначала новые', value: 'newest', current: false},
+        {name: 'Сначала старые', value: 'oldest', current: false},
+      ]
+    }
+
   },
   getters: {
     adminSideBarOpen: state => {
@@ -41,41 +111,61 @@ const store = createStore({
     },
   },
   actions: {
+    resetSearchOptions({commit}) {
+      commit('setSearchOptions', store.state.defaultSearchOptions);
+    },
     getSong({commit}, id) {
       commit('setSongLoading', true);
-      return axiosClient.get(`/songs/${id}?user_id=${store.state.user.data.id}`).then(res => {
+      return axiosClient.get(`/songs/${id}?user_id=${store.state.user.data?.id}`).then(res => {
         commit('setSongLoading', false);
         commit('setSong', res.data);
         return res;
       })
     },
-    getSongMidi({commit},id) {
+    getSongMidi({commit}, id) {
       console.log(id);
       return axiosClient.get(`/songs/${id}/midi`, {
         responseType: 'arraybuffer',
       });
     },
-    getSongs({commit}) {
+    getSongs({commit}, {url = null} = {}) {
+      url = url || '/songs?page=1';
       commit('setSongsLoading', true);
-      return axiosClient.get(`/songs?user_id=${store.state.user.data.id}`).then(res => {
+      const searchOptions = store.state.searchOptions;
+      let searchQuery = '';
+      searchQuery += `&user_id=${store.state.user.data ? store.state.user.data.id : 'guest'}`;
+      searchQuery += searchOptions.searchTitleInput ? `&title=${searchOptions.searchTitleInput}` : '';
+      searchQuery += searchOptions.searchAuthorInput ? `&author=${searchOptions.searchAuthorInput}` : '';
+      searchQuery += `&orderBy=${searchOptions.sorting.find(sort => sort.current).value}`;
+      searchOptions.filters[0].options.forEach(genre => {
+        if (genre.checked) {
+          searchQuery += `&genre[]=${genre.value}`;
+        }
+      });
+      searchOptions.filters[1].options.forEach(difficulty => {
+        if (difficulty.checked) {
+          searchQuery += `&difficultyLevel[]=${difficulty.value}`;
+        }
+      });
+      return axiosClient.get(`${url}${searchQuery}`).then(res => {
         commit('setSongsLoading', false);
         commit('setSongs', res.data);
         return res;
       })
     },
-    likeSong({ commit }, {song, user}) {
-      return axiosClient.post(`/songs/${song.id}/like`, {"user_id": user.id})
+    likeSong({commit}, {song, user}) {
+      return axiosClient.post(`/songs/${song.id}/like`, {"user_id": user?.id})
         .then(() => {
           return true;
         })
     },
-    dislikeSong({ commit }, {song, user}) {
+    dislikeSong({commit}, {song, user}) {
       return axiosClient.post(`/songs/${song.id}/dislike`, {"user_id": user.id})
         .then(() => {
           return true;
         })
     },
-    register({ commit }, user) {
+    register({commit}, user) {
       return axiosClient.post('/register', user)
         .then(({data}) => {
           commit('setUser', data);
@@ -83,7 +173,7 @@ const store = createStore({
         })
     },
 
-    login({ commit }, user) {
+    login({commit}, user) {
       return axiosClient.post('/login', user)
         .then(({data}) => {
           commit('setUser', data);
@@ -91,7 +181,7 @@ const store = createStore({
         })
     },
 
-    logout({ commit }) {
+    logout({commit}) {
       return axiosClient.post('/logout')
         .then(res => {
           return res;
@@ -128,9 +218,23 @@ const store = createStore({
       state.song.data = songs.data;
     },
     setSongs: (state, songs) => {
+      state.songs.links = songs.meta.links;
       state.songs.data = songs.data;
     },
-    toggleAdminSidebar (state) {
+    updateSearchTitleInput: (state, value) => {
+      state.searchOptions.searchTitleInput = value;
+    },
+    updateSearchAuthorInput: (state, value) => {
+      state.searchOptions.searchAuthorInput = value;
+    },
+    setSearchOptions: (state, options) => {
+      state.searchOptions = options;
+    },
+    updateSortingOrder: (state, newSort) => {
+      state.searchOptions.sorting.find(sort => sort.current).current = false;
+      state.searchOptions.sorting.find(sort => sort.name === newSort.name).current = true;
+    },
+    toggleAdminSidebar(state) {
       console.log(state.adminSideBarOpen)
       state.adminSideBarOpen = !state.adminSideBarOpen
     }
