@@ -15,8 +15,8 @@ class CreateUserSongLikesTable extends Migration
     {
         Schema::create('user_song_likes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class);
-            $table->foreignIdFor(\App\Models\Song::class);
+            $table->foreign('song_id')->references('id')->on('songs')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

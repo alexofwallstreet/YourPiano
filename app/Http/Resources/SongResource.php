@@ -24,9 +24,9 @@ class SongResource extends JsonResource
             'genre' => $this->genre_id,
             'difficulty' => $this->difficulty_level_id,
             'description' => $this->description,
-            'midiPath' => $this->midi_file,
             'imagePath' => URL::to('/') . '/storage/songs-images/' . $this->image_file,
-            'isFavorite' => UserSongLike::where('song_id', $this->id)->where('user_id', $request->user_id)->exists()
+            'isFavorite' => UserSongLike::where('song_id', $this->id)->where('user_id', $request->user_id)->exists(),
+            'ratingPoints' => $this->rating_points,
       ];
     }
 }

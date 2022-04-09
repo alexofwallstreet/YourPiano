@@ -20,7 +20,7 @@ export default {
     }
   },
   props: {
-    isFavorite: Boolean
+    isFavorite: false
   }
 }
 </script>

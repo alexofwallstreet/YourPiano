@@ -17,7 +17,7 @@ const store = createStore({
         difficulty: Number,
         genre: Number,
         imagePath: '',
-        midiPath: '',
+        ratingPoints: Number,
         isFavorite: Boolean
       }
     },
@@ -192,6 +192,14 @@ const store = createStore({
 
     toggleAdminSidebar(context) {
       context.commit('toggleAdminSidebar')
+    },
+
+    userSongRatingPlay({commit}, {song, user, points}) {
+      console.log(song, user, points)
+      return axiosClient.post(`/songs/${song.id}/rating-play`, {user_id: user.id, rating_points: parseInt(points)})
+        .then(() => {
+          return true;
+        })
     }
 
   },

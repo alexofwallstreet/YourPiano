@@ -39,6 +39,8 @@ Route::put('users/{user}/update-photo', [UserController::class, 'updatePhoto']);
 Route::post('songs/{song}/like', [\App\Http\Controllers\UserSongLikeController::class, 'likeSong']);
 Route::post('songs/{song}/dislike', [\App\Http\Controllers\UserSongLikeController::class, 'dislikeSong']);
 
+Route::post('songs/{song}/rating-play', [\App\Http\Controllers\UserSongRatingPlayController::class, 'create']);
+
 Route::get('/test', function () {
     var_dump(file_exists(storage_path('app/public/user_profile_photos/default.jpg')));
 });

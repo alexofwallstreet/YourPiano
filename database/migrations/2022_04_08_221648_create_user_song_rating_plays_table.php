@@ -15,8 +15,8 @@ class CreateUserSongRatingPlaysTable extends Migration
     {
         Schema::create('user_song_rating_plays', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class);
-            $table->foreignIdFor(\App\Models\Song::class);
+            $table->foreign('song_id')->references('id')->on('songs')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('rating_points')->default(0);
             $table->timestamps();
         });

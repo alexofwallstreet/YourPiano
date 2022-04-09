@@ -18,10 +18,12 @@
       </div>
       <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
 
-        <div v-if="!store.state.user.token" class="pt-4 text-sm text-gray-200 mb-4 relative whitespace-nowrap font-bold">
+        <div v-if="!store.state.user.token"
+             class="pt-4 text-sm text-gray-200 mb-4 relative whitespace-nowrap font-bold">
           <router-link :to="{name: 'Login'}" class="underline">Войдите</router-link>
           или
-          <router-link :to="{name: 'Register'}" class="underline">зарегистрируйтесь</router-link>,<br>
+          <router-link :to="{name: 'Register'}" class="underline">зарегистрируйтесь</router-link>
+          ,<br>
           чтобы играть песни
         </div>
         <!-- End Toggle button with Arrows -->
@@ -90,7 +92,7 @@
             </option>
           </select>
         </div>
-
+        <Modal :open="isModalOpen" :rating-points="ratingPoints"></Modal>
         <!-- MIDI Device select -->
         <div class="col-span-6 sm:col-span-3 mt-2">
           <label for="device" class="block text-sm font-medium text-white whitespace-nowrap">MIDI Устройство</label>
@@ -173,6 +175,7 @@ import INSTRUMENTS from '../piano/instruments';
 import SpinnerOverlay from "./ui/SpinnerOverlay.vue";
 import router from "../router";
 import LikeButton from "./ui/LikeButton.vue";
+import Modal from "./ui/Modal.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -243,11 +246,16 @@ export default {
       },
       midiInstruments: INSTRUMENTS,
       selectedMidiInstrument: INSTRUMENTS[2],
-      totalSongNotes: null,
-      currentSongNote: null,
+      totalSongNotes: 0,
+      currentSongNote: 0,
       playTime: 0,
       prevPlayTime: 0,
-      lastNoteTime: 0
+      lastNoteTime: 0,
+      isModalOpen: false,
+      ratingPoints: {
+        userPoints: 0,
+        maxPoints: 0
+      }
     };
   },
   async mounted() {
@@ -297,7 +305,6 @@ export default {
           this.computeNotesState();
           this.computeMissingNotes();
 
-          // if (this.inPianolaMode) {
           const self = this;
           for (const column of this.notesColumns) {
             for (const note of column.notes) {
@@ -306,7 +313,7 @@ export default {
                 note.time > this.prevPlayTime
               ) {
                 if (!note.processed) {
-                  this.onNoteOn(note.note, note.octave);
+                  this.onNoteOn(note.note, note.octave, false);
                   setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
                 }
                 this.currentSongNote++;
@@ -314,30 +321,49 @@ export default {
             }
           }
 
-          // }
-
           this.prevPlayTime = this.playTime;
           this.playTime += delta;
 
           if (this.playTime > this.lastNoteTime + NOTE_EXTRA_TIME + 1) {
+            this.prepareResults();
             this.stopSong();
-            //END OF SONG
           }
           break;
       }
 
       this.animFrameId = window.requestAnimationFrame(this.tick);
     },
+    prepareResults() {
+      if (this.gameMode === store.state.gameModes.RATING_GAME_MODE) {
+        this.loadingStart();
+        const TOTAL_NOTES = this.totalSongNotes;
+        const MAX_POINTS = this.song.data.ratingPoints;
+        const PERFECT_NOTES = this.stats.perfect;
+        const GOOD_NOTES = this.stats.good;
+        const ONE_NOTE_POINT = MAX_POINTS / TOTAL_NOTES;
+        const POINTS = (PERFECT_NOTES * ONE_NOTE_POINT) + (GOOD_NOTES * ONE_NOTE_POINT / 2);
+        // console.log('MAX: ' + MAX_POINTS);
+        // console.log('TOTAL_NOTES: ' + TOTAL_NOTES);
+        // console.log('PERFECT_NOTES: ' + PERFECT_NOTES);
+        // console.log('GOOD_NOTES: ' + GOOD_NOTES);
+        // console.log('ONE_NOTE_POINT: ' + ONE_NOTE_POINT);
+        // console.log('POINTS: ' + POINTS);
+        store.dispatch('userSongRatingPlay', {song: this.song.data, user: store.state.user.data, points: POINTS})
+          .then(() => {
+            this.ratingPoints = {maxPoints: MAX_POINTS, userPoints: POINTS};
+            this.isModalOpen = true;
+            this.loadingComplete();
+          })
+      }
+
+    },
     async initAudio() {
       this.loadingStart();
-      console.log('Loading start...')
       this.audioContext = new window.AudioContext();
       this.soundfont = await Soundfont.instrument(
         this.audioContext, this.selectedMidiInstrument
       ).then(function (instrument) {
         return instrument;
-      }).finally(function () {
-        console.log('Loading complete');
       });
       this.loadingComplete();
     },
@@ -394,7 +420,7 @@ export default {
         this.onNoteOff(noteInfo.note, noteInfo.octave);
       }
     },
-    onNoteOn: function (note, octave) {
+    onNoteOn: function (note, octave, isHuman = true) {
       const noteId = this.getNoteId(note, octave);
 
       if (this.keysPressed[noteId]) {
@@ -414,14 +440,16 @@ export default {
               continue;
             }
             const diff = Math.abs(note.time - this.playTime);
-            if (diff <= 0.5) {
-              note.processed = true;
-              if (diff < 0.1) {
-                ++this.stats.perfect;
-              } else {
-                ++this.stats.good;
+            if (isHuman) {
+              if (diff <= 0.5) {
+                note.processed = true;
+                if (diff < 0.1) {
+                  ++this.stats.perfect;
+                } else {
+                  ++this.stats.good;
+                }
+                break;
               }
-              break;
             }
           }
         }
@@ -678,7 +706,7 @@ export default {
       }
     }
   },
-  components: {LikeButton, SpinnerOverlay, Sidebar},
+  components: {Modal, LikeButton, SpinnerOverlay, Sidebar},
   setup() {
     const collapsed = ref(false);
     const toggleSidebar = () => (collapsed.value = !collapsed.value);
