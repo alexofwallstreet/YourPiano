@@ -30,11 +30,15 @@ Route::get('/songs', [SongController::class, 'index']);
 Route::get('/songs/{song}', [SongController::class, 'show']);
 Route::get('/songs/{song}/midi', [SongController::class, 'midi']);
 
+Route::get('/user-song-likes', [\App\Http\Controllers\UserSongLikeController::class, 'show']);
+
+
 Route::post('/songs', [SongController::class, 'store']);
 Route::put('/songs/{song}', [SongController::class, 'update']);
 Route::delete('/songs/{song}', [SongController::class, 'destroy']);
 
 Route::put('users/{user}/update-photo', [UserController::class, 'updatePhoto']);
+Route::get('users/{user}/stats', [UserController::class, 'stats']);
 
 Route::post('songs/{song}/like', [\App\Http\Controllers\UserSongLikeController::class, 'likeSong']);
 Route::post('songs/{song}/dislike', [\App\Http\Controllers\UserSongLikeController::class, 'dislikeSong']);

@@ -153,6 +153,15 @@ const store = createStore({
         return res;
       })
     },
+    getLikedSongs({commit}, {url = null} = {}) {
+      commit('setSongsLoading', true);
+      url = url || '/user-song-likes?page=1';
+      return axiosClient.get(`${url}&user_id=${store.state.user.data?.id}`).then(res => {
+        commit('setSongsLoading', false);
+        commit('setSongs', res.data);
+        return res;
+      })
+    },
     likeSong({commit}, {song, user}) {
       return axiosClient.post(`/songs/${song.id}/like`, {"user_id": user?.id})
         .then(() => {

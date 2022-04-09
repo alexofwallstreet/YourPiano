@@ -11,6 +11,8 @@ import SingleSong from "../views/SingleSong.vue";
 import AdminLayout from "../components/AdminLayout.vue";
 import Dashboard from "../views/admin/Dashboard.vue";
 import Profile from "../views/Profile.vue";
+import Overview from "../views/profile/Overview.vue";
+import Likes from "../views/profile/Likes.vue";
 
 const routes = [
   {
@@ -62,8 +64,21 @@ const routes = [
       {
         path: '/profile',
         name: 'Profile',
+        redirect: '/profile/overview',
         component: Profile,
         meta: {requiresAuth: true},
+        children: [
+          {
+            path: '/profile/overview',
+            name: 'ProfileOverview',
+            component: Overview
+          },
+          {
+            path: '/profile/liked-songs',
+            name: 'ProfileLikes',
+            component: Likes
+          },
+        ]
       },
       {
         path: '/auth',

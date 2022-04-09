@@ -14,21 +14,6 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class SongController extends Controller
 {
-    protected $user;
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
-            $this->user = Auth::user();
-            return $next($request);
-        });
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -75,6 +60,16 @@ class SongController extends Controller
             }
         }
         return SongResource::collection($songQuery->paginate(8));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function likes(Request $request)
+    {
+        return 'ok';
     }
 
     /**

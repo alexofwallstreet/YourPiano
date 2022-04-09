@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserSongRatingPlay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -28,5 +30,31 @@ class UserController extends Controller
 
         $user->save();
         return response(null, ResponseAlias::HTTP_NO_CONTENT);
+    }
+
+    public function stats(User $user)
+    {
+        # Count of songs that user played
+        $playedSongs = UserSongRatingPlay::where('user_id', $user->id)->groupBy('song_id')->count();
+
+        # Count of points that user Get from played songs
+        $totalPoints = UserSongRatingPlay::userRatingPoints($user);
+
+        # User Place in users Rating
+        $ratingUsers = UserSongRatingPlay::userPlaces($user)->get();
+        $userPlace = 1;
+        foreach ($ratingUsers as $ratingUser) {
+            if ($ratingUser->id === $user->id) {
+                break;
+            }
+            $userPlace++;
+        }
+
+        return [
+            'playedSongs' => $playedSongs,
+            'totalPoints' => $totalPoints,
+            'userPlace' => $userPlace,
+            'usersTop10' => array_slice($ratingUsers->toArray(), 0, 10)
+        ];
     }
 }

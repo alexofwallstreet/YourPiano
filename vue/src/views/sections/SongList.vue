@@ -1,8 +1,6 @@
 <template>
   <SongListSkeleton v-if="songs.loading"></SongListSkeleton>
-  <!-- Product grid -->
-  <div class="lg:col-span-3" v-if="!songs.loading">
-    <!-- Replace with your content -->
+  <div v-else class="lg:col-span-3 w-full">
     <div class="bg-white">
       <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 class="sr-only">Songs</h2>

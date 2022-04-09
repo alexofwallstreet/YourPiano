@@ -4,8 +4,7 @@
       <a
         v-for="(link, i) of links"
         :key="i"
-        :disabled="!link.url"
-        v-html="link.label"
+        :aria-disabled="!link.url"
         href="#"
         @click="getForPage(link)"
         aria-current="page"
@@ -16,14 +15,23 @@
                     i === 0 ? 'rounded-l-md' : '',
                     i === links.length - 1 ? 'rounded-r-md' : '',
                   ]"
-      ></a>
+      >
+        <template v-if="link.label.includes('Next')"><ChevronRightIcon class="h-5 w-5" aria-hidden="true" /></template>
+        <template v-else-if="link.label.includes('Prev')"><ChevronLeftIcon class="h-5 w-5" aria-hidden="true" /></template>
+        <template v-else>{{ link.label }}</template>
+      </a>
     </nav>
   </div>
 </template>
 
 <script>
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/solid'
 export default {
   name: "Pagination",
+  components: {
+    ChevronLeftIcon,
+    ChevronRightIcon,
+  },
   props: {
     links: Array,
     getForPage: Function
