@@ -8,7 +8,7 @@
         <div class="flex flex-col items-center justify-center font-medium opacity-0 animate-fade-in-down">
           <img src="/images/piano.svg" class="lg:w-1/4 w-1/2 -rotate-180" alt="">
           <div class="mt-6">
-            К сожалению, по вашему запросу ничего не найдено.
+            {{ message }}
           </div>
         </div>
       </div>
@@ -18,7 +18,10 @@
 
 <script>
 export default {
-  name: "NothingFound"
+  name: "NothingFound",
+  props: {
+    message: String
+  }
 }
 </script>
 

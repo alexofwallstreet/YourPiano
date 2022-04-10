@@ -194,7 +194,7 @@
             <SongList :songs="songs" v-if="songs.loading || songs.data.length > 1">
               <Pagination :links="songs.links" :get-for-page="getForPage"></Pagination>
             </SongList>
-            <NothingFound v-else></NothingFound>
+            <NothingFound v-else message="К сожалению, по вашему запросу ничего не найдено."></NothingFound>
 
           </div>
         </section>
@@ -265,9 +265,6 @@ export default {
         store.commit('updateSearchAuthorInput', value);
       }
     }
-  },
-  unmounted() {
-    store.dispatch('resetSearchOptions');
   },
   setup() {
     const mobileFiltersOpen = ref(false);

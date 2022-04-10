@@ -35,13 +35,13 @@ class UserController extends Controller
     public function stats(User $user)
     {
         # Count of songs that user played
-        $playedSongs = UserSongRatingPlay::where('user_id', $user->id)->groupBy('song_id')->count();
+        $playedSongs = UserSongRatingPlay::where('user_id', $user->id)->groupBy('song_id')->get()->count();
 
         # Count of points that user Get from played songs
         $totalPoints = UserSongRatingPlay::userRatingPoints($user);
 
         # User Place in users Rating
-        $ratingUsers = UserSongRatingPlay::userPlaces($user)->get();
+        $ratingUsers = UserSongRatingPlay::userPlaces($user)->get()->toArray();
         $userPlace = 1;
         foreach ($ratingUsers as $ratingUser) {
             if ($ratingUser->id === $user->id) {
@@ -49,12 +49,19 @@ class UserController extends Controller
             }
             $userPlace++;
         }
+        foreach ($ratingUsers as $ratingUser) {
+            $ratingUserPlayedSongs = UserSongRatingPlay::where('user_id', $ratingUser->id)
+                ->groupBy('song_id')->get()->count();
+            $ratingUser->playedSongs = $ratingUserPlayedSongs;
+            $ratingUser->userStatus = UserSongRatingPlay::userStatus($ratingUserPlayedSongs);
+        }
 
         return [
             'playedSongs' => $playedSongs,
             'totalPoints' => $totalPoints,
+            'userStatus' => UserSongRatingPlay::userStatus($playedSongs),
             'userPlace' => $userPlace,
-            'usersTop10' => array_slice($ratingUsers->toArray(), 0, 10)
+            'usersTop10' => array_slice($ratingUsers, 0, 10)
         ];
     }
 }

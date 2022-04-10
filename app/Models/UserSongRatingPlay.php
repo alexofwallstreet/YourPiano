@@ -10,6 +10,11 @@ class UserSongRatingPlay extends Model
 {
     use HasFactory;
 
+    const BEGINNER = 'Новичок';
+    const AMATEUR = 'Любитель';
+    const PROFESSIONAL = 'Профи';
+    const MAESTRO = 'Маэстро';
+
     public function song(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Song::class, 'song_id');
@@ -41,5 +46,19 @@ class UserSongRatingPlay extends Model
             ->select('users.id', 'users.name', 'users.email', 'users.profile_photo', DB::raw('SUM(Rating.max_points) as points'))
             ->groupBy('users.id')
             ->orderBy('points', 'DESC');
+    }
+
+    public static function userStatus(int $played): string
+    {
+        switch (true) {
+            case (in_array($played, range(0, 4))):
+                return self::BEGINNER;
+            case (in_array($played, range(5, 9))):
+                return self::AMATEUR;
+            case (in_array($played, range(10, 14))):
+                return self::PROFESSIONAL;
+            default:
+                return self::MAESTRO;
+        }
     }
 }
