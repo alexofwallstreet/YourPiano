@@ -63,16 +63,6 @@ class SongController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function likes(Request $request)
-    {
-        return 'ok';
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Requests\SongStoreRequest $request
@@ -162,10 +152,12 @@ class SongController extends Controller
      * @param Song $song
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Song $song)
+    public function destroy(Song $song): \Illuminate\Http\Response
     {
         if (file_exists(public_path('/storage/songs-images/' . $song->image_file))) {
-            unlink(public_path('/storage/songs-images/' . $song->image_file));
+            if ($song->image_file !== 'default.jpg') {
+                unlink(public_path('/storage/songs-images/' . $song->image_file));
+            }
         }
         if (file_exists(public_path('/storage/songs-midi/' . $song->midi_file))) {
             unlink(public_path('/storage/songs-midi/' . $song->midi_file));

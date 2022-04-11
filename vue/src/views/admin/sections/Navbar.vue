@@ -15,7 +15,8 @@
 
       <!-- right navbar -->
       <div class="flex items-center relative">
-        <img src="https://a7sas.net/wp-content/uploads/2019/07/4060.jpeg" class="w-12 h-12 rounded-full shadow-lg">
+        <span class="text-lg mr-4 font-medium">{{user.data.name}}</span>
+        <img :src="user?.data?.imagePath" class="w-12 h-12 rounded-full shadow-lg">
       </div>
     </div>
 
@@ -28,7 +29,8 @@ import { mapState } from 'vuex'
 export default {
   name: 'Navbar',
   computed: {
-    ...mapState(['adminSideBarOpen'])
+    ...mapState(['adminSideBarOpen']),
+    ...mapState(['user']),
   },
   data() {
     return {

@@ -387,10 +387,13 @@ export default {
       this.isLoading = false;
     },
     playNote(note, octave) {
-      this.soundfont.play(`${note}${octave}`, null, {
+      this.soundfont.play(`${note}${octave}`, this.audioContext.currentTime, {
         duration: 1,
-        gain: 10
-      });
+        gain: 10,
+      })
+    },
+    stopNote(note, octave) {
+      this.soundfont.play(`${note}${octave}`).stop(this.audioContext.currentTime)
     },
     onKeyDown: function (event) {
       const key = event.keyCode;
@@ -459,6 +462,7 @@ export default {
     onNoteOff: function (note, octave) {
       // Vue.set(this.keysPressed, this.getNoteId(note, octave), false);
       this.keysPressed[this.getNoteId(note, octave)] = false;
+      this.stopNote(note, octave);
     },
     convertMidiNote: function (midiNote) {
       // A piano has 88 keys and ours has 48. We should adjust the note to the octave in the range 2-5 (the note adjust can make the midi song sounds different)

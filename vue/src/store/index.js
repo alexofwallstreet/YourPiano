@@ -26,6 +26,11 @@ const store = createStore({
       links: [],
       data: []
     },
+    users: {
+      loading: false,
+      links: [],
+      data: []
+    },
     gameModes: {
       FREE_PLAY_MODE: 'free-play-mode',
       TUTORIAL_MODE: 'tutorial-mode',
@@ -187,6 +192,18 @@ const store = createStore({
         })
     },
 
+    getUsers({commit}, {url = null, search = null} = {},) {
+      url = url || '/users?page=1';
+      commit('setUsersLoading', true);
+      const searchQuery = search ? `&search=${search}` : '';
+
+      return axiosClient.get(`${url}${searchQuery}`).then(res => {
+        commit('setUsersLoading', false);
+        commit('setUsers', res.data);
+        return res;
+      })
+    },
+
     toggleAdminSidebar(context) {
       context.commit('toggleAdminSidebar')
     },
@@ -220,6 +237,10 @@ const store = createStore({
       state.songs.loading = loading;
     },
 
+    setUsersLoading: (state, loading) => {
+      state.users.loading = loading;
+    },
+
     setSongLoading: (state, loading) => {
       state.song.loading = loading;
     },
@@ -239,6 +260,11 @@ const store = createStore({
     setSongs: (state, songs) => {
       state.songs.links = songs.meta.links;
       state.songs.data = songs.data;
+    },
+
+    setUsers: (state, users) => {
+      state.users.links = users.meta.links;
+      state.users.data = users.data;
     },
 
     updateSearchTitleInput: (state, value) => {

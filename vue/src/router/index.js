@@ -13,6 +13,8 @@ import Dashboard from "../views/admin/Dashboard.vue";
 import Profile from "../views/Profile.vue";
 import Overview from "../views/profile/Overview.vue";
 import Likes from "../views/profile/Likes.vue";
+import AdminUsers from "../views/admin/AdminUsers.vue";
+import AdminSongs from "../views/admin/AdminSongs.vue";
 
 const routes = [
   {
@@ -107,7 +109,9 @@ const routes = [
     redirect: '/admin/dashboard',
     meta: {requiresAdmin: true},
     children: [
-      { path: 'dashboard', name: 'Dashboard', component: Dashboard }
+      { path: 'dashboard', name: 'Dashboard', component: Dashboard },
+      { path: 'users', name: 'AdminUsers', component: AdminUsers },
+      { path: 'songs', name: 'AdminSongs', component: AdminSongs },
     ]
   }
 ];

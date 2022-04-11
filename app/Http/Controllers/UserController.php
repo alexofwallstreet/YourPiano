@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\UserSongRatingPlay;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        $usersQuery = User::with([]);
+        if ($request->search) {
+            $usersQuery->orWhere('name', 'LIKE', '%' . $request->search . '%');
+            $usersQuery->orWhere('email', 'LIKE', '%' . $request->search . '%');
+        }
+
+        return UserResource::collection($usersQuery->paginate());
+    }
+
     public function updatePhoto(Request $request, User $user)
     {
         $request->validate([
@@ -64,4 +77,15 @@ class UserController extends Controller
             'usersTop10' => array_slice($ratingUsers, 0, 10)
         ];
     }
+
+    public function destroy(User $user)
+    {
+        if (file_exists(public_path('/storage/user-profile-images/' . $user->profile_photo))) {
+            if ($user->profile_photo !== 'default.jpg') {
+                unlink(public_path('/storage/user-profile-images/' . $user->profile_photo));
+            }
+        }
+        $user->delete();
+    }
+
 }
