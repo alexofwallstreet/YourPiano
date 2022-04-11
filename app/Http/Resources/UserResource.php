@@ -19,7 +19,7 @@ class UserResource extends JsonResource
           'id' => $this->id,
           'name' =>$this->name,
           'email' => $this->email,
-          'imagePath' => URL::to('/') . '/storage/user-profile-images/' . $this->profile_photo,
+          'imagePath' => URL::to('/') . '/' . $this->profile_photo,
           'isAdmin' => $this->is_admin
         ];
     }

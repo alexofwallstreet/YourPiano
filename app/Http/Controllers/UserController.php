@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\UserSongRatingPlay;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
@@ -24,25 +26,62 @@ class UserController extends Controller
         return UserResource::collection($usersQuery->paginate());
     }
 
+    /**
+     * @throws \Exception
+     */
     public function updatePhoto(Request $request, User $user)
     {
-        $request->validate([
-            'profile_photo' => 'image|max:2000',
+        $data = $request->validate([
+            'profile_photo' => 'required|string',
         ]);
 
-        if ($request->file('profile_photo')) {
-            if (file_exists(public_path('/storage/user-profile-images/' . $user->profile_photo))) {
-                if ($user->profile_photo !== 'default.jpg') {
-                    unlink(public_path('/storage/user-profile-images/' . $user->profile_photo));
+        if (isset($data['profile_photo'])) {
+            $imagePath = $this->saveImage($data['profile_photo']);
+
+            if ($user->profile_photo) {
+                if (!str_contains($user->profile_photo, 'default.jpg')) {
+                    $absolutePath = public_path($user->profile_photo);
+                    File::delete($absolutePath);
                 }
             }
-            $photoName = Str::uuid() . '.' . $request->profile_photo->getClientOriginalExtension();
-            $request->profile_photo->move(public_path('/storage/user-profile-images'), $photoName);
-            $user->profile_photo = $photoName;
+        }
+        $user->profile_photo = $imagePath;
+        $user->save();
+
+        return [
+          'profile_image' => URL::to('/') . '/' . $imagePath
+        ];
+    }
+
+    public function saveImage($image): string
+    {
+        if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+            $image = substr($image, strpos($image, ',') + 1);
+            $type = strtolower($type[1]); //png, jpg, gif
+
+            if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
+                throw new \Exception('Неверный тип изображения');
+            }
+
+            $image = str_replace(' ', '+', $image);
+            $image = base64_decode($image);
+            if ($image === false) {
+                throw new \Exception('Ошибка при декодировании файла');
+            }
+        } else {
+            throw new \Exception('Ошибка при загрузке картинки');
         }
 
-        $user->save();
-        return response(null, ResponseAlias::HTTP_NO_CONTENT);
+        $dir = 'storage/user-profile-images/';
+        $file = Str::random() . '.' . $type;
+        $absolutePath = public_path($dir);
+        $relativePath = $dir . $file;
+        if (!File::exists($absolutePath)) {
+            File::makeDirectory($absolutePath, 0755, true);
+        }
+        file_put_contents($relativePath, $image);
+
+        return $relativePath;
     }
 
     public function stats(User $user)

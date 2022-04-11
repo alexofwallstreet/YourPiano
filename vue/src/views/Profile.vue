@@ -1,4 +1,5 @@
 <template>
+  <UpdatePhotoModal :open="modalOpen" :toggle-func="toggleModal"></UpdatePhotoModal>
   <div>
     <main class="profile-page">
       <section class="relative block h-64">
@@ -16,10 +17,19 @@
 
             <div class="lg:w-8/12 lg:mx-auto mb-8">
               <header class="flex flex-wrap flex-col justify-center items-center p-4 md:py-8">
-                <img class="w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
+                <div class="inline-flex flex-col relative">
+                  <img class="relative w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
                      border-2 border-indigo-600 p-1"
-                     :src="store.state.user.data.imagePath"
-                     alt="profile">
+                       :src="store.state.user.data.imagePath"
+                       alt="profile">
+                  <div
+                    @click="toggleModal"
+                    class="absolute cursor-pointer hover:bg-indigo-700 right-0 bottom-0
+                    flex justify-center items-center w-6 h-6 md:w-10 md:h-10 bg-indigo-500 rounded-full">
+                    <PencilIcon class="w-4 h-4 md:w-7 md:h-7 stroke-indigo-50 "></PencilIcon>
+                  </div>
+                </div>
+
                 <!-- profile meta -->
                 <div class="w-8/12 md:w-7/12 mt-6">
                   <h2 class="text-3xl font-light sm:mb-0 text-center">
@@ -68,7 +78,17 @@
 </template>
 
 <script setup>
+import { PencilIcon } from '@heroicons/vue/outline'
+import {ref} from 'vue';
 import store from "../store";
+import UpdatePhotoModal from "./profile/UpdatePhotoModal.vue";
+const modalOpen = ref(false);
+
+function toggleModal() {
+  modalOpen.value = !modalOpen.value;
+  console.log(modalOpen.value);
+}
+
 </script>
 
 <style scoped>

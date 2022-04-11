@@ -167,6 +167,15 @@ const store = createStore({
         })
     },
 
+    updateUserImage({commit}, $image) {
+      return axiosClient.put(`users/${store.state.user.data.id}/update-photo`, {
+        'profile_photo': $image
+      }).then(({data}) => {
+        commit('setUserImage', data.profile_image);
+        return data;
+      })
+    },
+
     register({commit}, user) {
       return axiosClient.post('/register', user)
         .then(({data}) => {
@@ -231,6 +240,11 @@ const store = createStore({
       state.user.data = userData.user;
       sessionStorage.setItem('TOKEN', userData.token);
       sessionStorage.setItem('user', JSON.stringify(userData.user));
+    },
+
+    setUserImage: (state, data) => {
+      state.user.data.imagePath = data;
+      sessionStorage.setItem('user', JSON.stringify(store.state.user.data));
     },
 
     setSongsLoading: (state, loading) => {
