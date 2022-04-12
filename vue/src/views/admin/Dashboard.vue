@@ -1,13 +1,13 @@
 <template>
   <div id="home">
 
-    <div className="lg:flex justify-between items-center mb-6">
-      <p className="text-2xl font-extrabold mb-2 lg:mb-0">
+    <div className="lg:flex justify-between items-center mb-6 opacity-0 animate-fade-in-right">
+      <p className="text-gray-600 text-2xl font-extrabold">
         {{greetingMessage()}}, {{ user.data.name }}!
       </p>
     </div>
 
-    <div className="flex flex-wrap -mx-3 mb-20">
+    <div className="flex flex-wrap -mx-3 mb-20 opacity-0 animate-fade-in-down">
 
       <div className="w-1/2 xl:w-1/4 px-3">
         <div className="w-full bg-white border text-blue-400 rounded-lg flex items-center p-6 mb-6 xl:mb-0">

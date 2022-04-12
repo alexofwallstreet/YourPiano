@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users', [UserController::class, 'index']);
+    Route::delete('users/{user}', [UserController::class, 'destroy']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);

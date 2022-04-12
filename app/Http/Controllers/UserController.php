@@ -29,7 +29,7 @@ class UserController extends Controller
     /**
      * @throws \Exception
      */
-    public function updatePhoto(Request $request, User $user)
+    public function updatePhoto(Request $request, User $user): array
     {
         $data = $request->validate([
             'profile_photo' => 'required|string',
@@ -84,7 +84,7 @@ class UserController extends Controller
         return $relativePath;
     }
 
-    public function stats(User $user)
+    public function stats(User $user): array
     {
         # Count of songs that user played
         $playedSongs = UserSongRatingPlay::where('user_id', $user->id)->groupBy('song_id')->get()->count();
@@ -106,6 +106,7 @@ class UserController extends Controller
                 ->groupBy('song_id')->get()->count();
             $ratingUser->playedSongs = $ratingUserPlayedSongs;
             $ratingUser->userStatus = UserSongRatingPlay::userStatus($ratingUserPlayedSongs);
+            $ratingUser->profile_photo = URL::to('/') . '/' . $ratingUser->profile_photo;
         }
 
         return [
@@ -119,9 +120,10 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        if (file_exists(public_path('/storage/user-profile-images/' . $user->profile_photo))) {
-            if ($user->profile_photo !== 'default.jpg') {
-                unlink(public_path('/storage/user-profile-images/' . $user->profile_photo));
+        if ($user->profile_photo) {
+            if (!str_contains($user->profile_photo, 'default.jpg')) {
+                $absolutePath = public_path($user->profile_photo);
+                File::delete($absolutePath);
             }
         }
         $user->delete();

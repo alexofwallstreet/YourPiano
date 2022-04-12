@@ -18,7 +18,8 @@ const store = createStore({
         genre: Number,
         imagePath: '',
         ratingPoints: Number,
-        isFavorite: Boolean
+        isFavorite: Boolean,
+        status: String
       }
     },
     songs: {
@@ -117,7 +118,7 @@ const store = createStore({
       });
     },
 
-    getSongs({commit}, {url = null} = {}) {
+    getSongs({commit}, {url = null, search = null} = {}) {
       url = url || '/songs?page=1';
       commit('setSongsLoading', true);
       const searchOptions = store.state.searchOptions;
@@ -211,6 +212,17 @@ const store = createStore({
         commit('setUsers', res.data);
         return res;
       })
+
+
+    },
+
+    deleteUser({commit}, user) {
+      commit('setUsersLoading', true);
+      return axiosClient.delete(`/users/${user.value.id}`).then(res => {
+        commit('removeUser', user);
+        commit('setUsersLoading', false);
+        return res;
+      })
     },
 
     toggleAdminSidebar(context) {
@@ -265,6 +277,7 @@ const store = createStore({
 
     setStats: (state, stats) => {
       state.stats.data = stats.data;
+      state.user.data.status = stats.data.userStatus;
     },
 
     setSong: (state, songs) => {
@@ -279,6 +292,10 @@ const store = createStore({
     setUsers: (state, users) => {
       state.users.links = users.meta.links;
       state.users.data = users.data;
+    },
+
+    removeUser: (state, user) => {
+      state.users.data = state.users.data.filter(item => item.id !== user.value.id);
     },
 
     updateSearchTitleInput: (state, value) => {

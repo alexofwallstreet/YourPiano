@@ -1,7 +1,7 @@
 <template>
   <UpdatePhotoModal :open="modalOpen" :toggle-func="toggleModal"></UpdatePhotoModal>
   <div>
-    <main class="profile-page">
+    <main class="profile-page opacity-0 animate-fade-in-down">
       <section class="relative block h-64">
         <div class="relative top-0 w-full h-full bg-center bg-indigo-50">
         </div>
@@ -16,7 +16,7 @@
           <div class="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
 
             <div class="lg:w-8/12 lg:mx-auto mb-8">
-              <header class="flex flex-wrap flex-col justify-center items-center p-4 md:py-8">
+              <header class="flex flex-wrap justify-center items-start p-4 md:py-8">
                 <div class="inline-flex flex-col relative">
                   <img class="relative w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
                      border-2 border-indigo-600 p-1"
@@ -31,13 +31,17 @@
                 </div>
 
                 <!-- profile meta -->
-                <div class="w-8/12 md:w-7/12 mt-6">
-                  <h2 class="text-3xl font-light sm:mb-0 text-center">
+                <div class="w-auto px-12 mt-6">
+                  <h2 class="text-3xl font-light sm:mb-0  ">
                     {{ store.state.user.data.name }}
                   </h2>
                   <!-- user meta form medium screens -->
-                  <div class="hidden md:block mb-4 mt-1">
-                    <h1 class="font-semibold text-center">{{ store.state.user.data.email }}</h1>
+                  <div class="block mb-4 mt-1">
+                    <h1 class="font-semibold">{{ store.state.user.data.email }}</h1>
+                  </div>
+
+                  <div class="block mb-4 mt-1">
+                    <StatusLabel :status="store.state.user.data.status"></StatusLabel>
                   </div>
 
                 </div>
@@ -54,13 +58,13 @@
                   <li :class="$route.name === 'ProfileOverview' ? 'md:border-t md:border-gray-700 md:-mt-px md:text-gray-700' : ''">
                     <router-link :to="{name: 'ProfileOverview'}" class="inline-block p-3" href="#">
                       <i class="fas fa-th-large text-xl md:text-xs"></i>
-                      <span class="hidden md:inline">мой рейтинг</span>
+                      <span class="inline">мой рейтинг</span>
                     </router-link>
                   </li>
                   <li :class="$route.name === 'ProfileLikes' ? 'md:border-t md:border-gray-700 md:-mt-px md:text-gray-700' : ''">
                     <router-link :to="{name: 'ProfileLikes'}"  class="inline-block p-3" href="#">
                       <i class="far fa-square text-xl md:text-xs"></i>
-                      <span class="hidden md:inline">мои лайки</span>
+                      <span class="inline">мои лайки</span>
                     </router-link>
                   </li>
                 </ul>
@@ -79,6 +83,7 @@
 
 <script setup>
 import { PencilIcon } from '@heroicons/vue/outline'
+import StatusLabel from "./profile/StatusLabel.vue";
 import {ref} from 'vue';
 import store from "../store";
 import UpdatePhotoModal from "./profile/UpdatePhotoModal.vue";

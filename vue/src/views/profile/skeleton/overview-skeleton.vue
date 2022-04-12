@@ -1,10 +1,5 @@
 <template>
   <div class="w-full mt-6 animate-pulse">
-
-    <div class="flex justify-center">
-      <div class="w-24 h-6 bg-slate-200 rounded-full"></div>
-    </div>
-
     <div class="grid gap-6 my-8 md:grid-cols-2 xl:grid-cols-3">
       <div v-for="i in 3" class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white">
         <div class="p-4 flex justify-center items-start">
