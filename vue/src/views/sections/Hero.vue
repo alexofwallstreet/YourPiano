@@ -17,7 +17,7 @@
                          class="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700">
               Начать играть
             </router-link>
-            <router-link :to="{name: 'Login'}"
+            <router-link v-if="!store.state.user.token" :to="{name: 'Login'}"
                          class="inline-block text-center bg-indigo-400 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700">
               Войти
             </router-link>
@@ -36,10 +36,8 @@
   </svg>
 </template>
 
-<script>
-export default {
-  name: "Hero"
-}
+<script setup>
+import store from "../../store";
 </script>
 
 <style scoped>

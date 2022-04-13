@@ -16,8 +16,8 @@ class SongSeeder extends Seeder
             'difficulty_level_id' => 3,
             'genre_id' => 3,
             'description' => 'Für Elise, багатель No. 25 ля минор для фортепиано соло, WoO 59, Bia 515) — фортепианная пьеса-багатель Людвига ван Бетховена. Это произведение Бетховена на протяжении многих лет является одним из самых известных шедевров мировой музыки. Входит в обязательную программу произведений в музыкальных школах всего мира.',
-            'midi_file' => 'fur_elise.mid',
-            'image_file' => 'default.jpg'
+            'midi_file' => 'storage/songs-midi/fur_elise.mid',
+            'image_file' => 'storage/songs-images/default.jpg'
         ],
         [
             'title' => 'Take On Me',
@@ -25,8 +25,8 @@ class SongSeeder extends Seeder
             'difficulty_level_id' => 1,
             'genre_id' => 3,
             'description' => 'Für Elise, багатель No. 25 ля минор для фортепиано соло, WoO 59, Bia 515) — фортепианная пьеса-багатель Людвига ван Бетховена. Это произведение Бетховена на протяжении многих лет является одним из самых известных шедевров мировой музыки. Входит в обязательную программу произведений в музыкальных школах всего мира.',
-            'midi_file' => 'take_on_me.mid',
-            'image_file' => 'default.jpg'
+            'midi_file' => 'storage/songs-midi/take_on_me.mid',
+            'image_file' => 'storage/songs-images/default.jpg'
         ],
         [
             'title' => 'Star Wars Theme',
@@ -34,8 +34,8 @@ class SongSeeder extends Seeder
             'difficulty_level_id' => 2,
             'genre_id' => 4,
             'description' => 'Für Elise, багатель No. 25 ля минор для фортепиано соло, WoO 59, Bia 515) — фортепианная пьеса-багатель Людвига ван Бетховена. Это произведение Бетховена на протяжении многих лет является одним из самых известных шедевров мировой музыки. Входит в обязательную программу произведений в музыкальных школах всего мира.',
-            'midi_file' => 'star_wars.mid',
-            'image_file' => 'default.jpg'
+            'midi_file' => 'storage/songs-midi/star_wars.mid',
+            'image_file' => 'storage/songs-images/default.jpg'
         ]
     ];
 
@@ -46,10 +46,8 @@ class SongSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 100; $i++) {
-            foreach (self::SONGS as $SONG) {
-                DB::table('songs')->insert([$SONG]);
-            }
+        foreach (self::SONGS as $SONG) {
+            DB::table('songs')->insert([$SONG]);
         }
     }
 }

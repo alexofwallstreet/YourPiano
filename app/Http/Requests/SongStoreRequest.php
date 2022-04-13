@@ -26,11 +26,11 @@ class SongStoreRequest extends FormRequest
     return [
       'title' => 'required|max:255',
       'author' => 'required|max:255',
-      'description' => 'nullable',
+      'description' => 'string|nullable',
       'genre_id' => 'required|exists:genres,id',
       'difficulty_level_id' => 'required|exists:difficulty_levels,id',
-      'image_file' => 'image|max:2000',
-      'midi_file' => 'required|mimes:mid',
+      'image_file' => 'string|nullable',
+      'midi_file' => 'required|string',
       'rating_points' => 'required|numeric'
     ];
   }

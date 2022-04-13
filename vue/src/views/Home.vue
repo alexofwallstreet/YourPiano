@@ -3,7 +3,6 @@
   <Hero></Hero>
   <About></About>
   <BestSongs></BestSongs>
-  <Stats></Stats>
   <FAQ></FAQ>
 </template>
 

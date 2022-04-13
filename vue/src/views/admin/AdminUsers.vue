@@ -1,5 +1,7 @@
 <template>
-  <DeleteModal :open="isDeleteModalOpen" :item="currentUser" :title="currentUser.name" :delete-callback="deleteUser"></DeleteModal>
+  <DeleteModal :open="isDeleteModalOpen" :item="currentUser"
+               :title="'Вы уверены, что хотите удалить пользователя ' + currentUser.name + ' и все его результаты?'"
+               :delete-callback="deleteUser"></DeleteModal>
   <div class="py-8 rounded-md w-full">
     <div class="flex items-center justify-center opacity-0 animate-fade-in-up">
       <h2 class="text-gray-600 text-3xl font-extrabold">Пользователи YourPiano</h2>

@@ -1,14 +1,14 @@
 <template>
   <SongListSkeleton v-if="songs.loading"></SongListSkeleton>
   <div v-else class="lg:col-span-3 w-full">
-    <div class="bg-white">
+    <div>
       <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 class="sr-only">Songs</h2>
 
         <div
           class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           <router-link
-            v-for="(song, i) in songs.data" :to="{name: 'SingleSong', params: {id: song.id}, props: {song: song}}"
+            v-for="(song, i) in (onlyBest ? songs.data.slice(0,4) : songs.data)" :to="{name: 'SingleSong', params: {id: song.id}, props: {song: song}}"
             :key="song.id"
             class="group opacity-0 animate-fade-in-down"
             :style="{animationDelay: `${i * 10}ms`}">
@@ -40,7 +40,8 @@ export default {
   name: "SongList",
   components: {LikeButton, SongListSkeleton},
   props: {
-    songs: Object
+    songs: Object,
+    onlyBest: false
   }
 }
 </script>

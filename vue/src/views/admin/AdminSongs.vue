@@ -1,18 +1,28 @@
 <template>
+  <UpdateModal :open="isUpdateModalOpen" :toggle-modal-callback="toggleUpdateModal"></UpdateModal>
   <div class="py-8 rounded-md w-full">
     <div class="flex items-center justify-center opacity-0 animate-fade-in-up">
       <h2 class="text-gray-600 text-3xl font-extrabold">Песни YourPiano</h2>
     </div>
     <div class="w-full opacity-0 animate-fade-in-down">
       <div class="py-4 overflow-x-auto w-full">
-
         <div class="relative my-2 p-0.5">
           <SearchIcon class="absolute h-5 w-5 top-0 bottom-0 my-auto ml-4"></SearchIcon>
           <input @change="getSongs" v-model="search" type="text" name="search" id="search"
                  class="focus:ring-indigo-500 focus:border-indigo-500 block shadow
                  w-full h-12 pl-12 pr-12 sm:text-sm border-gray-300 rounded-lg"
-                 placeholder="Введите название песни или ее автора" />
+                 placeholder="Введите название песни или ее автора"/>
         </div>
+
+        <div class="flex">
+          <button
+            class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm mb-5 px-4 py-2 mx-1 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm"
+            type="button"
+            @click="toggleUpdateModal()"
+          >Добавить новую песню
+          </button>
+        </div>
+
 
         <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
           <div v-if="users.loading" class="p-12 flex justify-center h-96 w-full bg-slate-200 animate-pulse">
@@ -59,14 +69,14 @@
                   </div>
                   <div class="ml-3">
                     <p class="text-gray-900 whitespace-no-wrap">
-                      {{user.title}}
+                      {{ user.title }}
                     </p>
                   </div>
                 </div>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <p class="text-gray-900 whitespace-no-wrap">
-                  {{user.author}}
+                  {{ user.author }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -93,13 +103,15 @@
 </template>
 
 <script setup>
-import { SearchIcon } from '@heroicons/vue/solid'
+import {SearchIcon} from '@heroicons/vue/solid'
 import {computed, ref} from "vue";
 import store from "../../store";
 import Pagination from "../ui/Pagination.vue";
 import LoadingSpinner from "../ui/LoadingSpinner.vue";
+import UpdateModal from "./sections/AddSong.vue";
 
 const search = ref('');
+const isUpdateModalOpen = ref(false);
 
 const users = computed(() => store.state.songs);
 store.dispatch('getSongs');
@@ -113,6 +125,11 @@ function getForPage(link) {
 
 function getSongs() {
   store.dispatch('getSongs', {search: search.value});
+}
+
+function toggleUpdateModal() {
+  console.log(isUpdateModalOpen)
+  isUpdateModalOpen.value = !isUpdateModalOpen.value;
 }
 </script>
 

@@ -1,7 +1,10 @@
 <template>
   <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
     <div class="max-w-xl sm:mx-auto lg:max-w-2xl">
-      <SectionHeader></SectionHeader>
+      <SectionHeader
+        :label="'вопросы/ответы'"
+        :title="'Часто задаваемые вопросы'"
+      ></SectionHeader>
       <div class="space-y-4">
         <div class="border rounded shadow-sm" v-for="item in questions">
           <button type="button" aria-label="Open item" title="Open item" @click="item.isOpen = !item.isOpen"
@@ -28,18 +31,18 @@ import SectionHeader from "../ui/SectionHeader.vue";
 
 const questions = [
   {
-    question: "1 The quick, brown fox jumps over a lazy dog?",
-    answer: "1 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque rem aperiam, eaque ipsa quae",
+    question: "Это бесплатно?",
+    answer: "Приложение является абсолютно бесплатным, разработано в качестве дипломного проекта для университета.",
     isOpen: false
   },
   {
-    question: "2 The quick, brown fox jumps over a lazy dog?",
-    answer: "2 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque rem aperiam, eaque ipsa quae",
+    question: "Я могу научиться играть на фортепиано с помощью приложения?",
+    answer: "Тут все зависит от вас! Прилагая должные усилия, вы сможете научиться играть любую песню на сайте. Для этого предназначен режим «Обучения», доступный для каждой песни.",
     isOpen: false
   },
   {
-    question: "3 The quick, brown fox jumps over a lazy dog?",
-    answer: "3 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque rem aperiam, eaque ipsa quae",
+    question: "Как можно добавить мою любимую песню на сайт?",
+    answer: "Для того, чтобы на сайте появилась ваша любимаю песня, заполните форму ниже",
     isOpen: false
   },
 ];

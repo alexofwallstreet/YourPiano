@@ -118,7 +118,7 @@ const store = createStore({
       });
     },
 
-    getSongs({commit}, {url = null, search = null} = {}) {
+    getSongs({commit}, {url = null} = {}) {
       url = url || '/songs?page=1';
       commit('setSongsLoading', true);
       const searchOptions = store.state.searchOptions;
@@ -175,6 +175,15 @@ const store = createStore({
         commit('setUserImage', data.profile_image);
         return data;
       })
+    },
+
+    addSong({commit}, song) {
+      console.log(song.value)
+      delete song.image_file_url;
+      return axiosClient.post('/songs', song.value)
+        .then(({data}) => {
+          return data;
+        })
     },
 
     register({commit}, user) {
@@ -287,6 +296,7 @@ const store = createStore({
     setSongs: (state, songs) => {
       state.songs.links = songs.meta.links;
       state.songs.data = songs.data;
+      console.log(state)
     },
 
     setUsers: (state, users) => {

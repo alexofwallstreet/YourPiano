@@ -45,7 +45,8 @@ class UserSongRatingPlay extends Model
             ->joinSub($songsRating, 'Rating', 'users.id', '=', 'Rating.id')
             ->select('users.id', 'users.name', 'users.email', 'users.profile_photo', DB::raw('SUM(Rating.max_points) as points'))
             ->groupBy('users.id')
-            ->orderBy('points', 'DESC');
+            ->orderBy('points', 'DESC')
+            ->orderBy('users.id', 'ASC');
     }
 
     public static function userStatus(int $played): string

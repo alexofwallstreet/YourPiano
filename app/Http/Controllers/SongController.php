@@ -8,6 +8,7 @@ use App\Models\Song;
 use App\Models\UserSongRatingPlay;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\Input;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -73,16 +74,68 @@ class SongController extends Controller
         $newSong = new Song();
         $newSong->fill($request->validated());
 
-        $imageName = Str::uuid() . '.' . $request->image_file->getClientOriginalExtension();
-        $request->image_file->move(public_path('/storage/songs-images'), $imageName);
-        $newSong->image_file = $imageName;
+        if (isset($request['image_file'])) {
+            $imagePath = $this->saveImage($request['image_file']);
+        }
+        $newSong->image_file = $imagePath;
 
-        $midiName = Str::uuid() . '.' . $request->midi_file->getClientOriginalExtension();
-        $request->midi_file->move(public_path('/storage/songs-midi'), $midiName);
-        $newSong->midi_file = $midiName;
+        if (isset($request['midi_file'])) {
+            $midiPath = $this->saveMidi($request['midi_file']);
+        }
+        $newSong->midi_file = $midiPath;
 
         $newSong->save();
         return new SongResource($newSong);
+    }
+
+    public function saveImage($image): string
+    {
+        if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {
+            $image = substr($image, strpos($image, ',') + 1);
+            $type = strtolower($type[1]); //png, jpg, gif
+
+            if (!in_array($type, ['jpg', 'jpeg', 'png', 'gif'])) {
+                throw new \Exception('Неверный тип изображения');
+            }
+
+            $image = str_replace(' ', '+', $image);
+            $image = base64_decode($image);
+            if ($image === false) {
+                throw new \Exception('Ошибка при декодировании файла');
+            }
+        } else {
+            throw new \Exception('Ошибка при загрузке картинки');
+        }
+
+        $dir = 'storage/songs-images/';
+        $file = Str::random() . '.' . $type;
+        $absolutePath = public_path($dir);
+        $relativePath = $dir . $file;
+        if (!File::exists($absolutePath)) {
+            File::makeDirectory($absolutePath, 0755, true);
+        }
+        file_put_contents($relativePath, $image);
+
+        return $relativePath;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function saveMidi($midi): string
+    {
+        $b64_sub = substr($midi, strpos($midi, ",") + 1);
+        $b64_clean = str_replace(' ', '+', $b64_sub);
+        $raw = base64_decode($b64_clean, true);
+        $dir = 'storage/songs-midi/';
+        $file = Str::random() . '.mid';
+        $absolutePath = public_path($dir);
+        $relativePath = $dir . $file;
+        if (!File::exists($absolutePath)) {
+            File::makeDirectory($absolutePath, 0755, true);
+        }
+        file_put_contents($relativePath, $raw);
+        return $relativePath;
     }
 
     /**
@@ -104,7 +157,7 @@ class SongController extends Controller
      */
     public function midi(Song $song)
     {
-        $path = public_path('storage/songs-midi/' . $song->midi_file);
+        $path = public_path($song->midi_file);
         if (file_exists($path)) {
             return file_get_contents($path);
         }

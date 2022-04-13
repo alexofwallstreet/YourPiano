@@ -479,6 +479,7 @@ export default {
     onMidiFileLoaded: function (midiContent) {
       this.midiFile = new MidiFile(midiContent);
       this.bpm = this.midiFile.ticksPerBeat;
+      console.log(this.midiFile);
       this.totalSongNotes = this.midiFile.events.length;
       this.currentSongNote = 0;
       this.lastNoteTime = 0;

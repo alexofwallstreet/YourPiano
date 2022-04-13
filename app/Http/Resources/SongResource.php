@@ -24,7 +24,7 @@ class SongResource extends JsonResource
             'genre' => $this->genre_id,
             'difficulty' => $this->difficulty_level_id,
             'description' => $this->description,
-            'imagePath' => URL::to('/') . '/storage/songs-images/' . $this->image_file,
+            'imagePath' => URL::to('/') . '/' . $this->image_file,
             'isFavorite' => UserSongLike::where('song_id', $this->id)->where('user_id', $request->user_id)->exists(),
             'ratingPoints' => $this->rating_points,
       ];

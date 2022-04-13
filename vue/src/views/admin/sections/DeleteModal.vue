@@ -17,7 +17,7 @@
                   <EmojiHappyIcon class="h-6 w-6 text-red-600" aria-hidden="true" />
                 </div>
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Вы действительно хотите удалить {{title}}?</DialogTitle>
+                  <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">{{title}}</DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500"></p>
                   </div>

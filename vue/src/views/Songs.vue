@@ -191,7 +191,7 @@
               </button>
             </form>
 
-            <SongList :songs="songs" v-if="songs.loading || songs.data.length > 1">
+            <SongList :songs="songs" v-if="songs.loading || songs.data.length > 0">
               <Pagination :links="songs.links" :get-for-page="getForPage"></Pagination>
             </SongList>
             <NothingFound v-else message="К сожалению, по вашему запросу ничего не найдено."></NothingFound>
