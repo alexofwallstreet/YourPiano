@@ -42,7 +42,7 @@ export default {
   props: {
     songs: Object,
     onlyBest: false
-  }
+  },
 }
 </script>
 

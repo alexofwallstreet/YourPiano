@@ -34,7 +34,7 @@ class UserSongRatingPlay extends Model
         return $totalPointsResult;
     }
 
-    public static function userPlaces(User $user)
+    public static function userPlaces(User $user): \Illuminate\Database\Query\Builder
     {
         $songsRating = DB::table('users')
             ->leftJoin('user_song_rating_plays', 'users.id', '=', 'user_song_rating_plays.user_id')

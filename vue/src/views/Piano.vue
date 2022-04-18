@@ -308,13 +308,14 @@ export default {
           const self = this;
           for (const column of this.notesColumns) {
             for (const note of column.notes) {
+              console.log(note)
               if (
                 this.playTime >= note.time &&
                 note.time > this.prevPlayTime
               ) {
                 if (!note.processed) {
                   this.onNoteOn(note.note, note.octave, false);
-                  setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
+                  setTimeout(() => self.onNoteOff(note.note, note.octave), 10);
                 }
                 this.currentSongNote++;
               }
@@ -460,7 +461,6 @@ export default {
       }
     },
     onNoteOff: function (note, octave) {
-      // Vue.set(this.keysPressed, this.getNoteId(note, octave), false);
       this.keysPressed[this.getNoteId(note, octave)] = false;
       this.stopNote(note, octave);
     },

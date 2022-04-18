@@ -234,6 +234,15 @@ const store = createStore({
       })
     },
 
+    deleteSong({commit}, song) {
+      commit('setSongsLoading', true);
+      return axiosClient.delete(`/songs/${song.value.id}`).then(res => {
+        commit('removeSong', song);
+        commit('setSongsLoading', false);
+        return res;
+      })
+    },
+
     toggleAdminSidebar(context) {
       context.commit('toggleAdminSidebar')
     },
@@ -308,6 +317,10 @@ const store = createStore({
       state.users.data = state.users.data.filter(item => item.id !== user.value.id);
     },
 
+    removeSong: (state, song) => {
+      state.songs.data = state.songs.data.filter(item => item.id !== song.value.id);
+    },
+
     updateSearchTitleInput: (state, value) => {
       state.searchOptions.searchTitleInput = value;
     },
@@ -323,6 +336,16 @@ const store = createStore({
     updateSortingOrder: (state, newSort) => {
       state.searchOptions.sorting.find(sort => sort.current).current = false;
       state.searchOptions.sorting.find(sort => sort.name === newSort.name).current = true;
+    },
+
+    setDefaultSearch: (state) => {
+      state.searchOptions.sorting = state.searchOptions.sorting.map((sort) => {
+        sort.current = sort.value === 'popularity';
+        return sort;
+      });
+      state.searchOptions.filters.forEach((filter) => {
+        filter.options = filter.options.map((item) => {item.checked = false; return item});
+      })
     },
 
     toggleAdminSidebar(state) {

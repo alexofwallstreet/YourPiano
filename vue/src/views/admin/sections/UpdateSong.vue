@@ -13,11 +13,11 @@
           <form @submit.prevent="addSong" class="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class="sm:flex sm:items-start w-full">
-                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                  <MusicNoteIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
+                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <MusicNoteIcon class="h-6 w-6 text-indigo-600" aria-hidden="true" />
                 </div>
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                  <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">Добавьте новую песню</DialogTitle>
+                  <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900">Редактировать песню</DialogTitle>
                   <div class="mt-2">
                     <div class="rounded-md shadow-sm -space-y-px">
                       <div class="py-2">
@@ -125,9 +125,9 @@
       </span>
             </ErrorMessage>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex justify-end">
-              <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+              <button type="submit" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
                       @click="addSong()">Добавить</button>
-              <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-500 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
+              <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-500 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
                       @click="toggleModalCallback()">Отмена</button>
             </div>
           </form>
@@ -151,7 +151,12 @@ let midiFileName = ref('');
 const props = defineProps({
   open: false,
   title: String,
-  item: Object,
+  song: {
+    id: Number,
+    title: String,
+    author: String,
+
+  },
   toggleModalCallback: Function
 })
 

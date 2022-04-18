@@ -248,6 +248,11 @@ export default {
     ViewGridIcon,
     XIcon,
   },
+  beforeUnmount() {
+    store.commit('updateSearchTitleInput', '');
+    store.commit('updateSearchAuthorInput', '');
+    store.commit('setDefaultSearch');
+  },
   computed: {
     searchTitleInput: {
       get() {
@@ -278,7 +283,6 @@ export default {
     }
 
     function updateSortingOrder(option) {
-      console.log(option)
       store.commit('updateSortingOrder', option);
       this.getSongs();
     }

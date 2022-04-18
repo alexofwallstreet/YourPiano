@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
           <router-link :to="{name: 'Home'}" class="flex-shrink-0">
-            <img class="w-14 h-full" src="/logo-min.svg" alt="YourPiano Logo"/>
+            <img class="w-56 h-full" src="/logo.svg" alt="YourPiano Logo"/>
           </router-link>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
@@ -168,7 +168,6 @@ import {computed} from "vue";
 import {useRouter} from 'vue-router';
 
 const navigation = [
-  {name: 'Главная', to: {name: 'Home'}},
   {name: 'Пианино', to: {name: 'PianoFreePlay'}},
   {name: 'Песни', to: {name: 'Songs'}},
 ]

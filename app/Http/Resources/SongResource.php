@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use App\Models\UserSongLike;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
 class SongResource extends JsonResource

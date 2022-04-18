@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('users', [UserController::class, 'index']);
     Route::delete('users/{user}', [UserController::class, 'destroy']);
+    Route::post('/songs', [SongController::class, 'store']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -35,7 +36,6 @@ Route::get('/songs/{song}/midi', [SongController::class, 'midi']);
 Route::get('/user-song-likes', [\App\Http\Controllers\UserSongLikeController::class, 'show']);
 
 
-Route::post('/songs', [SongController::class, 'store']);
 Route::put('/songs/{song}', [SongController::class, 'update']);
 Route::delete('/songs/{song}', [SongController::class, 'destroy']);
 

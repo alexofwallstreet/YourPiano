@@ -88,6 +88,9 @@ class SongController extends Controller
         return new SongResource($newSong);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function saveImage($image): string
     {
         if (preg_match('/^data:image\/(\w+);base64,/', $image, $type)) {

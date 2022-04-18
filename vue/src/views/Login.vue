@@ -86,7 +86,7 @@ function login() {
   store.dispatch('login', user)
     .then(() => {
       router.push({
-        name: 'Home'
+        name: 'Profile'
       })
     })
     .catch((err) => {
