@@ -108,7 +108,11 @@
         </router-link>
       </div>
       <div class="pt-4 pb-3 border-t border-gray-700">
-        <div class="flex items-center px-5">
+        <router-link :to="{name: 'Profile'}" class="flex items-center px-3 mx-3" :class="[
+                  this.$route.name !== 'Profile'
+                  ? ''
+                  : '', 'hover:bg-gray-700 hover:text-white text-gray-300 block px-3 py-2 rounded-md text-base font-medium'
+                ]">
           <div class="flex-shrink-0">
             <img class="h-10 w-10 rounded-full" v-if="user"
                  :src="user.imagePath" alt=""/>
@@ -117,7 +121,7 @@
             <div class="text-base font-medium leading-none text-white">{{ user.name }}</div>
             <div class="text-sm font-medium leading-none text-gray-400">{{ user.email }}</div>
           </div>
-        </div>
+        </router-link>
         <div class="mt-3 px-2 space-y-1">
           <DisclosureButton
             v-if="user"
@@ -170,6 +174,7 @@ import {useRouter} from 'vue-router';
 const navigation = [
   {name: 'Пианино', to: {name: 'PianoFreePlay'}},
   {name: 'Песни', to: {name: 'Songs'}},
+  {name: 'О сайте', to: {name: 'Home'}},
 ]
 
 export default {

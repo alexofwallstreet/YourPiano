@@ -1,12 +1,16 @@
 <template>
   <section class="text-gray-600 body-font overflow-hidden">
     <div class="container px-5 py-24 mx-auto">
+      <div class="lg:w-4/5 mx-auto flex flex-wrap mb-5">
+        <Breadcrumbs :page-name="song.data.title"></Breadcrumbs>
+      </div>
       <SongItemSkeleton v-if="song.loading"></SongItemSkeleton>
       <div v-if="!song.loading" class="lg:w-4/5 mx-auto flex flex-wrap">
         <img
-          :alt="song.data.title" class="lg:w-1/2 w-full lg:h-full h-64 object-cover object-center rounded"
+          :alt="song.data.title"
+          class="lg:w-1/2 w-full lg:h-full h-64 object-cover object-center rounded opacity-0 animate-fade-in-down"
           :src="song.data.imagePath">
-        <div class="justify-between lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+        <div class="justify-between lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 opacity-0 animate-fade-in-down">
           <div>
             <h2 class="text-sm title-font text-gray-500 tracking-widest">{{ song.data.author }}</h2>
             <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{ song.data.title }}</h1>
@@ -52,6 +56,7 @@ import SongItemSkeleton from "./ui/skeletons/sogn-item-skeleton.vue";
 import LikeButton from "./ui/LikeButton.vue";
 import DifficultyLabel from "./ui/DifficultyLabel.vue";
 import GenreLabel from "./ui/GenreLabel.vue";
+import Breadcrumbs from "./ui/Breadcrumbs.vue";
 
 const loading = ref(false);
 
