@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: [
     "./index.html",
@@ -53,6 +55,10 @@ module.exports = {
         'fade-in-left': 'fade-in-left 0.2s ease-in-out both',
         'fade-in-right': 'fade-in-right 0.2s ease-in-out both',
       }
+    },
+    screens: {
+      'xs': '475px',
+      ...defaultTheme.screens,
     },
   },
   plugins: [

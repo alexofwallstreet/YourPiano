@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\UserResource;
+use App\Models\Song;
 use App\Models\User;
 use App\Models\UserSongRatingPlay;
 use Illuminate\Support\Facades\File;
@@ -115,6 +116,21 @@ class UserController extends Controller
             'userStatus' => UserSongRatingPlay::userStatus($playedSongs),
             'userPlace' => $userPlace,
             'usersTop10' => array_slice($ratingUsers, 0, 10)
+        ];
+    }
+
+    public function adminStats(): array
+    {
+        $usersCount = User::all()->count();
+        $songsCount = Song::all()->count();
+        $totalRatingPlays = UserSongRatingPlay::all()->count();
+        $totalRatingPoints = (int)DB::table('user_song_rating_plays')
+            ->sum('rating_points');
+        return [
+            'usersCount' => $usersCount,
+            'songsCount' => $songsCount,
+            'totalRatingPlays' => $totalRatingPlays,
+            'totalRatingPoints' => $totalRatingPoints,
         ];
     }
 

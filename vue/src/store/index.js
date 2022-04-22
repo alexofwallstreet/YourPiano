@@ -84,6 +84,15 @@ const store = createStore({
         userPlace: Number,
         usersTop10: Array
       }
+    },
+    adminStats: {
+      loading: false,
+      data: {
+        usersCount: Number,
+        songsCount: Number,
+        totalRatingPlays: Number,
+        totalRatingPoints: Number,
+      }
     }
   },
   getters: {
@@ -98,6 +107,15 @@ const store = createStore({
       return axiosClient.get(`/users/${store.state.user.data.id}/stats`).then(res => {
         commit('setStatsLoading', false);
         commit('setStats', res);
+        return res;
+      })
+    },
+
+    getAdminStats({commit}) {
+      commit('setAdminStatsLoading', true);
+      return axiosClient.get(`/admin-stats`).then(res => {
+        commit('setAdminStatsLoading', false);
+        commit('setAdminStats', res);
         return res;
       })
     },
@@ -293,9 +311,17 @@ const store = createStore({
       state.stats.loading = loading;
     },
 
+    setAdminStatsLoading: (state, loading) => {
+      state.adminStats.loading = loading;
+    },
+
     setStats: (state, stats) => {
       state.stats.data = stats.data;
       state.user.data.status = stats.data.userStatus;
+    },
+
+    setAdminStats: (state, stats) => {
+      state.adminStats.data = stats.data;
     },
 
     setSong: (state, songs) => {

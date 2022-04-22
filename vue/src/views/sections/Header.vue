@@ -30,7 +30,7 @@
                 <MenuButton
                   class="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                   <span class="sr-only">Open user menu</span>
-                  <img class="h-8 w-8 rounded-full" v-if="user"
+                  <img class="h-8 w-8 rounded-full object-cover" v-if="user"
                        :src="user.imagePath" alt=""/>
                 </MenuButton>
                 <router-link :to="{name: 'Login'}"
@@ -174,7 +174,7 @@ import {useRouter} from 'vue-router';
 const navigation = [
   {name: 'Пианино', to: {name: 'PianoFreePlay'}},
   {name: 'Песни', to: {name: 'Songs'}},
-  {name: 'О сайте', to: {name: 'Home'}},
+  {name: 'О сайте', to: {name: 'About'}},
 ]
 
 export default {

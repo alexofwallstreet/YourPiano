@@ -137,7 +137,7 @@ function register() {
   store.dispatch('register', user)
     .then(() => {
       router.push({
-        name: 'Dashboard'
+        name: 'Profile'
       })
     })
     .catch((err) => {

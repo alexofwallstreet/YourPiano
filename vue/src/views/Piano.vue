@@ -17,7 +17,6 @@
         </div>
       </div>
       <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
-
         <div v-if="!store.state.user.token"
              class="pt-4 text-sm text-gray-200 mb-4 relative whitespace-nowrap font-bold">
           <router-link :to="{name: 'Login'}" class="underline">Войдите</router-link>
@@ -25,6 +24,14 @@
           <router-link :to="{name: 'Register'}" class="underline">зарегистрируйтесь</router-link>
           ,<br>
           чтобы играть песни
+        </div>
+        <div v-else-if="gameMode === store.state.gameModes.FREE_PLAY_MODE" class="whitespace-nowrap">
+          <router-link
+            class="block w-full px-12 py-3 text-sm font-bold text-white border bg-indigo-400 text-center mb-6 mt-2
+              border-blue-600 rounded-md xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
+            :to="{name: 'Songs'}">
+            Игать песни
+          </router-link>
         </div>
         <!-- End Toggle button with Arrows -->
         <div class="song-wrapper" v-if="!isFreePlayMode()">
@@ -185,7 +192,6 @@ const OCTAVE_BASE = 3;
 const NOTE_EXTRA_TIME = 0.3; // seconds = extra time before note is computed as missing
 const MIDI_VALUE_C2 = 36;
 const NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-const DEFAULT_BPM = 90;
 
 const COUNTDOWN_TIME = 3; // seconds
 const GAME_STATE = {
@@ -230,7 +236,6 @@ export default {
       states: GAME_STATE,
       gameState: GAME_STATE.idle,
       keys: keys,
-      bpm: DEFAULT_BPM,
       keysPressed: {},
       notesColumns: notesColumns,
       prevGameState: null,
@@ -308,14 +313,13 @@ export default {
           const self = this;
           for (const column of this.notesColumns) {
             for (const note of column.notes) {
-              console.log(note)
               if (
                 this.playTime >= note.time &&
                 note.time > this.prevPlayTime
               ) {
                 if (!note.processed) {
                   this.onNoteOn(note.note, note.octave, false);
-                  setTimeout(() => self.onNoteOff(note.note, note.octave), 10);
+                  setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
                 }
                 this.currentSongNote++;
               }
@@ -427,7 +431,7 @@ export default {
     onNoteOn: function (note, octave, isHuman = true) {
       const noteId = this.getNoteId(note, octave);
 
-      if (this.keysPressed[noteId]) {
+      if (this.keysPressed[noteId] && isHuman) {
         return;
       }
 
@@ -478,8 +482,6 @@ export default {
     },
     onMidiFileLoaded: function (midiContent) {
       this.midiFile = new MidiFile(midiContent);
-      this.bpm = this.midiFile.ticksPerBeat;
-      console.log(this.midiFile);
       this.totalSongNotes = this.midiFile.events.length;
       this.currentSongNote = 0;
       this.lastNoteTime = 0;
@@ -521,7 +523,6 @@ export default {
     async loadMidiSong() {
       this.stopSong();
       this.midi = await store.dispatch('getSongMidi', this.song.data.id);
-      console.log(this.song)
     },
     loadMidiFile: function (file) {
       this.stopSong();

@@ -1,9 +1,9 @@
 <template>
   <div class="lg:w-4/5 mx-auto flex flex-wrap animate-pulse">
-    <div class="lg:w-1/2 w-full lg:h-96 min-h-64 object-cover object-center rounded bg-slate-200 opacity-0 animate-fade-in-down"></div>
-    <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 opacity-0 animate-fade-in-down">
-      <div v-for="i in 10" class="h-2 bg-slate-200 rounded mb-3"></div>
-      <div v-for="i in 2" class="h-2 w-1/2 bg-slate-200 rounded mb-3"></div>
+    <div class="lg:w-1/2 w-full lg:h-96 sm:h-64 object-cover object-center rounded bg-slate-200 opacity-0 animate-fade-in-right"></div>
+    <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
+      <div v-for="i in 10" class="h-2 bg-slate-200 rounded mb-3 opacity-0 animate-fade-in-left "></div>
+      <div v-for="i in 2" class="h-2 w-1/2 bg-slate-200 rounded mb-3  "></div>
       <p class="leading-relaxed"></p>
       <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
         <div class="flex ml-6 items-center">

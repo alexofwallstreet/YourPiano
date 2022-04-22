@@ -12,6 +12,14 @@
           :title="'Только клавиатура и ничего лишнего'"
           :content="'Учитесь играть свои любимые песни на фортепиано, достаточно лишь вашего ноутбука или компьютера! Может у вас есть midi-клавиатура? Отличная новость, вы можете использовать и ее!'"
         ></SectionHeader>
+        <div class="flex flex-wrap justify-center gap-4 mt-8">
+          <router-link
+            class="block w-full px-12 py-3 text-sm font-medium text-white border bg-indigo-600
+              border-blue-600 rounded xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
+            :to="{name: 'About'}">
+            Узнать больше
+          </router-link>
+        </div>
       </div>
     </div>
   </div>

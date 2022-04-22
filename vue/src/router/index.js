@@ -15,6 +15,7 @@ import Overview from "../views/profile/Overview.vue";
 import Likes from "../views/profile/Likes.vue";
 import AdminUsers from "../views/admin/AdminUsers.vue";
 import AdminSongs from "../views/admin/AdminSongs.vue";
+import About from "../views/About.vue";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
         path: '/home',
         name: 'Home',
         component: Home
+      },
+      {
+        path: '/about',
+        name: 'About',
+        component: About
       },
       {
         path: '/piano/free-play',

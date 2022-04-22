@@ -12,13 +12,19 @@
             Обучайтесь игре на фортепиано вместе с YourPiano! Это весело и увлекательно, зарабатывайте очки за каждую
             сыгранную песню, разучивайте новые песни
           </p>
-          <div class="flex items-center space-x-4">
-            <router-link :to="{name: 'PianoFreePlay'}"
-                         class="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700">
+
+          <div class="flex flex-wrap justify-start gap-4 mt-8">
+            <router-link
+              class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600
+              border border-blue-600 rounded xs:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
+              :to="{name: ''}">
               Начать играть
             </router-link>
-            <router-link v-if="!store.state.user.token" :to="{name: 'Login'}"
-                         class="inline-block text-center bg-indigo-400 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700">
+
+            <router-link
+              class="block w-full px-12 py-3 text-sm font-medium text-white border bg-indigo-400
+              border-blue-600 rounded xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
+              :to="{name: 'Login'}">
               Войти
             </router-link>
           </div>

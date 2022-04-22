@@ -1,16 +1,21 @@
 <template>
   <section class="text-gray-600 body-font overflow-hidden">
     <div class="container px-5 py-24 mx-auto">
+
       <div class="lg:w-4/5 mx-auto flex flex-wrap mb-5">
         <Breadcrumbs :page-name="song.data.title"></Breadcrumbs>
       </div>
+
       <SongItemSkeleton v-if="song.loading"></SongItemSkeleton>
-      <div v-if="!song.loading" class="lg:w-4/5 mx-auto flex flex-wrap">
-        <img
+      <div v-if="!song.loading" class="lg:w-4/5 mx-auto flex flex-wrap rounded border shadow-xl">
+        <div class="lg:w-1/2 w-full lg:h-96 sm:h-64 shadow-md p-5">
+          <img
           :alt="song.data.title"
-          class="lg:w-1/2 w-full lg:h-full h-64 object-cover object-center rounded opacity-0 animate-fade-in-down"
+          class="object-cover w-full h-full object-center rounded opacity-0 animate-fade-in-right"
           :src="song.data.imagePath">
-        <div class="justify-between lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 opacity-0 animate-fade-in-down">
+        </div>
+
+        <div class="justify-between lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 opacity-0 animate-fade-in-left p-5">
           <div>
             <h2 class="text-sm title-font text-gray-500 tracking-widest">{{ song.data.author }}</h2>
             <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{ song.data.title }}</h1>
