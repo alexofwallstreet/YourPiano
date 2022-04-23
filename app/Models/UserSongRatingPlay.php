@@ -10,10 +10,10 @@ class UserSongRatingPlay extends Model
 {
     use HasFactory;
 
-    const BEGINNER = 'Новичок';
-    const AMATEUR = 'Любитель';
-    const PROFESSIONAL = 'Профи';
-    const MAESTRO = 'Маэстро';
+    const BEGINNER = 0;
+    const AMATEUR = 1;
+    const PROFESSIONAL = 2;
+    const MAESTRO = 3;
 
     public function song(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

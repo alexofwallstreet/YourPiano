@@ -81,7 +81,7 @@
         </div>
 
         <div class="w-full whitespace-nowrap">
-          <VolumeUpIcon class="w-4 inline-block"></VolumeUpIcon>
+          <VolumeUpIcon class="w-6 inline-block mr-2"></VolumeUpIcon>
           <label for="speed" class="font-bold text-white whitespace-nowrap">Громкость: {{ Math.floor(volumeLevel * 10) }}%</label>
           <br>
           <input type="range" id="volume" name="range" min="0" max="10" step="0.01"

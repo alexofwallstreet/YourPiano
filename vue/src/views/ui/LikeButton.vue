@@ -1,23 +1,19 @@
 <template>
-  <svg v-if="user" xmlns="http://www.w3.org/2000/svg" class="song-control-btn h-10 w-10 cursor-pointer relative"
-       viewBox="0 0 20 20"
-       fill="currentColor"
-       :class="{'fill-indigo-400' : !isFavorite,
-                    'fill-red-400' : isFavorite}">>
-    <path fill-rule="evenodd"
-          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-          clip-rule="evenodd"/>
-  </svg>
+  <div id="like">
+    <HeartIcon
+      class="ong-control-btn h-12 w-12 rounded-full p-1 cursor-pointer relative animate-bounce"
+      :class="{'fill-gray-300' : !isFavorite, 'fill-red-400' : isFavorite}"
+    ></HeartIcon>
+  </div>
+
 </template>
 
 <script>
-import store from "../../store";
+import { HeartIcon } from '@heroicons/vue/solid'
 export default {
   name: "LikeButton",
-  data() {
-    return {
-      user: store.state.user.data
-    }
+  components: {
+    HeartIcon
   },
   props: {
     isFavorite: false
@@ -26,5 +22,14 @@ export default {
 </script>
 
 <style scoped>
+ #like svg path {
+  stroke-dasharray: 100;
+  animation: dash 5s linear;
+}
 
+@keyframes dash {
+  to {
+    stroke-dashoffset: 1000;
+  }
+}
 </style>

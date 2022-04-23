@@ -19,7 +19,9 @@ const store = createStore({
         imagePath: '',
         ratingPoints: Number,
         isFavorite: Boolean,
-        status: String
+        status: String,
+        totalPlays: Number,
+        userPlays: Number,
       }
     },
     songs: {

@@ -8,23 +8,40 @@
         <div
           class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           <router-link
-            v-for="(song, i) in (onlyBest ? songs.data.slice(0,4) : songs.data)" :to="{name: 'SingleSong', params: {id: song.id}, props: {song: song}}"
+            v-for="(song, i) in (onlyBest ? songs.data.slice(0,4) : songs.data)"
+            :to="{name: 'SingleSong', params: {id: song.id}, props: {song: song}}"
             :key="song.id"
-            class="group opacity-0 animate-fade-in-down"
+            class="group opacity-0 animate-fade-in-down border-b drop-shadow pb-5"
             :style="{animationDelay: `${i * 10}ms`}">
             <div
               class="relative w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
-              <img :src="song.imagePath" :alt="song.title" class="w-full h-full object-center object-cover"/>
-              <div class="absolute flex justify-end items-end p-2">
-                <LikeButton :is-favorite="song.isFavorite"></LikeButton>
+              <img :src="song.imagePath" :alt="song.title"
+                   class="w-full h-full object-center object-cover brightness-90"/>
+              <div v-if="!onlyBest" class="absolute flex justify-between items-end p-2">
+                <div>
+                  <UserScore v-if="song.userPoints" :user-points="song.userPoints" :mode="0"></UserScore>
+                </div>
+<!--                <LikeButton :is-favorite="song.isFavorite"></LikeButton>-->
+              </div>
+              <!--              <div class="h-4">-->
+              <!--                <DifficultyLabel :level-id="song.difficulty"></DifficultyLabel>-->
+              <!--              </div>-->
+              <div class="relative flex items-start pt-2 justify-center w-full right-0">
+                <CountPlaysLabel :count="song.totalPlays"></CountPlaysLabel>
               </div>
             </div>
-            <h3 class="mt-4 text-sm text-gray-700">
+            <h3 class="mt-2 text-sm text-gray-700">
               {{ song.author }}
             </h3>
-            <p class="mt-1 text-lg font-medium text-gray-900">
+            <p class="text-2xl font-medium text-gray-900">
               {{ song.title }}
             </p>
+            <div class="mt-2">
+              <DifficultyLabel class="h-5 mt-1 mr-2" :level-id="song.difficulty"></DifficultyLabel>
+            </div>
+            <div>
+              <GenreLabel :genre-id="song.genre" class="h-5 mt-1"></GenreLabel>
+            </div>
           </router-link>
         </div>
       </div>
@@ -36,9 +53,14 @@
 <script>
 import SongListSkeleton from "../ui/skeletons/song-list-skeleton.vue";
 import LikeButton from "../ui/LikeButton.vue";
+import DifficultyLabel from "../ui/DifficultyLabel.vue";
+import GenreLabel from "../ui/GenreLabel.vue";
+import UserScore from "../ui/UserScore.vue";
+import CountPlaysLabel from "../ui/CountPlaysLabel.vue";
+
 export default {
   name: "SongList",
-  components: {LikeButton, SongListSkeleton},
+  components: {CountPlaysLabel, UserScore, GenreLabel, DifficultyLabel, LikeButton, SongListSkeleton},
   props: {
     songs: Object,
     onlyBest: false

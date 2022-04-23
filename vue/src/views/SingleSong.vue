@@ -10,24 +10,30 @@
         <div class="lg:col-span-3">
 
           <div class="relative mt-4 flex gap-6 flex-wrap lg:justify-start justify-center">
+            <UserScore class="absolute left-3 top-2" :user-points="song.userPoints" :mode="0"></UserScore>
+
             <img
               alt=""
               :src="song.data.imagePath"
               class="w-64 rounded-xl h-64 object-cover"
             />
 
-            <div class="info flex flex-col justify-between py-3">
+            <div class="info flex flex-col justify-between">
               <div>
-                <GenreLabel :genre-id="song.data.genre"></GenreLabel>
-                <span class="w-4 inline-block"></span>
                 <DifficultyLabel :level-id="song.data.difficulty"></DifficultyLabel>
+                <span class="w-4 inline-block"></span>
+                <GenreLabel :genre-id="song.data.genre"></GenreLabel>
+
                 <h1 class="md:text-7xl sm:text-5xl text-3xl font-extrabold tracking-tight text-gray-900">
                   {{ song.data.title }}</h1>
-                <h4 class="md:text-3xl text-xl font-medium tracking-tight text-gray-400 uppercase mt-2">
+                <h4 class="md:text-xl text-xl font-medium tracking-tight text-gray-400 uppercase mt-2">
                   {{ song.data.author }}</h4>
               </div>
-              <div class="mt-5">
-                Эту песню сыграли 130 раз
+              <div class="mt-2">
+                <UserScore :mode="1" :song-points="song.data.ratingPoints" :user-points="song.data.userPoints"></UserScore>
+              </div>
+              <div class="font-medium">
+                Эту песню сыграли <span class="font-extrabold text-xl">{{ song.data.totalPlays }}</span> раз
               </div>
             </div>
           </div>
@@ -55,7 +61,7 @@
             <div
               class="w-full h-10 p-0 border-0 flex items-center lg:justify-between text-gray-500">
               <div>
-                Заработано
+                Сохрани песню, чтобы не потерять ее:
               </div>
               <LikeButton @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
             </div>
@@ -84,6 +90,7 @@ import LikeButton from "./ui/LikeButton.vue";
 import DifficultyLabel from "./ui/DifficultyLabel.vue";
 import GenreLabel from "./ui/GenreLabel.vue";
 import Breadcrumbs from "./ui/Breadcrumbs.vue";
+import UserScore from "./ui/UserScore.vue";
 
 const loading = ref(false);
 

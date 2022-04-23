@@ -1,15 +1,17 @@
 <template>
-  <p class="inline-flex items-center px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full bg-indigo-600 ">
-    {{LEVELS[levelId]}}
+  <p :class="LEVELS[levelId]?.background + ' ' + LEVELS[levelId]?.text"
+     class="inline-flex items-center px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full"
+  >{{ LEVELS[levelId]?.title }}
   </p>
 </template>
 
 <script>
 import store from "../../store";
+
 const LEVELS = {
-  1: "Простой",
-  2: "Средний",
-  3: "Сложный",
+  1: {title: "Простой", background: "bg-green-200", text: "text-green-900"},
+  2: {title: "Средний", background: "bg-yellow-200", text: "text-yellow-900"},
+  3: {title: "Сложный", background: "bg-red-200", text: "text-red-900"},
 }
 let levelId;
 export default {
