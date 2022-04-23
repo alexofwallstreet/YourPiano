@@ -130,7 +130,6 @@ const store = createStore({
     },
 
     getSongMidi({commit}, id) {
-      console.log(id);
       return axiosClient.get(`/songs/${id}/midi`, {
         responseType: 'arraybuffer',
       });
@@ -196,7 +195,6 @@ const store = createStore({
     },
 
     addSong({commit}, song) {
-      console.log(song.value)
       delete song.image_file_url;
       return axiosClient.post('/songs', song.value)
         .then(({data}) => {
@@ -266,7 +264,6 @@ const store = createStore({
     },
 
     userSongRatingPlay({commit}, {song, user, points}) {
-      console.log(song, user, points)
       return axiosClient.post(`/songs/${song.id}/rating-play`, {user_id: user.id, rating_points: parseInt(points)})
         .then(() => {
           return true;
@@ -331,7 +328,6 @@ const store = createStore({
     setSongs: (state, songs) => {
       state.songs.links = songs.meta.links;
       state.songs.data = songs.data;
-      console.log(state)
     },
 
     setUsers: (state, users) => {
@@ -375,7 +371,6 @@ const store = createStore({
     },
 
     toggleAdminSidebar(state) {
-      console.log(state.adminSideBarOpen)
       state.adminSideBarOpen = !state.adminSideBarOpen
     }
   },

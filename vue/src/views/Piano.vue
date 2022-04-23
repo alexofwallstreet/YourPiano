@@ -318,9 +318,8 @@ export default {
                 note.time > this.prevPlayTime
               ) {
                 if (!note.processed) {
-                  console.log(note)
                   this.onNoteOn(note.note, note.octave, false);
-                  setTimeout(() => self.onNoteOff(note.note, note.octave), (note.endTime - note.time) * 1000);
+                  setTimeout(() => self.onNoteOff(note.note, note.octave), (note.endTime - note.time) * 1000 / this.songSpeed);
                 }
               }
             }
@@ -440,7 +439,7 @@ export default {
     onNoteOn: function (note, octave, isHuman = true) {
       const noteId = this.getNoteId(note, octave);
 
-      if (this.keysPressed[noteId] && isHuman) {
+      if (this.keysPressed[noteId]) {
         return;
       }
 

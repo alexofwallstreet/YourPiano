@@ -205,8 +205,6 @@ function onImageChoose(ev) {
   const file = ev.target.files[0];
   const reader = new FileReader();
   reader.onload = () => {
-    console.log(reader.result)
-
     //the field to send on the backend and apply validation
     song.value.image_file = reader.result;
     //the field to display here
@@ -220,7 +218,6 @@ function onMidiChoose(ev) {
   midiFileName.value = file.name;
   const reader = new FileReader();
   reader.onload = () => {
-    console.log(reader.result)
     //the field to send on the backend and apply validation
     song.value.midi_file = reader.result;
   }

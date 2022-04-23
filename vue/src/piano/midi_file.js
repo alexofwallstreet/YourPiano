@@ -126,7 +126,7 @@ export default class {
               this.events.reverse();
               this.events.find(event => event.noteNumber === noteNumber).endTime = eventTime;
               this.events.reverse();
-              console.log(readNumber())
+              readNumber();
             }
               break
 

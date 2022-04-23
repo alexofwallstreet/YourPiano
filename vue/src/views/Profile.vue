@@ -91,7 +91,6 @@ const modalOpen = ref(false);
 
 function toggleModal() {
   modalOpen.value = !modalOpen.value;
-  console.log(modalOpen.value);
 }
 
 </script>
