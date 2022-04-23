@@ -16,14 +16,14 @@
           <div class="flex flex-wrap justify-start gap-4 mt-8">
             <router-link
               class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600
-              border border-blue-600 rounded xs:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
+              rounded xs:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
               :to="{name: ''}">
               Начать играть
             </router-link>
 
             <router-link
-              class="block w-full px-12 py-3 text-sm font-medium text-white border bg-indigo-400
-              border-blue-600 rounded xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
+              class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-400
+              rounded xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
               :to="{name: 'Login'}">
               Войти
             </router-link>

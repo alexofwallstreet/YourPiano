@@ -48,12 +48,24 @@ module.exports = {
             opacity: '1'
           }
         },
+        'fade-out-left': {
+          'from': {
+            transform: 'translateY(0rem)',
+            opacity: '1'
+          },
+          'to': {
+            transform: 'translateX(0.75rem)',
+            opacity: '0'
+          },
+        },
       },
       animation: {
         'fade-in-down': 'fade-in-down 0.2s ease-in-out both',
         'fade-in-up': 'fade-in-up 0.2s ease-in-out both',
         'fade-in-left': 'fade-in-left 0.2s ease-in-out both',
         'fade-in-right': 'fade-in-right 0.2s ease-in-out both',
+
+        'fade-out-left': 'fade-in-left 0.2s ease-in-out both',
       }
     },
     screens: {

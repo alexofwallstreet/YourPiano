@@ -30,7 +30,7 @@
             class="block w-full px-12 py-3 text-sm font-bold text-white border bg-indigo-400 text-center mb-6 mt-2
               border-blue-600 rounded-md xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
             :to="{name: 'Songs'}">
-            Игать песни
+            Играть песни
           </router-link>
         </div>
         <!-- End Toggle button with Arrows -->
@@ -49,41 +49,43 @@
           </div>
 
           <div class="pb-2 flex justify-start">
-            <svg
+            <PlayIcon
               v-on:click.prevent="playSong"
-              xmlns="http://www.w3.org/2000/svg"
-              class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
-              :class="{'fill-indigo-400' : isPlaying() || isCountdown(), 'fill-white' : !isPlaying() && !isCountdown()}">
-              <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                    clip-rule="evenodd"/>
-            </svg>
-            <svg v-on:click.prevent="pauseSong" xmlns="http://www.w3.org/2000/svg"
-                 class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20" fill="currentColor"
-                 :class="{'fill-white' : isPlaying() && !isCountdown() ,
-                    'fill-indigo-400' : !isPlaying() || isCountdown()}">
-              <path fill-rule="evenodd"
-                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
-                    clip-rule="evenodd"/>
-            </svg>
-            <svg v-on:click.prevent="stopSong" xmlns="http://www.w3.org/2000/svg"
-                 class="song-control-btn h-10 w-10 cursor-pointer relative" viewBox="0 0 20 20"
-                 :class="{'fill-white' : isPlaying() && !isCountdown() ,
-                    'fill-indigo-400' : !isPlaying() || isCountdown()}">
-              <path fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
-                    clip-rule="evenodd"/>
-            </svg>
+              class="song-control-btn h-10 w-10 cursor-pointer relative"
+              :class="{'fill-indigo-400' : isPlaying() || isCountdown(), 'fill-white' : !isPlaying() && !isCountdown()}"
+            ></PlayIcon>
+
+            <PauseIcon
+              v-on:click.prevent="pauseSong"
+              class="song-control-btn h-10 w-10 cursor-pointer relative"
+              :class="{'fill-white' : isPlaying() && !isCountdown() , 'fill-indigo-400' : !isPlaying() || isCountdown()}"
+            ></PauseIcon>
+
+            <StopIcon
+              v-on:click.prevent="stopSong"
+              class="song-control-btn h-10 w-10 cursor-pointer relative"
+              :class="{'fill-white' : isPlaying() && !isCountdown(), 'fill-indigo-400' : !isPlaying() || isCountdown()}"
+            ></StopIcon>
+
             <div class="flex justify-end ml-auto">
               <LikeButton @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
             </div>
           </div>
 
           <div class="w-full" v-if="isTutorialMode()">
-            <label for="speed" class="font-bold text-white whitespace-nowrap">Скорость: {{ songSpeed }}</label>
+            <FastForwardIcon class="w-4 inline-block"></FastForwardIcon>
+            <label for="speed" class="font-bold text-white whitespace-nowrap">Скорость: x{{ songSpeed }}</label>
             <input type="range" id="speed" name="range" min="0" max="2" step="0.01"
                    class="w-full h-2 bg-indigo-100 appearance-none" v-model="songSpeed"/>
           </div>
+        </div>
+
+        <div class="w-full whitespace-nowrap">
+          <VolumeUpIcon class="w-4 inline-block"></VolumeUpIcon>
+          <label for="speed" class="font-bold text-white whitespace-nowrap">Громкость: {{ Math.floor(volumeLevel * 10) }}%</label>
+          <br>
+          <input type="range" id="volume" name="range" min="0" max="10" step="0.01"
+                 class="w-full h-2 bg-indigo-100 appearance-none" v-model="volumeLevel"/>
         </div>
 
 
@@ -183,6 +185,7 @@ import SpinnerOverlay from "./ui/SpinnerOverlay.vue";
 import router from "../router";
 import LikeButton from "./ui/LikeButton.vue";
 import Modal from "./ui/Modal.vue";
+import {PlayIcon, PauseIcon, StopIcon, VolumeUpIcon, FastForwardIcon} from '@heroicons/vue/solid'
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -245,6 +248,7 @@ export default {
       midiDevices: new MidiDevices(this.onDeviceKeyDown, this.onDeviceKeyUp),
       midiDeviceSelected: null,
       songSpeed: 1,
+      volumeLevel: 5,
       inPianolaMode: false,
       stats: {
         perfect: 0,
@@ -367,8 +371,8 @@ export default {
 
       await Soundfont.instrument(this.audioContext, this.selectedMidiInstrument)
         .then(instrument => {
-        this.soundfont = instrument;
-      });
+          this.soundfont = instrument;
+        });
 
       this.loadingComplete();
     },
@@ -392,9 +396,13 @@ export default {
       this.isLoading = false;
     },
     playNote(note, octave) {
+      console.log(this.volumeLevel)
       const noteName = `${note}${octave}`;
       this.audioContext.resume().then(() => {
-        this.activeAudioNodes[noteName] = this.soundfont.play(noteName);
+        this.activeAudioNodes[noteName] = this.soundfont.play(noteName, this.audioContext.currentTime, {
+          gain: Number.parseFloat(this.volumeLevel),
+          release: 2,
+        });
       });
     },
     stopNote(note, octave) {
@@ -719,7 +727,17 @@ export default {
       }
     }
   },
-  components: {Modal, LikeButton, SpinnerOverlay, Sidebar},
+  components: {
+    Modal,
+    LikeButton,
+    SpinnerOverlay,
+    Sidebar,
+    PlayIcon,
+    StopIcon,
+    PauseIcon,
+    VolumeUpIcon,
+    FastForwardIcon
+  },
   setup() {
     const collapsed = ref(false);
     const toggleSidebar = () => (collapsed.value = !collapsed.value);
