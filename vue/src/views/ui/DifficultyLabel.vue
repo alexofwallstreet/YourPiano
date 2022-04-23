@@ -1,20 +1,26 @@
 <template>
-  <p class="inline-flex items-center px-3 py-px text-xs font-semibold tracking-wider text-white uppercase rounded-full bg-indigo-600">
-    {{levelName}}
+  <p class="inline-flex items-center px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full bg-indigo-600 ">
+    {{LEVELS[levelId]}}
   </p>
 </template>
 
 <script>
 import store from "../../store";
+const LEVELS = {
+  1: "Простой",
+  2: "Средний",
+  3: "Сложный",
+}
+let levelId;
 export default {
   name: "DifficultyLabel",
-  computed: {
-    levelName() {
-      return store.state.searchOptions.filters[1].options.find(filter => filter.value === this.levelId).label;
-    }
-  },
   props: {
-    levelId: Number
+    levelId
+  },
+  data() {
+    return {
+      LEVELS
+    }
   }
 }
 </script>

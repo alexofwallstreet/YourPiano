@@ -122,7 +122,11 @@ export default class {
 
           switch (eventType) {
             case 0x08: {  // note off
-              readNumber(2)
+              const noteNumber = readNumber();
+              this.events.reverse();
+              this.events.find(event => event.noteNumber === noteNumber).endTime = eventTime;
+              this.events.reverse();
+              console.log(readNumber())
             }
               break
 

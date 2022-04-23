@@ -174,7 +174,7 @@
 import store from "../store";
 import MidiDevices from "../piano/midi_devices";
 import MidiFile from "../piano/midi_file";
-import {ref, computed} from 'vue'
+import {computed, ref} from 'vue'
 import Soundfont from "soundfont-player";
 import Sidebar from "./ui/Sidebar.vue";
 import KEYBOARD_NOTES from '../piano/notes';
@@ -237,7 +237,9 @@ export default {
       gameState: GAME_STATE.idle,
       keys: keys,
       keysPressed: {},
+      keysPlayed: [],
       notesColumns: notesColumns,
+      activeAudioNodes: {},
       prevGameState: null,
       midiFile: null,
       midiDevices: new MidiDevices(this.onDeviceKeyDown, this.onDeviceKeyUp),
@@ -251,8 +253,6 @@ export default {
       },
       midiInstruments: INSTRUMENTS,
       selectedMidiInstrument: INSTRUMENTS[2],
-      totalSongNotes: 0,
-      currentSongNote: 0,
       playTime: 0,
       prevPlayTime: 0,
       lastNoteTime: 0,
@@ -318,10 +318,10 @@ export default {
                 note.time > this.prevPlayTime
               ) {
                 if (!note.processed) {
+                  console.log(note)
                   this.onNoteOn(note.note, note.octave, false);
-                  setTimeout(() => self.onNoteOff(note.note, note.octave), 200);
+                  setTimeout(() => self.onNoteOff(note.note, note.octave), (note.endTime - note.time) * 1000);
                 }
-                this.currentSongNote++;
               }
             }
           }
@@ -341,7 +341,7 @@ export default {
     prepareResults() {
       if (this.gameMode === store.state.gameModes.RATING_GAME_MODE) {
         this.loadingStart();
-        const TOTAL_NOTES = this.totalSongNotes;
+        const TOTAL_NOTES = this.midiFile.events.length;
         const MAX_POINTS = this.song.data.ratingPoints;
         const PERFECT_NOTES = this.stats.perfect;
         const GOOD_NOTES = this.stats.good;
@@ -365,11 +365,12 @@ export default {
     async initAudio() {
       this.loadingStart();
       this.audioContext = new window.AudioContext();
-      this.soundfont = await Soundfont.instrument(
-        this.audioContext, this.selectedMidiInstrument
-      ).then(function (instrument) {
-        return instrument;
+
+      await Soundfont.instrument(this.audioContext, this.selectedMidiInstrument)
+        .then(instrument => {
+        this.soundfont = instrument;
       });
+
       this.loadingComplete();
     },
     unsetAudio: function () {
@@ -392,13 +393,21 @@ export default {
       this.isLoading = false;
     },
     playNote(note, octave) {
-      this.soundfont.play(`${note}${octave}`, this.audioContext.currentTime, {
-        duration: 1,
-        gain: 10,
-      })
+      const noteName = `${note}${octave}`;
+      this.audioContext.resume().then(() => {
+        this.activeAudioNodes[noteName] = this.soundfont.play(noteName);
+      });
     },
     stopNote(note, octave) {
-      this.soundfont.play(`${note}${octave}`).stop(this.audioContext.currentTime)
+      const noteName = `${note}${octave}`;
+      this.audioContext.resume().then(() => {
+        if (!this.activeAudioNodes[noteName]) {
+          return;
+        }
+        const audioNode = this.activeAudioNodes[noteName];
+        audioNode.stop();
+        this.activeAudioNodes[noteName] = null;
+      });
     },
     onKeyDown: function (event) {
       const key = event.keyCode;
@@ -482,8 +491,6 @@ export default {
     },
     onMidiFileLoaded: function (midiContent) {
       this.midiFile = new MidiFile(midiContent);
-      this.totalSongNotes = this.midiFile.events.length;
-      this.currentSongNote = 0;
       this.lastNoteTime = 0;
 
       for (let noteColumn of this.notesColumns) {
@@ -516,6 +523,7 @@ export default {
           note: noteInfo.note,
           octave: noteInfo.octave,
           time: event.time + 3,
+          endTime: event.endTime + 3,
           processed: false, // has been processed as missing, or perfect, etc
         });
       }

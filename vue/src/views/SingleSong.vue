@@ -1,51 +1,73 @@
 <template>
-  <section class="text-gray-600 body-font overflow-hidden">
-    <div class="container px-5 py-24 mx-auto">
-
-      <div class="lg:w-4/5 mx-auto flex flex-wrap mb-5">
+  <section>
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="relative z-10 flex items-baseline justify-between pt-16 pb-6 border-b border-gray-200">
         <Breadcrumbs :page-name="song.data.title"></Breadcrumbs>
       </div>
+    </header>
+    <div class="relative max-w-screen-xl px-4 py-8 mx-auto">
+      <div class="grid gap-8 lg:items-start lg:grid-cols-4">
+        <div class="lg:col-span-3">
 
-      <SongItemSkeleton v-if="song.loading"></SongItemSkeleton>
-      <div v-if="!song.loading" class="lg:w-4/5 mx-auto flex flex-wrap rounded border shadow-xl">
-        <div class="lg:w-1/2 w-full lg:h-96 sm:h-64 shadow-md p-5">
-          <img
-          :alt="song.data.title"
-          class="object-cover w-full h-full object-center rounded opacity-0 animate-fade-in-right"
-          :src="song.data.imagePath">
+          <div class="relative mt-4 flex gap-6 flex-wrap lg:justify-start justify-center">
+            <img
+              alt=""
+              :src="song.data.imagePath"
+              class="w-64 rounded-xl h-64 object-cover"
+            />
+
+            <div class="info flex flex-col justify-between py-3">
+              <div>
+                <GenreLabel :genre-id="song.data.genre"></GenreLabel>
+                <span class="w-4 inline-block"></span>
+                <DifficultyLabel :level-id="song.data.difficulty"></DifficultyLabel>
+                <h1 class="md:text-7xl sm:text-5xl text-3xl font-extrabold tracking-tight text-gray-900">
+                  {{ song.data.title }}</h1>
+                <h4 class="md:text-3xl text-xl font-medium tracking-tight text-gray-400 uppercase mt-2">
+                  {{ song.data.author }}</h4>
+              </div>
+              <div class="mt-5">
+                Эту песню сыграли 130 раз
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="justify-between lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0 opacity-0 animate-fade-in-left p-5">
-          <div>
-            <h2 class="text-sm title-font text-gray-500 tracking-widest">{{ song.data.author }}</h2>
-            <h1 class="text-gray-900 text-3xl title-font font-medium mb-1">{{ song.data.title }}</h1>
-            <p class="leading-relaxed">{{ song.data.description }}</p>
-          </div>
-
-          <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-            <div class="flex">
-              <span class="mr-3">Жанр</span>
-              <GenreLabel :genre-id="song.data.genre"></GenreLabel>
-            </div>
-            <div class="flex ml-6">
-              <span class="mr-3">Сложность</span>
-              <DifficultyLabel :level-id="song.data.difficulty"></DifficultyLabel>
-            </div>
-          </div>
-          <div class="flex">
-            <router-link :to="{name: 'PianoRatingPlay', params: {id: song.data.id}}"
-                         class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
-              Играть
+        <div class="lg:top-0 lg:sticky">
+          <form class="space-y-4 lg:pt-8 text-center lg:text-left">
+            <router-link
+              :to="{name: 'PianoRatingPlay', params: {id: song.data.id}}"
+              type="submit"
+              class="w-full px-6 py-3 text-sm font-bold tracking-wide text-white bg-indigo-600 text-center
+              border-blue-600 rounded w-auto lg:w-full hover:bg-indigo-700 active:bg-indigo-800"
+            >
+              Играть на рейтинг
             </router-link>
-            <router-link :to="{name: 'PianoTutorialPlay'}"
-                         class="flex text-white bg-indigo-400 border-0 py-2 px-6 mx-2 focus:outline-none hover:bg-indigo-600 rounded">
+
+            <router-link
+              :to="{name: 'PianoTutorialPlay'}"
+              type="button"
+              class="w-full ml-3 lg:ml-0 px-6 py-3 text-sm font-bold tracking-wide w-auto lg:w-full text-center text-white hover:bg-indigo-700 bg-indigo-400 border border-gray-300 rounded"
+            >
               Пройти обучение
             </router-link>
-            <button
-              @click.prevent="toggleLike(song.data)"
-              class="ml-auto w-10 h-10 p-0 border-0 inline-flex items-center justify-center text-gray-500">
-              <LikeButton :is-favorite="song.data.isFavorite"></LikeButton>
-            </button>
+
+            <div
+              class="w-full h-10 p-0 border-0 flex items-center lg:justify-between text-gray-500">
+              <div>
+                Заработано
+              </div>
+              <LikeButton @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
+            </div>
+          </form>
+        </div>
+
+        <div class="lg:col-span-3">
+          <div class="prose max-w-none">
+            <p>{{ song.data.description }}</p>
+            <iframe src="https://www.youtube-nocookie.com/embed/Eb-Vfe61W6A?controls=0" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
           </div>
         </div>
       </div>
@@ -90,5 +112,20 @@ store.dispatch('getSong', router.currentRoute.value.params.id);
 </script>
 
 <style scoped>
+.prose h3 {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgb(243 244 246);
 
+  /* @apply mb-1 pb-2 border-b border-gray-200; */
+}
+
+.prose iframe {
+  width: 100%;
+  margin-top: 1.5rem;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+
+  /* @apply w-full aspect-video mt-6 rounded-xl; */
+}
 </style>
