@@ -33,7 +33,7 @@
                 <UserScore :mode="1" :song-points="song.data.ratingPoints" :user-points="song.data.userPoints"></UserScore>
               </div>
               <div class="font-medium">
-                Эту песню сыграли <span class="font-extrabold text-xl">{{ song.data.totalPlays }}</span> раз
+                Эту песню сыграли <span class="font-extrabold text-xl bg-orange-200 px-2 rounded-full">{{ song.data.totalPlays }}</span> раз
               </div>
             </div>
           </div>

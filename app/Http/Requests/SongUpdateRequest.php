@@ -21,17 +21,17 @@ class SongUpdateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'title' => 'max:255',
-            'author' => 'max:255',
-            'description' => 'nullable',
-            'genre_id' => 'exists:genres,id',
-            'difficulty_level_id' => 'exists:difficulty_levels,id',
-            'image_file' => 'image|max:2000',
-            'midi_file' => 'mimes:mid',
-            'rating_points' => 'numeric'
+            'title' => 'required|max:255',
+            'author' => 'required|max:255',
+            'description' => 'string',
+            'genre_id' => 'required|exists:genres,id',
+            'difficulty_level_id' => 'required|exists:difficulty_levels,id',
+            'image_file' => 'string|nullable',
+            'midi_file' => 'string|nullable',
+            'rating_points' => 'required|numeric'
         ];
     }
 }

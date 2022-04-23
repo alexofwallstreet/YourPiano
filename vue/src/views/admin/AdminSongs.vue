@@ -1,9 +1,10 @@
 <template>
   <AddModal :open="isAddModalOpen" :toggle-modal-callback="toggleAddModal"></AddModal>
-  <UpdateModal :open="isUpdateModalOpen" :toggle-modal-callback="toggleUpdateModal"></UpdateModal>
-  <DeleteModal :open="isDeleteModalOpen" :item="currentSong"
+  <UpdateModal :open="isUpdateModalOpen" :item="currentSong" :toggle-modal-callback="toggleUpdateModal"></UpdateModal>
+  <DeleteModal :open="isDeleteModalOpen " :item="currentSong" :toggle-modal-callback="toggleDeleteModal"
                :title="'Вы уверены, что хотите удалить песню ' + currentSong?.title + ' и все результаты, связанные с ней?'"
                :delete-callback="deleteSong"></DeleteModal>
+
   <div class="py-8 rounded-md w-full">
     <div class="flex items-center justify-center opacity-0 animate-fade-in-up">
       <h2 class="text-gray-600 text-3xl font-extrabold">Песни YourPiano</h2>
@@ -66,33 +67,33 @@
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 w-10 h-10">
-                    <img class="w-full h-full rounded-full object-cover"
+                  <div class="flex-shrink-0 w-20 h-20 mr-4">
+                    <img class="w-full h-full object-cover rounded-xl"
                          :src="song.imagePath"
                          alt=""/>
                   </div>
                   <div class="ml-3">
-                    <p class="text-gray-900 whitespace-no-wrap">
+                    <p class="text-gray-900 text-xl whitespace-no-wrap">
                       {{ song.title }}
                     </p>
                   </div>
                 </div>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <p class="text-gray-900 whitespace-no-wrap">
+                <p class="text-gray-900 text-lg whitespace-no-wrap">
                   {{ song.author }}
                 </p>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-<!--                <button-->
-<!--                  @click="toggleUpdateModal()"-->
-<!--                  class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto sm:text-sm"-->
-<!--                  type="button"-->
-<!--                >Изменить-->
-<!--                </button>-->
+                <button
+                  @click="toggleUpdateModal(song)"
+                  class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto sm:text-sm"
+                  type="button"
+                >Изменить
+                </button>
 
                 <button
-                  @click="currentSong = song; isDeleteModalOpen = true;"
+                  @click="currentSong = song; toggleDeleteModal()"
                   class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                   type="button"
                 >Удалить
@@ -125,6 +126,9 @@ const isDeleteModalOpen = ref(false);
 
 const currentSong = ref(null);
 
+const option = store.state.searchOptions.sorting.find(option => option.value === 'oldest');
+store.commit('updateSortingOrder', option);
+
 const songs = computed(() => store.state.songs);
 store.dispatch('getSongs');
 
@@ -139,7 +143,12 @@ function getSongs() {
   store.dispatch('getSongs', {search: search.value});
 }
 
-function toggleUpdateModal() {
+function toggleDeleteModal() {
+  isDeleteModalOpen.value = !isDeleteModalOpen.value;
+}
+
+function toggleUpdateModal(song) {
+  currentSong.value = song;
   isUpdateModalOpen.value = !isUpdateModalOpen.value;
 }
 

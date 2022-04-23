@@ -171,31 +171,36 @@ class SongController extends Controller
      * Update the specified resource in storage.
      *
      * @param Requests\SongUpdateRequest $request
-     * @param int $id
+     * @param Song $song
      * @return SongResource
+     * @throws \Exception
      */
-    public function update(Requests\SongUpdateRequest $request, Song $song)
+    public function update(Requests\SongUpdateRequest $request, Song $song): SongResource
     {
         $song->update($request->validated());
 
-        if ($request->file('image_file')) {
-            if (file_exists(public_path('/storage/songs-images/' . $song->image_file))) {
-                if ($song->image_file !== 'default.jpg') {
-                    unlink(public_path('/storage/songs-images/' . $song->image_file));
+        if (!empty($request['image_file'])) {
+            $imagePath = $this->saveImage($request['image_file']);
+
+            if ($song->image_file) {
+                if (!str_contains($song->image_file, 'default.jpg')) {
+                    $absolutePath = public_path($song->image_file);
+                    File::delete($absolutePath);
                 }
             }
-            $imageName = Str::uuid() . '.' . $request->image_file->getClientOriginalExtension();
-            $request->image_file->move(public_path('/storage/songs-images'), $imageName);
-            $song->image_file = $imageName;
+
+            $song->image_file = $imagePath;
         }
 
-        if ($request->file('midi_file')) {
-            if (file_exists(public_path('/storage/songs-midi/' . $song->midi_file))) {
-                unlink(public_path('/storage/songs-midi/' . $song->midi_file));
+        if (!empty($request['midi_file'])) {
+            $midiPath = $this->saveMidi($request['midi_file']);
+
+            if ($song->midi_file) {
+                $absolutePath = public_path($song->midi_file);
+                File::delete($absolutePath);
             }
-            $midiName = Str::uuid() . '.' . $request->midi_file->getClientOriginalExtension();
-            $request->midi_file->move(public_path('/storage/songs-midi'), $midiName);
-            $song->midi_file = $midiName;
+
+            $song->midi_file = $midiPath;
         }
 
         $song->save();

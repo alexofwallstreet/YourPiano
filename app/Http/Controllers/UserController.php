@@ -24,7 +24,7 @@ class UserController extends Controller
             $usersQuery->orWhere('email', 'LIKE', '%' . $request->search . '%');
         }
 
-        return UserResource::collection($usersQuery->paginate());
+        return UserResource::collection($usersQuery->paginate(10));
     }
 
     /**
@@ -132,6 +132,11 @@ class UserController extends Controller
             'totalRatingPlays' => $totalRatingPlays,
             'totalRatingPoints' => $totalRatingPoints,
         ];
+    }
+
+    public function update(User $user)
+    {
+
     }
 
     public function destroy(User $user)

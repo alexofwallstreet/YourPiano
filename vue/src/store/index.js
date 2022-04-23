@@ -204,6 +204,14 @@ const store = createStore({
         })
     },
 
+    updateSong({commit}, song) {
+      delete song.image_file_url;
+      return axiosClient.put(`/songs/${song.value.id}`, song.value)
+        .then(({data}) => {
+          return data;
+        })
+    },
+
     register({commit}, user) {
       return axiosClient.post('/register', user)
         .then(({data}) => {
@@ -270,7 +278,7 @@ const store = createStore({
         .then(() => {
           return true;
         })
-    }
+    },
 
   },
 

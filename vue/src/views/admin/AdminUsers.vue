@@ -55,20 +55,20 @@
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
-                  <div class="flex-shrink-0 w-10 h-10">
-                    <img class="w-full h-full rounded-full"
+                  <div class="flex-shrink-0 w-16 h-16 mr-4">
+                    <img class="w-full h-full rounded-full object-cover"
                          :src="user.imagePath"
                          alt=""/>
                   </div>
                   <div class="ml-3">
-                    <p class="text-gray-900 whitespace-no-wrap">
+                    <p class="text-gray-900 text-xl whitespace-no-wrap">
                       {{user.name}}
                     </p>
                   </div>
                 </div>
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <p class="text-gray-900 whitespace-no-wrap">
+                <p class="text-gray-900 text-lg whitespace-no-wrap">
                   {{user.email}}
                 </p>
               </td>
