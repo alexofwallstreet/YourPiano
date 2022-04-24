@@ -9,9 +9,9 @@
 import store from "../../store";
 
 const LEVELS = {
-  1: {title: "Простой", background: "bg-green-200", text: "text-green-900"},
-  2: {title: "Средний", background: "bg-yellow-200", text: "text-yellow-900"},
-  3: {title: "Сложный", background: "bg-red-200", text: "text-red-900"},
+  1: {title: "Простой", background: "bg-green-100", text: "text-green-900"},
+  2: {title: "Средний", background: "bg-yellow-100", text: "text-yellow-900"},
+  3: {title: "Сложный", background: "bg-red-100", text: "text-red-900"},
 }
 let levelId;
 export default {

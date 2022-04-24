@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- profile meta -->
-                <div class="w-auto px-12 mt-6">
+                <div class="w-auto px-12 mt-6 text-center md:text-left">
                   <h2 class="text-3xl font-light sm:mb-0  ">
                     {{ store.state.user.data.name }}
                   </h2>
@@ -49,25 +49,32 @@
 
               <!-- posts -->
               <div class="px-px md:px-3">
-
-                <!-- insta freatures -->
-                <ul class="flex items-center justify-around md:justify-center space-x-12
+                <ul class="flex items-center justify-center space-x-12
                     uppercase tracking-widest font-semibold text-xs text-gray-600
                     border-t">
-                  <!-- posts tab is active -->
                   <li :class="$route.name === 'ProfileOverview' ? 'md:border-t md:border-gray-700 md:-mt-px md:text-gray-700' : ''">
-                    <router-link :to="{name: 'ProfileOverview'}" class="inline-block p-3" href="#">
+                    <router-link :to="{name: 'ProfileOverview'}" class="inline-flex items-center p-3" href="#">
                       <i class="fas fa-th-large text-xl md:text-xs"></i>
-                      <span class="inline">мой рейтинг</span>
+                      <StarIcon class="inline w-5 h-5 mx-2"></StarIcon>
+                      <span class="hidden md:inline">мой рейтинг</span>
                     </router-link>
                   </li>
                   <li :class="$route.name === 'ProfileLikes' ? 'md:border-t md:border-gray-700 md:-mt-px md:text-gray-700' : ''">
-                    <router-link :to="{name: 'ProfileLikes'}"  class="inline-block p-3" href="#">
+                    <router-link :to="{name: 'ProfileLikes'}"  class="inline-flex items-center p-3" href="#">
                       <i class="far fa-square text-xl md:text-xs"></i>
-                      <span class="inline">мои лайки</span>
+                      <HeartIcon class="inline w-5 h-5 mx-2"></HeartIcon>
+                      <span class="hidden md:inline">понравившиеся</span>
+                    </router-link>
+                  </li>
+                  <li :class="$route.name === 'ProfileSettings' ? 'md:border-t md:border-gray-700 md:-mt-px md:text-gray-700' : ''">
+                    <router-link :to="{name: 'ProfileSettings'}"  class="inline-flex items-center p-3" href="#">
+                      <i class="far fa-square text-xl md:text-xs"></i>
+                      <CogIcon class="inline w-5 h-5 mx-2"></CogIcon>
+                      <span class="hidden md:inline">настройки</span>
                     </router-link>
                   </li>
                 </ul>
+
                 <!-- flexbox grid -->
                 <div class="flex flex-wrap justify-center w-full">
                   <router-view></router-view>
@@ -82,12 +89,14 @@
 </template>
 
 <script setup>
-import { PencilIcon } from '@heroicons/vue/outline'
+import { PencilIcon, HeartIcon, StarIcon, CogIcon } from '@heroicons/vue/outline'
 import StatusLabel from "./profile/StatusLabel.vue";
 import {ref} from 'vue';
 import store from "../store";
 import UpdatePhotoModal from "./profile/UpdatePhotoModal.vue";
 const modalOpen = ref(false);
+
+store.dispatch('getStats');
 
 function toggleModal() {
   modalOpen.value = !modalOpen.value;

@@ -100,6 +100,10 @@
                           <img v-if="song.image_file_url" :src="song.image_file_url" alt="New Image"
                                class="h-full w-full object-cover">
                         </div>
+                        <div v-else-if="item" class="flex justify-center w-full h-24">
+                          <img v-if="item.imagePath" :src="item.imagePath" alt="New Image"
+                               class="h-full w-full object-cover">
+                        </div>
                         <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                           <div class="space-y-1 text-center">
                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -212,7 +216,6 @@ onUpdated(() => {
     midi_file: null,
     rating_points: props.item?.ratingPoints,
   }
-  console.log(song.value)
 })
 
 function updateSong() {
@@ -252,3 +255,9 @@ function onMidiChoose(ev) {
   reader.readAsDataURL(file);
 }
 </script>
+
+<style scoped>
+input:a[type=number] {
+  visibility: hidden;
+}
+</style>

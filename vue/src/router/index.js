@@ -16,6 +16,7 @@ import Likes from "../views/profile/Likes.vue";
 import AdminUsers from "../views/admin/AdminUsers.vue";
 import AdminSongs from "../views/admin/AdminSongs.vue";
 import About from "../views/About.vue";
+import Settings from "../views/profile/Settings.vue";
 
 const routes = [
   {
@@ -85,6 +86,11 @@ const routes = [
             path: '/profile/liked-songs',
             name: 'ProfileLikes',
             component: Likes
+          },
+          {
+            path: '/profile/settings',
+            name: 'ProfileSettings',
+            component: Settings
           },
         ]
       },

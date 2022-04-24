@@ -69,7 +69,6 @@ export default {
   components: {OverviewSkeleton, StatusLabel, Table, PlayIcon, ChartBarIcon, HashtagIcon},
   setup() {
     const stats = computed(() => store.state.stats);
-    store.dispatch('getStats');
     return {
       stats
     }

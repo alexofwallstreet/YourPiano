@@ -5,12 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SongResource;
 use App\Http\Requests;
 use App\Models\Song;
-use App\Models\UserSongRatingPlay;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\Input;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class SongController extends Controller
@@ -23,6 +20,11 @@ class SongController extends Controller
     public function index(Request $request)
     {
         $songQuery = Song::with([]);
+        if ($request->search) {
+            $songQuery->orWhere('title', 'LIKE', '%' . $request->search . '%');
+            $songQuery->orWhere('author', 'LIKE', '%' . $request->search . '%');
+            $songQuery->orWhere('description', 'LIKE', '%' . $request->search . '%');
+        }
         if ($request->title) {
             $songQuery->where('title', 'LIKE', '%' . $request->title . '%');
         }

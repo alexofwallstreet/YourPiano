@@ -396,7 +396,6 @@ export default {
       this.isLoading = false;
     },
     playNote(note, octave) {
-      console.log(this.volumeLevel)
       const noteName = `${note}${octave}`;
       this.audioContext.resume().then(() => {
         this.activeAudioNodes[noteName] = this.soundfont.play(noteName, this.audioContext.currentTime, {

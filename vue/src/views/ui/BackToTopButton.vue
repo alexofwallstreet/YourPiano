@@ -8,10 +8,10 @@
       class="text-white hover:text-indigo-200 transition"
     >
       <button @click="scrollToTop"
-              class="bg-indigo-600 rounded-full p-4 border-2 animate-bounce"
+              class="bg-indigo-600 rounded-full p-3 animate-bounce"
               role="button"
               aria-label="scroll to top of the page">
-        <ArrowUpIcon class="h-10 w-10"></ArrowUpIcon>
+        <ArrowUpIcon class="h-3 w-3"></ArrowUpIcon>
       </button>
     </div>
   </div>

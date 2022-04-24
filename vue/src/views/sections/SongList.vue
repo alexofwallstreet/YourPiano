@@ -39,7 +39,7 @@
             <div class="mt-2">
               <DifficultyLabel class="h-5 mt-1 mr-2" :level-id="song.difficulty"></DifficultyLabel>
             </div>
-            <div>
+            <div class="mt-1">
               <GenreLabel :genre-id="song.genre" class="h-5 mt-1"></GenreLabel>
             </div>
           </router-link>

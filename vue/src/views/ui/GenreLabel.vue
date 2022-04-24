@@ -1,5 +1,5 @@
 <template>
-  <p class="inline-flex items-center px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full bg-indigo-100 text-indigo-900">
+  <p class="inline-flex items-center px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full bg-indigo-50 text-indigo-900">
     {{GENRES[genreId]}}
   </p>
 </template>

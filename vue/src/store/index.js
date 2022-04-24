@@ -137,7 +137,7 @@ const store = createStore({
       });
     },
 
-    getSongs({commit}, {url = null} = {}) {
+    getSongs({commit}, {url = null, search = null} = {}) {
       url = url || '/songs?page=1';
       commit('setSongsLoading', true);
       const searchOptions = store.state.searchOptions;
@@ -146,6 +146,7 @@ const store = createStore({
       searchQuery += searchOptions.searchTitleInput ? `&title=${searchOptions.searchTitleInput}` : '';
       searchQuery += searchOptions.searchAuthorInput ? `&author=${searchOptions.searchAuthorInput}` : '';
       searchQuery += `&orderBy=${searchOptions.sorting.find(sort => sort.current).value}`;
+      searchQuery += search ? `&search=${search}` : '';
       searchOptions.filters[0].options.forEach(genre => {
         if (genre.checked) {
           searchQuery += `&genre[]=${genre.value}`;
