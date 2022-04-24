@@ -22,12 +22,6 @@
                      border-2 border-indigo-600 p-1"
                        :src="store.state.user.data.imagePath"
                        alt="profile">
-                  <div
-                    @click="toggleModal"
-                    class="absolute cursor-pointer hover:bg-indigo-700 right-0 bottom-0
-                    flex justify-center items-center w-6 h-6 md:w-10 md:h-10 bg-indigo-500 rounded-full">
-                    <PencilIcon class="w-4 h-4 md:w-7 md:h-7 stroke-indigo-50 "></PencilIcon>
-                  </div>
                 </div>
 
                 <!-- profile meta -->

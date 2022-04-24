@@ -30,13 +30,23 @@ class UserController extends Controller
     /**
      * @throws \Exception
      */
-    public function updatePhoto(Request $request, User $user): array
+    public function update(Request $request, User $user): UserResource
     {
+        $emailValidation = 'required|email|string|unique:users,email';
+
+        if ($request->email === $user->email) {
+            $emailValidation = '';
+        }
+
         $data = $request->validate([
-            'profile_photo' => 'required|string',
+            'name' => 'required|string',
+            'email' => $emailValidation,
+            'profile_photo' => 'string|nullable',
         ]);
 
-        if (isset($data['profile_photo'])) {
+        $user->update($data);
+
+        if (!empty($data['profile_photo'])) {
             $imagePath = $this->saveImage($data['profile_photo']);
 
             if ($user->profile_photo) {
@@ -45,13 +55,12 @@ class UserController extends Controller
                     File::delete($absolutePath);
                 }
             }
-        }
-        $user->profile_photo = $imagePath;
-        $user->save();
 
-        return [
-          'profile_image' => URL::to('/') . '/' . $imagePath
-        ];
+            $user->profile_photo = $imagePath;
+        }
+
+        $user->save();
+        return new UserResource($user);
     }
 
     public function saveImage($image): string
@@ -132,11 +141,6 @@ class UserController extends Controller
             'totalRatingPlays' => $totalRatingPlays,
             'totalRatingPoints' => $totalRatingPoints,
         ];
-    }
-
-    public function update(User $user)
-    {
-
     }
 
     public function destroy(User $user)

@@ -20,7 +20,7 @@ export default {
   name: "StatusLabel",
   components: {LoadingSpinner},
   props: {
-    status: Number
+    status: String
   },
   data() {
     return {
