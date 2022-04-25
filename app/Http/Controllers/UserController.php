@@ -10,8 +10,10 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 class UserController extends Controller
@@ -61,6 +63,28 @@ class UserController extends Controller
 
         $user->save();
         return new UserResource($user);
+    }
+
+    public function updatePassword(Request $request, User $user)
+    {
+        $data = $request->validate([
+            'old_password' => 'required|string',
+            'new_password' => [
+                'required',
+                'same:new_password_confirm',
+                Password::min(8)->mixedCase()->numbers(),
+            ]
+        ]);
+
+        if (Hash::check($data['old_password'], $user->password)) {
+            $user->password = bcrypt($data['new_password']);
+            $user->save();
+            return new UserResource($user);
+        }
+
+        return response([
+            'error' => 'Given password not'
+        ], 422);
     }
 
     public function saveImage($image): string

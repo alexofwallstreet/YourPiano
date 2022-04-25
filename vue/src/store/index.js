@@ -232,6 +232,13 @@ const store = createStore({
         })
     },
 
+    updatePassword({commit}, updatePasswordModel) {
+      return axiosClient.put(`users/${store.state.user.data.id}/update-password`, updatePasswordModel)
+        .then(({data}) => {
+          return data;
+        })
+    },
+
     logout({commit}) {
       return axiosClient.post('/logout')
         .then(res => {

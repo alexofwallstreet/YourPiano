@@ -17,7 +17,8 @@
                 {{ errorMsg }}
                 <span @click="errorMsg=''"
                       class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                   </svg>
                 </span>
@@ -26,7 +27,8 @@
                 {{ successMsg }}
                 <span @click="successMsg=''"
                       class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                   </svg>
                 </span>
@@ -64,7 +66,8 @@
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <button type="submit" :disabled="_.isEqual(startModel, updateModel)" :class="_.isEqual(startModel, updateModel) ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600  hover:bg-indigo-700'"
+              <button type="submit" :disabled="_.isEqual(startModel, updateModel)"
+                      :class="_.isEqual(startModel, updateModel) ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600  hover:bg-indigo-700'"
                       class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <LockClosedIcon v-if="!loading" class="-ml-1 mr-3 h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
                                 :class="_.isEqual(startModel, updateModel) ? 'fill-gray-50' : 'fill-indigo-300'"
@@ -100,24 +103,50 @@
         </div>
       </div>
       <div class="mt-5 md:mt-0 md:col-span-2">
-        <form action="#" method="POST">
+        <form @submit.prevent="changePassword">
           <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white sm:p-6">
               <div class="grid grid-cols-6 gap-6">
+                <div class="col-span-6 sm:col-span-6">
+                  <ErrorMessage v-if="errorPasswordMsg">
+                    {{ errorPasswordMsg }}
+                    <span @click="errorPasswordMsg=''"
+                          class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </span>
+                  </ErrorMessage>
+                  <SuccessMessage v-if="successPasswordMsg">
+                    {{ successPasswordMsg }}
+                    <span @click="successPasswordMsg=''"
+                          class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </span>
+                  </SuccessMessage>
+                </div>
+
                 <div class="col-span-6 sm:col-span-5">
                   <label for="old-password" class="block text-sm font-medium text-gray-700">Текущий пароль</label>
-                  <input type="text" name="old-password" id="old-password" autocomplete="given-name"
+                  <input type="password" name="old-password" id="old-password" autocomplete="given-name"
+                         v-model="changePasswordModel.old_password"
                          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                 </div>
                 <div class="col-span-6 sm:col-span-5">
                   <label for="new-password" class="block text-sm font-medium text-gray-700">Новый пароль</label>
-                  <input type="text" name="new-password" id="new-password" autocomplete="given-name"
+                  <input type="password" name="new-password" id="new-password" autocomplete="given-name"
+                         v-model="changePasswordModel.new_password"
                          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                 </div>
                 <div class="col-span-6 sm:col-span-5">
                   <label for="new-password-repeat" class="block text-sm font-medium text-gray-700">Повторите новый
                     пароль</label>
-                  <input type="text" name="new-password-repeat" id="new-password-repeat" autocomplete="given-name"
+                  <input type="password" name="new-password-repeat" id="new-password-repeat" autocomplete="given-name"
+                         v-model="changePasswordModel.new_password_confirm"
                          class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                 </div>
               </div>
@@ -207,7 +236,9 @@ const isImageUpload = ref(false);
 const loading = ref(false);
 const startModel = ref({});
 let errorMsg = ref('');
+let errorPasswordMsg = ref('');
 let successMsg = ref('');
+let successPasswordMsg = ref('');
 
 // Create empty image
 let updateModel = ref({
@@ -216,6 +247,22 @@ let updateModel = ref({
   profile_photo: null,
   profile_photo_url: null,
 });
+
+let changePasswordModel = ref({
+  new_password: '',
+  old_password: '',
+  new_password_confirm: '',
+})
+
+function changePassword() {
+  store.dispatch('updatePassword', changePasswordModel.value)
+    .then(() => {
+      successPasswordMsg.value = 'Пароль успешно обновлен';
+    })
+    .catch((err) => {
+      errorPasswordMsg.value = 'Ошибка';
+    })
+}
 
 onMounted(() => {
   updateStartModel();

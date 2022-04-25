@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-center w-full">
-    <SongList :songs="songs">
-      <Pagination :links="songs.links" :get-for-page="getForPage"></Pagination>
+    <SongList :songs="songs" v-if="songs.loading || songs.data.length > 0">
+      <Pagination v-if="songs.data.length > 0" :links="songs.links" :get-for-page="getForPage"></Pagination>
     </SongList>
     <NothingFound v-if="songs.data.length === 0 && !songs.loading" message="У вас нет понравившихся песен."></NothingFound>
   </div>
