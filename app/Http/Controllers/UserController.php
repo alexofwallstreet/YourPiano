@@ -176,6 +176,16 @@ class UserController extends Controller
             }
         }
         $user->delete();
+        return response([
+            'success' => true
+        ]);
     }
 
+    public function destroyResults(User $user)
+    {
+        UserSongRatingPlay::where('user_id', $user->id)->delete();
+        return response([
+            'success' => true
+        ]);
+    }
 }

@@ -1,4 +1,18 @@
 <template>
+  <DeleteModal
+    :open="isDeleteResultsModalOpen"
+    :toggle-modal-callback="toggleDeleteResultsModal"
+    :delete-callback="deleteResult"
+    :title="'Вы уверены, что хотите удалить все ваши результаты? Восстановить их будет невозможно'"
+  ></DeleteModal>
+
+  <DeleteModal
+    :open="isDeleteAccountModalOpen"
+    :toggle-modal-callback="toggleDeleteAccountModal"
+    :delete-callback="deleteAccount"
+    :title="'Вы уверены, что хотите удалить ваш аккаунт? Все данные и результаты будут потеряны'"
+  ></DeleteModal>
+
   <div class="opacity-0 animate-fade-in-down mt-6">
     <div class="md:grid md:grid-cols-3 md:gap-6">
       <div class="md:col-span-1">
@@ -57,8 +71,9 @@
                 <label class="block text-sm font-medium text-gray-700"> Фото профиля </label>
                 <div class="mt-1 flex items-center">
                   <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                     <img :src="updateModel.profile_photo_url ?? store.state.user.data.imagePath" alt="New Image"
+                     <img v-if="!loading" :src="updateModel.profile_photo_url ?? store.state.user.data.imagePath" alt="New Image"
                           class="h-full w-full object-cover">
+                    <LoadingSpinner v-else class="w-12 h-12"></LoadingSpinner>
                   </span>
                   <input type="file" @change="onImageChoose"
                          class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"/>
@@ -184,6 +199,28 @@
           <div class="shadow overflow-hidden sm:rounded-md">
             <div class="px-4 py-5 bg-white space-y-6 sm:p-6">
               <fieldset>
+                <div class="py-3" v-if="successDeleteResultsMsg || errorDeleteResultsMsg">
+                  <ErrorMessage v-if="errorDeleteResultsMsg">
+                    {{ errorDeleteResultsMsg }}
+                    <span @click="errorDeleteResultsMsg=''"
+                          class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </span>
+                  </ErrorMessage>
+                  <SuccessMessage v-if="successDeleteResultsMsg">
+                    {{ successDeleteResultsMsg }}
+                    <span @click="successDeleteResultsMsg=''"
+                          class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </span>
+                  </SuccessMessage>
+                </div>
                 <legend class="text-base font-medium text-gray-900">Удалить все результаты</legend>
                 <p class="text-sm text-gray-600">
                   Удаление результатов приведет к тому, что все очки, набранные вами за сыгранные песни, будут удалены.
@@ -191,7 +228,7 @@
                 <div class="mt-1 space-y-4">
                   <div>
                     <div class="mt-2 flex items-center">
-                      <button type="button"
+                      <button type="button" @click="toggleDeleteResultsModal"
                               class="bg-red-500 text-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Удалить результаты
                       </button>
@@ -200,6 +237,18 @@
                 </div>
               </fieldset>
               <fieldset>
+                <div class="py-3" v-if="errorDeleteAccountMsg">
+                  <ErrorMessage v-if="errorDeleteAccountMsg">
+                    {{ errorDeleteAccountMsg }}
+                    <span @click="errorDeleteAccountMsg=''"
+                          class="w-8 h-8 flex items-center justify-center cursor-pointer rounded-full transition-colors hover:bg-[rgba(0,0,0,0.2)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                  </span>
+                  </ErrorMessage>
+                </div>
                 <legend class="text-base font-medium text-gray-900">Удалить аккаунт</legend>
                 <p class="text-sm text-gray-600">
                   Удаление всех данных профиля, включая лайки и набранные очки.
@@ -207,7 +256,7 @@
                 <div class="mt-1 space-y-4">
                   <div>
                     <div class="mt-2 flex items-center">
-                      <button type="button"
+                      <button type="button" @click="toggleDeleteAccountModal"
                               class="bg-red-500 text-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         Удалить аккаунт
                       </button>
@@ -231,14 +280,27 @@ import {LockClosedIcon} from '@heroicons/vue/solid';
 import {onMounted, ref} from "vue";
 import ErrorMessage from "../ui/ErrorMessage.vue";
 import SuccessMessage from "../ui/SuccessMessage.vue";
+import DeleteModal from "../admin/sections/DeleteModal.vue";
+import {useRouter} from "vue-router";
+import LoadingSpinner from "../ui/LoadingSpinner.vue";
+
+const router = useRouter();
 
 const isImageUpload = ref(false);
 const loading = ref(false);
 const startModel = ref({});
+
+const isDeleteResultsModalOpen = ref(false);
+const isDeleteAccountModalOpen = ref(false);
+
 let errorMsg = ref('');
 let errorPasswordMsg = ref('');
+let errorDeleteResultsMsg = ref('');
+let errorDeleteAccountMsg = ref('');
 let successMsg = ref('');
 let successPasswordMsg = ref('');
+let successDeleteResultsMsg = ref('');
+let successDeleteAccountMsg = ref('');
 
 // Create empty image
 let updateModel = ref({
@@ -255,6 +317,8 @@ let changePasswordModel = ref({
 })
 
 function changePassword() {
+  errorPasswordMsg.value = '';
+  successPasswordMsg.value = '';
   store.dispatch('updatePassword', changePasswordModel.value)
     .then(() => {
       successPasswordMsg.value = 'Пароль успешно обновлен';
@@ -303,6 +367,44 @@ function update() {
     })
     .catch((err) => {
       errorMsg.value = 'Произошла ошибка';
+    })
+}
+
+function toggleDeleteResultsModal() {
+  isDeleteResultsModalOpen.value = !isDeleteResultsModalOpen.value;
+}
+
+function toggleDeleteAccountModal() {
+  isDeleteAccountModalOpen.value = !isDeleteAccountModalOpen.value;
+}
+
+function deleteResult() {
+  errorDeleteResultsMsg.value = '';
+  successDeleteResultsMsg.value = '';
+  store.dispatch('deleteUserResults')
+    .then(() => {
+      successDeleteResultsMsg.value = 'Результаты успешно удалены';
+      toggleDeleteResultsModal();
+      store.dispatch('getStats');
+    })
+    .catch((err) => {
+      errorDeleteResultsMsg.value = 'Ошибка при удалении результатов';
+    })
+}
+
+function deleteAccount() {
+  store.dispatch('deleteAccount')
+    .then(() => {
+      store.dispatch('logout')
+        .then(() => {
+        }).finally(() => {
+        router.push({
+          name: 'Login'
+        })
+      });
+    })
+    .catch((err) => {
+      errorDeleteAccountMsg.value = 'Ошибка при удалении аккаунта';
     })
 }
 </script>

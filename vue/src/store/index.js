@@ -232,6 +232,13 @@ const store = createStore({
         })
     },
 
+    deleteUserResults({commit}) {
+      return axiosClient.delete(`users/${store.state.user.data.id}/results`)
+        .then((data) => {
+          return data;
+        })
+    },
+
     updatePassword({commit}, updatePasswordModel) {
       return axiosClient.put(`users/${store.state.user.data.id}/update-password`, updatePasswordModel)
         .then(({data}) => {
@@ -269,6 +276,15 @@ const store = createStore({
         commit('setUsersLoading', false);
         return res;
       })
+    },
+
+    deleteAccount({commit}) {
+      return axiosClient.delete(`/users/${store.state.user.data.id}`)
+        .then(res => {
+          return res;
+        }).finally(() => {
+          commit('logout');
+        })
     },
 
     deleteSong({commit}, song) {

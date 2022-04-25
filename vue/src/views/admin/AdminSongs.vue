@@ -1,9 +1,13 @@
 <template>
   <AddModal :open="isAddModalOpen" :toggle-modal-callback="toggleAddModal"></AddModal>
   <UpdateModal :open="isUpdateModalOpen" :item="currentSong" :toggle-modal-callback="toggleUpdateModal"></UpdateModal>
-  <DeleteModal :open="isDeleteModalOpen " :item="currentSong" :toggle-modal-callback="toggleDeleteModal"
-               :title="'Вы уверены, что хотите удалить песню ' + currentSong?.title + ' и все результаты, связанные с ней?'"
-               :delete-callback="deleteSong"></DeleteModal>
+  <DeleteModal
+    :open="isDeleteModalOpen "
+    :item="currentSong"
+    :toggle-modal-callback="toggleDeleteModal"
+    :title="'Вы уверены, что хотите удалить песню ' + currentSong?.title + ' и все результаты, связанные с ней?'"
+    :delete-callback="deleteSong"
+  ></DeleteModal>
 
   <div class="py-8 rounded-md w-full">
     <div class="flex items-center justify-center opacity-0 animate-fade-in-up">

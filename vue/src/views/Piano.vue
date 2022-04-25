@@ -36,19 +36,19 @@
         <!-- End Toggle button with Arrows -->
         <div class="song-wrapper" v-if="!isFreePlayMode()">
           <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
-            <img class="w-full h-full object-cover" :src="song.data.imagePath" alt="Sunset in the mountains">
+            <img class="w-full h-full object-cover" :src="song.data.imagePath" :alt="song.data.title">
           </div>
           <div class="pt-4">
             <div class="font-bold text-sm text-blue-200 whitespace-nowrap">{{ song.data.author }}</div>
             <div class="font-bold text-xl mb-2 whitespace-nowrap">{{ song.data.title }}</div>
           </div>
           <!-- Slider -->
-          <div class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-2">
+          <div class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-1">
             <div class="h-full bg-white song-slider rounded"
                  :style="{ width: lastNoteTime > playTime ? (playTime / lastNoteTime * 100 + '%') : ('100%') }"></div>
           </div>
 
-          <div class="pb-2 flex justify-start">
+          <div class="pb-2 flex justify-start items-center">
             <PlayIcon
               v-on:click.prevent="playSong"
               class="song-control-btn h-10 w-10 cursor-pointer relative"
@@ -56,6 +56,7 @@
             ></PlayIcon>
 
             <PauseIcon
+              v-if="gameMode !== store.state.gameModes.RATING_GAME_MODE"
               v-on:click.prevent="pauseSong"
               class="song-control-btn h-10 w-10 cursor-pointer relative"
               :class="{'fill-white' : isPlaying() && !isCountdown() , 'fill-indigo-400' : !isPlaying() || isCountdown()}"
@@ -68,12 +69,13 @@
             ></StopIcon>
 
             <div class="flex justify-end ml-auto">
-              <LikeButton @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
+              <LoadingSpinner class="m-2 w-8 h-8" v-if="isLikeLoading"></LoadingSpinner>
+              <LikeButton v-else @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
             </div>
           </div>
 
           <div class="w-full" v-if="isTutorialMode()">
-            <FastForwardIcon class="w-4 inline-block"></FastForwardIcon>
+            <FastForwardIcon class="w-6 mr-2 inline-block"></FastForwardIcon>
             <label for="speed" class="font-bold text-white whitespace-nowrap">Скорость: x{{ songSpeed }}</label>
             <input type="range" id="speed" name="range" min="0" max="2" step="0.01"
                    class="w-full h-2 bg-indigo-100 appearance-none" v-model="songSpeed"/>
@@ -126,10 +128,20 @@
     <div class="flex-1 overflow-auto">
       <div class="main flex lg:justify-center md:justify-start w-full opacity-0 animate-fade-in-down ">
         <!-- Piano Keyboard + Falling Notes -->
-        <div className="content flex flex-col justify-between h-full">
-          <div className="flex h-full">
-            <div className="notesColumns" ref="notesColumns">
-              <div className="flex h-full">
+        <div class="content flex flex-col justify-between h-full">
+          <div v-if="gameMode !== store.state.gameModes.FREE_PLAY_MODE" class="absolute text-bold text-white top-0 z-10 p-4 flex-col ">
+            <div class="text-lg text-gray-400">
+              Результат: <br> <span class="font-bold text-3xl">{{currentRatingPoints}}</span><span class="text-xl px-2">/ {{ song.data.ratingPoints }}</span>
+            </div>
+            <div class="mt-4 text-lg text-gray-400">
+              Лучший: <br> <span class="font-bold text-3xl">{{song.data.userPoints}}</span>
+            </div>
+          </div>
+
+          <div class="flex h-full">
+            <div class="notesColumns" ref="notesColumns">
+
+              <div class="flex h-full">
                 <div
                   class="bg-gray-700"
                   v-for="(column, cindex) in notesColumns"
@@ -146,12 +158,12 @@
                     v-bind:key="`note_${cindex}_${nindex}`"
                     v-bind:style="{ top: getScreenYPosByTime(time) }"
                   />
-                  <div className="dropArea"/>
+                  <div class="dropArea"/>
                 </div>
               </div>
             </div>
           </div>
-          <div className="keyboard flex pb-3">
+          <div class="keyboard flex pb-3">
             <div
               v-for="(key, index) in keys"
               v-bind:key="key[0] + key[1]"
@@ -163,7 +175,7 @@
               v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(index) }"
               v-on:mousedown="playNote(key[0], key[1])"
             >
-              <div className="keySign text-center font-medium">{{ getKeySign(key[0], key[1]) }}</div>
+              <div class="keySign text-center font-medium">{{ getKeySign(key[0], key[1]) }}</div>
             </div>
           </div>
         </div>
@@ -186,6 +198,7 @@ import router from "../router";
 import LikeButton from "./ui/LikeButton.vue";
 import Modal from "./ui/Modal.vue";
 import {PlayIcon, PauseIcon, StopIcon, VolumeUpIcon, FastForwardIcon} from '@heroicons/vue/solid'
+import LoadingSpinner from "./ui/LoadingSpinner.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -221,6 +234,7 @@ export default {
     let notesColumns = [];
 
     let isLoading = true;
+    let isLikeLoading = false;
 
     for (let k of keys) {
       notesColumns.push({
@@ -236,6 +250,7 @@ export default {
       song: computed(() => store.state.song),
       midi: [],
       isLoading: isLoading,
+      isLikeLoading: isLikeLoading,
       states: GAME_STATE,
       gameState: GAME_STATE.idle,
       keys: keys,
@@ -350,6 +365,7 @@ export default {
         const GOOD_NOTES = this.stats.good;
         const ONE_NOTE_POINT = MAX_POINTS / TOTAL_NOTES;
         const POINTS = (PERFECT_NOTES * ONE_NOTE_POINT) + (GOOD_NOTES * ONE_NOTE_POINT / 2);
+        this.song.data.userPoints = POINTS > this.song.data.userPoints ? parseInt(POINTS) : this.song.data.userPoints;
         // console.log('MAX: ' + MAX_POINTS);
         // console.log('TOTAL_NOTES: ' + TOTAL_NOTES);
         // console.log('PERFECT_NOTES: ' + PERFECT_NOTES);
@@ -707,26 +723,27 @@ export default {
       return this.gameState === GAME_STATE.countdown;
     },
     toggleLike(song) {
-      if (!this.isLoading) {
-        this.isLoading = true;
+      if (!this.isLikeLoading) {
+        this.isLikeLoading = true;
         const user = store.state.user.data;
         if (song.isFavorite) {
           store.dispatch('dislikeSong', {song, user})
             .then(() => {
               song.isFavorite = false;
-              this.isLoading = false;
+              this.isLikeLoading = false;
             })
         } else {
           store.dispatch('likeSong', {song, user})
             .then(() => {
               song.isFavorite = true;
-              this.isLoading = false;
+              this.isLikeLoading = false;
             })
         }
       }
     }
   },
   components: {
+    LoadingSpinner,
     Modal,
     LikeButton,
     SpinnerOverlay,
@@ -747,6 +764,16 @@ export default {
     )
 
     return {collapsed, toggleSidebar, sidebarWidth}
+  },
+  computed: {
+    currentRatingPoints() {
+      const TOTAL_NOTES = this.midiFile?.events?.length;
+      const MAX_POINTS = this.song?.data?.ratingPoints;
+      const PERFECT_NOTES = this.stats.perfect;
+      const GOOD_NOTES = this.stats.good;
+      const ONE_NOTE_POINT = MAX_POINTS / TOTAL_NOTES;
+      return parseInt((PERFECT_NOTES * ONE_NOTE_POINT) + (GOOD_NOTES * ONE_NOTE_POINT / 2));
+    }
   },
   props: {
     gameMode: String

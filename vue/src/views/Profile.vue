@@ -20,7 +20,7 @@
                 <div class="inline-flex flex-col relative">
                   <img class="relative w-20 h-20 md:w-40 md:h-40 object-cover rounded-full
                      border-2 border-indigo-600 p-1"
-                       :src="store.state.user.data.imagePath"
+                       :src="store.state.user.data?.imagePath"
                        alt="profile">
                 </div>
 
