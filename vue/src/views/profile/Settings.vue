@@ -64,9 +64,10 @@
               </div>
             </div>
             <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              <button type="submit"
-                      class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <button type="submit" :disabled="_.isEqual(startModel, updateModel)" :class="_.isEqual(startModel, updateModel) ? 'bg-gray-300 cursor-not-allowed' : 'bg-indigo-600  hover:bg-indigo-700'"
+                      class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <LockClosedIcon v-if="!loading" class="-ml-1 mr-3 h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
+                                :class="_.isEqual(startModel, updateModel) ? 'fill-gray-50' : 'fill-indigo-300'"
                                 aria-hidden="true"/>
                 <svg v-else
                      class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
@@ -196,6 +197,7 @@
 
 <script setup>
 import store from "../../store";
+import _ from 'lodash';
 import {LockClosedIcon} from '@heroicons/vue/solid';
 import {onMounted, ref} from "vue";
 import ErrorMessage from "../ui/ErrorMessage.vue";
@@ -203,6 +205,7 @@ import SuccessMessage from "../ui/SuccessMessage.vue";
 
 const isImageUpload = ref(false);
 const loading = ref(false);
+const startModel = ref({});
 let errorMsg = ref('');
 let successMsg = ref('');
 
@@ -215,8 +218,7 @@ let updateModel = ref({
 });
 
 onMounted(() => {
-  updateModel.value.name = store.state.user.data.name;
-  updateModel.value.email = store.state.user.data.email;
+  updateStartModel();
 })
 
 function onImageChoose(ev) {
@@ -233,6 +235,12 @@ function onImageChoose(ev) {
   reader.readAsDataURL(file);
 }
 
+function updateStartModel() {
+  updateModel.value.name = store.state.user.data.name;
+  updateModel.value.email = store.state.user.data.email;
+  startModel.value = _.clone(updateModel.value);
+}
+
 function update() {
   errorMsg.value = '';
   successMsg.value = '';
@@ -244,6 +252,7 @@ function update() {
       isImageUpload.value = false;
       updateModel.value.profile_photo = null;
       updateModel.value.profile_photo_url = null;
+      updateStartModel();
     })
     .catch((err) => {
       errorMsg.value = 'Произошла ошибка';
