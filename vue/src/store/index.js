@@ -4,8 +4,8 @@ import axiosClient from '../axios'
 const store = createStore({
   state: {
     user: {
-      data: JSON.parse(sessionStorage.getItem('user')),
-      token: sessionStorage.getItem('TOKEN')
+      data: JSON.parse(localStorage.getItem('user')),
+      token: localStorage.getItem('TOKEN')
     },
     song: {
       loading: false,
@@ -314,24 +314,24 @@ const store = createStore({
     logout: state => {
       state.user.data = null;
       state.user.token = null;
-      sessionStorage.clear();
+      localStorage.clear();
     },
 
     setUser: (state, userData) => {
       state.user.token = userData.token;
       state.user.data = userData.user;
-      sessionStorage.setItem('TOKEN', userData.token);
-      sessionStorage.setItem('user', JSON.stringify(userData.user));
+      localStorage.setItem('TOKEN', userData.token);
+      localStorage.setItem('user', JSON.stringify(userData.user));
     },
 
     setUpdatedUser: (state, userData) => {
       state.user.data = userData.data;
-      sessionStorage.setItem('user', JSON.stringify(userData.data));
+      localStorage.setItem('user', JSON.stringify(userData.data));
     },
 
     setUserImage: (state, data) => {
       state.user.data.imagePath = data;
-      sessionStorage.setItem('user', JSON.stringify(store.state.user.data));
+      localStorage.setItem('user', JSON.stringify(store.state.user.data));
     },
 
     setSongsLoading: (state, loading) => {

@@ -15,18 +15,18 @@
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="p-8 text-center text-white bg-indigo-600 sm:col-span-2 sm:p-16 lg:py-24">
                   <div class="max-w-lg mx-auto space-y-8">
-                    <p class="text-3xl font-bold sm:text-4xl">
+                    <p class="text-3xl font-extrabold sm:text-4xl">
                       Всегда мечтали научиться играть на фортепиано?
                     </p>
 
-                    <p class="text-sm">
+                    <p class="text-lg">
                       Обучение с YourPiano - это весело и увлекательно.
                       Зарабатывайте очки за каждую сыгранную песню и повышайте свой уровень
                     </p>
 
                     <a
-                      href=""
-                      class="inline-flex items-center px-4 py-4 mt-8 font-medium text-indigo-600 bg-white rounded-full hover:opacity-75"
+                      href="#begin"
+                      class="animate-bounce inline-flex items-center px-4 py-4 mt-16 font-medium text-indigo-600 bg-white rounded-full hover:opacity-75"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -42,17 +42,17 @@
                   </div>
                 </div>
 
-                <div class="relative h-64 lg:order-first lg:h-full">
+                <div class="relative h-64 lg:order-first lg:h-full bg-indigo-800 rounded-3xl hidden sm:block">
                   <img
-                    src="https://images.unsplash.com/photo-1625239185060-88135bd3519b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80"
+                    src="/images/piano-woman.png"
                     alt="Sunset with palm trees"
                     class="absolute inset-0 object-cover w-full h-full"
                   />
                 </div>
 
-                <div class="relative h-64 lg:h-full">
+                <div class="relative h-64 lg:h-full bg-indigo-800 rounded-3xl ">
                   <img
-                    src="https://images.unsplash.com/photo-1625175619292-ff5e5b2dfaf1?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=668&q=80"
+                    src="/images/piano-woman-2.png"
                     alt="Man in a hat and yellow jumper"
                     class="absolute inset-0 object-cover w-full h-full"
                   />
@@ -62,13 +62,13 @@
           </section>
 
           <!-- Second Screen -->
-          <section class="px-4 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
-            <div class="relative overflow-hidden text-gray-300 bg-gray-900 lg:flex">
+          <section id="begin" class="px-4 py-8 mx-auto max-w-screen-2xl sm:px-6 lg:px-8 border shadow">
+            <div class="relative overflow-hidden text-gray-900 lg:flex">
               <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left">
                 <div class="max-w-xl mx-auto lg:ml-0">
                   <p class="text-sm font-medium">Lorem ipsum dolor sit amet.</p>
 
-                  <p class="mt-2 text-2xl font-bold text-white sm:text-3xl">
+                  <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit
                   </p>
 
@@ -79,40 +79,40 @@
                     duis.
                   </p>
 
-                  <a
-                    href=""
-                    class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                  <router-link
+                    to="about"
+                    class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
                   >
                     Get started today
-                  </a>
+                  </router-link>
                 </div>
               </div>
 
-              <div class="relative w-full h-64 sm:h-96 lg:w-1/2 lg:h-auto">
+              <div class="relative w-full h-64 sm:h-96 lg:w-1/2 lg:h-auto bg-indigo-800 rounded-3xl">
                 <img
-                  src="https://www.hyperui.dev/photos/women-2.jpeg"
+                  src="/images/pianist.png"
                   alt="Women smiling at college"
-                  class="absolute inset-0 object-cover w-full h-full"
+                  class="absolute inset-0 object-contain w-full h-full p-12 "
                 />
               </div>
             </div>
           </section>
 
           <!-- Third Screen -->
-          <section class="px-4 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
-            <div class="relative overflow-hidden text-gray-300 bg-gray-900 lg:flex">
-              <div class="relative w-full h-64 sm:h-96 lg:w-1/2 lg:h-auto">
+          <section class="px-4 mx-auto py-8 max-w-screen-2xl sm:px-6 lg:px-8 border shadow">
+            <div class="relative overflow-hidden text-gray-900 lg:flex">
+              <div class="relative w-full h-64 sm:h-96 lg:w-1/2 lg:h-auto bg-indigo-800 rounded-3xl">
                 <img
-                  src="https://www.hyperui.dev/photos/women-2.jpeg"
+                  src="/images/piano-woman-3.png"
                   alt="Women smiling at college"
-                  class="absolute inset-0 object-cover w-full h-full"
+                  class="absolute inset-0 object-cover w-full h-full "
                 />
               </div>
               <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left">
                 <div class="max-w-xl mx-auto lg:ml-0">
                   <p class="text-sm font-medium">Lorem ipsum dolor sit amet.</p>
 
-                  <p class="mt-2 text-2xl font-bold text-white sm:text-3xl">
+                  <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit
                   </p>
 
@@ -125,7 +125,7 @@
 
                   <a
                     href=""
-                    class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                    class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
                   >
                     Get started today
                   </a>
@@ -150,19 +150,19 @@
                   <div
                     class="absolute inline-flex px-4 py-2 bg-white rounded-lg shadow-xl -bottom-4 -right-4"
                   >
-                    <span class="inline-block w-12 h-10 bg-gray-100 rounded-lg"></span>
+                    <span class="inline-flex items-center justify-center w-12 h-10 bg-gray-100 rounded-lg font-extrabold text-4xl">"</span>
                   </div>
                 </div>
 
                 <blockquote class="sm:col-span-2">
-                  <p class="text-xl font-medium sm:text-2xl">
+                  <p class="text-xl font-bold sm:text-2xl">
                     Слова иногда нуждаются в музыке, но музыка не нуждается ни в чём.
                   </p>
 
                   <cite class="inline-flex items-center mt-8 not-italic">
                     <span class="hidden w-6 h-px bg-gray-400 sm:inline-block"></span>
                     <p class="text-sm text-gray-500 uppercase sm:ml-3">
-                      <strong>Алексей Волчков</strong>, создатель сайта YourPiano
+                      <i>Алексей Волчков</i>, создатель сайта YourPiano
                     </p>
                   </cite>
                 </blockquote>
@@ -171,16 +171,15 @@
           </div>
 
           <!-- Promo Section -->
-          <section class="text-white bg-gray-900">
-            <div class="max-w-screen-xl px-4 py-32 mx-auto lg:h-screen lg:items-center lg:flex">
+          <section class="text-gray-900">
+            <div class="max-w-screen-xl px-4 py-32 mx-auto lg:items-center lg:flex">
               <div class="max-w-3xl mx-auto text-center">
                 <h1
-                  class="text-3xl font-extrabold text-transparent sm:text-5xl bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
-                  Understand User Flow.
-
+                  class="text-3xl font-extrabold text-transparent sm:text-5xl bg-clip-text bg-gradient-to-r from-blue-500 via-indogo-500 to-indigo-600">
+                  Начинай учиться
                   <span class="sm:block">
-          Increase Conversion.
-        </span>
+                  прямо сейчас
+                  </span>
                 </h1>
 
                 <p class="max-w-xl mx-auto mt-4 sm:leading-relaxed sm:text-xl">
@@ -190,13 +189,13 @@
 
                 <div class="flex flex-wrap justify-center gap-4 mt-8">
                   <a
-                    class="block w-full px-12 py-3 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded sm:w-auto active:text-opacity-75 hover:bg-transparent hover:text-white focus:outline-none focus:ring"
+                    class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600 border border-blue-600 rounded sm:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
                     href="/get-started">
                     Get Started
                   </a>
 
                   <a
-                    class="block w-full px-12 py-3 text-sm font-medium text-white border border-blue-600 rounded sm:w-auto hover:bg-blue-600 active:bg-blue-500 focus:outline-none focus:ring"
+                    class="block w-full px-12 py-3 text-sm font-medium text-white border bg-indigo-500 border-blue-600 rounded sm:w-auto hover:bg-indigo-600 active:bg-indigo-500 focus:outline-none focus:ring"
                     href="/about">
                     Learn More
                   </a>
