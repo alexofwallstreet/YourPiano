@@ -70,7 +70,7 @@
                 </ul>
 
                 <!-- flexbox grid -->
-                <div class="flex flex-wrap justify-center w-full">
+                <div class="flex flex-wrap justify-center w-full gap-2">
                   <router-view></router-view>
                 </div>
               </div>

@@ -17,11 +17,12 @@
             <router-link
               class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600
               rounded xs:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
-              :to="{name: ''}">
+              :to="{name: 'PianoFreePlay'}">
               Начать играть
             </router-link>
 
             <router-link
+              v-if="!store.state.user.token"
               class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-400
               rounded xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
               :to="{name: 'Login'}">

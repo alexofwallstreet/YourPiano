@@ -2,9 +2,8 @@
   <SongListSkeleton v-if="songs.loading"></SongListSkeleton>
   <div v-else class="lg:col-span-3 w-full">
     <div>
-      <div class="max-w-2xl mx-auto py-12 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:max-w-7xl lg:px-8" :class="onlyBest ? '' : 'py-12'">
         <h2 class="sr-only">Songs</h2>
-
         <div
           class="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
           <router-link
@@ -23,9 +22,6 @@
                 </div>
 <!--                <LikeButton :is-favorite="song.isFavorite"></LikeButton>-->
               </div>
-              <!--              <div class="h-4">-->
-              <!--                <DifficultyLabel :level-id="song.difficulty"></DifficultyLabel>-->
-              <!--              </div>-->
               <div class="relative flex items-start pt-2 justify-center w-full right-0">
                 <CountPlaysLabel :count="song.totalPlays"></CountPlaysLabel>
               </div>
@@ -36,10 +32,10 @@
             <p class="text-2xl font-medium text-gray-900">
               {{ song.title }}
             </p>
-            <div class="mt-2">
+            <div class="mt-2" v-if="!onlyBest">
               <DifficultyLabel class="h-5 mt-1 mr-2" :level-id="song.difficulty"></DifficultyLabel>
             </div>
-            <div class="mt-1">
+            <div class="mt-1" v-if="!onlyBest">
               <GenreLabel :genre-id="song.genre" class="h-5 mt-1"></GenreLabel>
             </div>
           </router-link>

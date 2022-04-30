@@ -1,11 +1,13 @@
 <template>
-  <div :class="{'heartbeat' : !isFavorite}">
+  <button @click="clickHandler"
+          :class="{'heartbeat' : !isFavorite, 'click': click}"
+          class="transition-all">
     <HeartIcon
       id="like-icon"
       class="ong-control-btn h-12 w-12 rounded-full p-1 cursor-pointer relative"
       :class="{'fill-gray-300' : !isFavorite, 'fill-red-400' : isFavorite}"
     ></HeartIcon>
-  </div>
+  </button>
 
 </template>
 
@@ -18,8 +20,20 @@ export default {
     LoadingSpinner,
     HeartIcon
   },
+  data() {
+    let click = false;
+    return {
+      click
+    }
+  },
+  methods: {
+    clickHandler() {
+      this.click = true;
+      setTimeout(() => this.click = false, 1000);
+    }
+  },
   props: {
-    isFavorite: false
+    isFavorite: false,
   }
 }
 </script>
@@ -30,6 +44,9 @@ export default {
 }
 .heartbeat {
   animation: gelatine 1s ease infinite;
+}
+.click {
+  animation: onClick 0.5s ease-in;
 }
  @keyframes gelatine {
    from, to {
@@ -45,4 +62,17 @@ export default {
      transform: scale(0.95, 1.05);
    }
  }
+
+@keyframes onClick {
+  from, to {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(0.7, 0.7);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
 </style>

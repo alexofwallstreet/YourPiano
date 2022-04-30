@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative bg-indigo-50 px-4 py-16 w-full md:px-24 lg:px-8 lg:py-20">
+    class="relative bg-indigo-50 px-4 py-16 w-full md:px-24 lg:px-8 lg:py-20 mt-12">
     <svg class="absolute left-0 top-0 w-full h-6 -mt-5 sm:-mt-10 sm:h-16 text-deep-purple-accent-400"
          preserveAspectRatio="none" viewBox="0 0 1440 54">
       <path class="fill-indigo-50"
@@ -17,7 +17,7 @@
     <SongList :songs="songs" :only-best="true"></SongList>
     <div class="flex justify-center">
       <router-link :to="{name: 'Songs'}"
-                   class="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700">
+                   class="inline-block text-center bg-indigo-600 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-indigo-700 mt-12">
         Больше песен
       </router-link>
     </div>

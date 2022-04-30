@@ -49,28 +49,31 @@
           </div>
 
           <div class="pb-2 flex justify-start items-center">
-            <PlayIcon
-              v-on:click.prevent="playSong"
-              class="song-control-btn h-10 w-10 cursor-pointer relative"
-              :class="{'fill-indigo-400' : isPlaying() || isCountdown(), 'fill-white' : !isPlaying() && !isCountdown()}"
-            ></PlayIcon>
+            <button v-on:click.prevent="playSong">
+              <PlayIcon
+                class="song-control-btn h-10 w-10 cursor-pointer relative"
+                :class="{'fill-indigo-400' : isPlaying() || isCountdown(), 'fill-white' : !isPlaying() && !isCountdown()}"
+              ></PlayIcon>
+            </button>
 
-            <PauseIcon
-              v-if="gameMode !== store.state.gameModes.RATING_GAME_MODE"
-              v-on:click.prevent="pauseSong"
-              class="song-control-btn h-10 w-10 cursor-pointer relative"
-              :class="{'fill-white' : isPlaying() && !isCountdown() , 'fill-indigo-400' : !isPlaying() || isCountdown()}"
-            ></PauseIcon>
+            <button v-on:click.prevent="pauseSong">
+              <PauseIcon
+                class="song-control-btn h-10 w-10 cursor-pointer relative"
+                :class="{'fill-white' : isPlaying() && !isCountdown() , 'fill-indigo-400' : !isPlaying() || isCountdown()}"
+              ></PauseIcon>
+            </button>
 
-            <StopIcon
-              v-on:click.prevent="stopSong"
-              class="song-control-btn h-10 w-10 cursor-pointer relative"
-              :class="{'fill-white' : isPlaying() && !isCountdown(), 'fill-indigo-400' : !isPlaying() || isCountdown()}"
-            ></StopIcon>
+            <button v-on:click.prevent="stopSong">
+              <StopIcon
+                class="song-control-btn h-10 w-10 cursor-pointer relative"
+                :class="{'fill-white' : isPlaying() && !isCountdown(), 'fill-indigo-400' : !isPlaying() || isCountdown()}"
+              ></StopIcon>
+            </button>
 
             <div class="flex justify-end ml-auto">
-              <LoadingSpinner class="m-2 w-8 h-8" v-if="isLikeLoading"></LoadingSpinner>
-              <LikeButton v-else @click.prevent="toggleLike(song.data)" :is-favorite="song.data.isFavorite"></LikeButton>
+              <LikeButton
+                @click.prevent="toggleLike(song.data)"
+                :is-favorite="song.data.isFavorite"></LikeButton>
             </div>
           </div>
 
@@ -128,19 +131,16 @@
     <div class="flex-1 overflow-auto">
       <div class="main flex lg:justify-center md:justify-start w-full opacity-0 animate-fade-in-down ">
         <!-- Piano Keyboard + Falling Notes -->
+
+
         <div class="content flex flex-col justify-between h-full">
-          <div v-if="gameMode !== store.state.gameModes.FREE_PLAY_MODE" class="absolute text-bold text-white top-0 z-10 p-4 flex-col ">
-            <div class="text-lg text-gray-400">
-              Результат: <br> <span class="font-bold text-3xl">{{currentRatingPoints}}</span><span class="text-xl px-2">/ {{ song.data.ratingPoints }}</span>
-            </div>
-            <div class="mt-4 text-lg text-gray-400">
-              Лучший: <br> <span class="font-bold text-3xl">{{song.data.userPoints}}</span>
-            </div>
-          </div>
-
           <div class="flex h-full">
-            <div class="notesColumns" ref="notesColumns">
-
+            <div class="relative notesColumns" ref="notesColumns">
+              <div v-if="gameMode !== store.state.gameModes.FREE_PLAY_MODE" class="absolute text-bold text-white top-0 z-10 p-4 w-full flex justify-end">
+                <div class="text-lg text-gray-400 bg-indigo-50 py-2 pl-5 pr-3 text-center rounded-md opacity-80 text-indigo-600 transition-all">
+                  <span class="font-extrabold text-3xl text-indigo-600">{{currentRatingPoints}}</span><span class="text-xl px-2">/ {{ song.data.ratingPoints }}</span>
+                </div>
+              </div>
               <div class="flex h-full">
                 <div
                   class="bg-gray-700"
@@ -163,15 +163,16 @@
               </div>
             </div>
           </div>
-          <div class="keyboard flex pb-3">
+          <div class="keyboard flex pb-3 transition-all">
             <div
               v-for="(key, index) in keys"
               v-bind:key="key[0] + key[1]"
               v-bind:class="{
-            whiteKey: isWhiteKey(key[0]),
-            blackKey: !isWhiteKey(key[0]),
-            pressed: isKeyPressed(key[0], key[1]),
-          }"
+              whiteKey: isWhiteKey(key[0]),
+              blackKey: !isWhiteKey(key[0]),
+              pressed: isKeyPressed(key[0], key[1]),
+              notPressed: isKeyNotPressed(key[0], key[1]),
+              }"
               v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(index) }"
               v-on:mousedown="playNote(key[0], key[1])"
             >
@@ -255,6 +256,7 @@ export default {
       gameState: GAME_STATE.idle,
       keys: keys,
       keysPressed: {},
+      keysNotPressed: {},
       keysPlayed: [],
       notesColumns: notesColumns,
       activeAudioNodes: {},
@@ -337,8 +339,15 @@ export default {
                 note.time > this.prevPlayTime
               ) {
                 if (!note.processed) {
+                  const noteId = this.getNoteId(note.note, note.octave);
                   this.onNoteOn(note.note, note.octave, false);
-                  setTimeout(() => self.onNoteOff(note.note, note.octave), (note.endTime - note.time) * 1000 / this.songSpeed);
+                  this.keysNotPressed[noteId] = true;
+                  let timeOut = (note.endTime - note.time) * 1000 / this.songSpeed;
+                  timeOut = timeOut > 500 ? 500 : timeOut;
+                  setTimeout(() => {
+                    self.onNoteOff(note.note, note.octave);
+                    this.keysNotPressed[noteId] = false;
+                  }, timeOut);
                 }
               }
             }
@@ -404,6 +413,9 @@ export default {
     },
     isKeyPressed: function (note, octave) {
       return this.keysPressed[this.getNoteId(note, octave)];
+    },
+    isKeyNotPressed: function (note, octave) {
+      return this.keysNotPressed[this.getNoteId(note, octave)];
     },
     loadingStart: function () {
       this.isLoading = true;
@@ -876,6 +888,10 @@ export default {
   background-color: rgba(199, 210, 254);
 }
 
+.main .content .keyboard .whiteKey.pressed.notPressed {
+  background-color: rgb(254 202 202);
+}
+
 .main .content .keyboard .whiteKey.pressed .keySign {
   bottom: 20px;
   transition: bottom 30ms linear;
@@ -905,6 +921,10 @@ export default {
   transition: background-color, transform 0.1s ease-out;
   transform: rotateX(-10deg);
   background-color: rgba(55, 48, 163);
+}
+
+.main .content .keyboard .blackKey.notPressed {
+  background-color: rgb(248 113 113);
 }
 
 .main .content .keyboard .blackKey.pressed .keySign {

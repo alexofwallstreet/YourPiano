@@ -58,6 +58,16 @@ module.exports = {
             opacity: '0'
           },
         },
+        'fade-out-down': {
+          'from': {
+            transform: 'translateY(0rem)',
+            opacity: '1'
+          },
+          'to': {
+            transform: 'translateY(0.75rem)',
+            opacity: '0'
+          }
+        }
       },
       animation: {
         'fade-in-down': 'fade-in-down 0.2s ease-in-out both',
@@ -65,7 +75,8 @@ module.exports = {
         'fade-in-left': 'fade-in-left 0.2s ease-in-out both',
         'fade-in-right': 'fade-in-right 0.2s ease-in-out both',
 
-        'fade-out-left': 'fade-in-left 0.2s ease-in-out both',
+        'fade-out-left': 'fade-out-left 0.2s ease-in-out both',
+        'fade-out-down': 'fade-out-down 0.2s ease-in-out both',
       }
     },
     screens: {

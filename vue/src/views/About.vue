@@ -4,8 +4,8 @@
       <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">О сайте</h1>
     </div>
   </header>
-  <main>
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 bg-indigo-50">
+  <main class="bg-indigo-50">
+    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <!-- Replace with your content -->
       <div class="px-4 py-6 sm:px-0">
         <div class="bg-white rounded-lg shadow-md">
@@ -135,7 +135,7 @@
           </section>
 
           <!-- Quote Screen -->
-          <div class="max-w-5xl px-4 py-8 mx-auto">
+          <div class="max-w-5xl px-4 py-8 mx-auto mt-7">
             <section class="p-8 bg-gray-100 rounded-lg shadow-xl">
               <div class="grid grid-cols-1 gap-12 sm:grid-cols-3 sm:items-center">
                 <div class="relative">
