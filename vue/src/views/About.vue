@@ -14,7 +14,7 @@
             <div class="px-4 py-16 mx-auto max-w-screen-2xl sm:px-6 lg:px-8">
               <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div class="p-8 text-center text-white bg-indigo-600 sm:col-span-2 sm:p-16 lg:py-24">
-                  <div class="max-w-lg mx-auto space-y-8">
+                  <div class="max-w-lg mx-auto space-y-8 animate-fade-in-down" :style="{animationDelay: `100ms`}">
                     <p class="text-3xl font-extrabold sm:text-4xl">
                       Всегда мечтали научиться играть на фортепиано?
                     </p>
@@ -42,11 +42,12 @@
                   </div>
                 </div>
 
-                <div class="relative h-64 lg:order-first lg:h-full bg-indigo-800 rounded-3xl hidden sm:block">
+                <div class="relative h-64 lg:order-first lg:h-full bg-indigo-800 rounded-3xl hidden sm:block ">
                   <img
                     src="/images/piano-woman.png"
                     alt="Sunset with palm trees"
-                    class="absolute inset-0 object-cover w-full h-full"
+                    :style="{animationDelay: `400ms`}"
+                    class="absolute inset-0 object-cover w-full h-full animate-fade-in-right"
                   />
                 </div>
 
@@ -54,7 +55,8 @@
                   <img
                     src="/images/piano-woman-2.png"
                     alt="Man in a hat and yellow jumper"
-                    class="absolute inset-0 object-cover w-full h-full"
+                    :style="{animationDelay: `400ms`}"
+                    class="absolute inset-0 object-cover w-full h-full animate-fade-in-left"
                   />
                 </div>
               </div>
@@ -65,7 +67,7 @@
           <section id="begin" class="px-4 py-8 mx-auto max-w-screen-2xl sm:px-6 lg:px-8 border shadow">
             <div class="relative overflow-hidden text-gray-900 lg:flex">
               <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left">
-                <div class="max-w-xl mx-auto lg:ml-0">
+                <div class="max-w-xl mx-auto lg:ml-0 animate-fade-in-down">
                   <p class="text-sm font-medium">Lorem ipsum dolor sit amet.</p>
 
                   <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
@@ -92,7 +94,7 @@
                 <img
                   src="/images/pianist.png"
                   alt="Women smiling at college"
-                  class="absolute inset-0 object-contain w-full h-full p-12 "
+                  class="absolute inset-0 object-contain w-full h-full p-12 animate-fade-in-left" :style="{animationDelay: `1000ms`}"
                 />
               </div>
             </div>
@@ -105,10 +107,10 @@
                 <img
                   src="/images/piano-woman-3.png"
                   alt="Women smiling at college"
-                  class="absolute inset-0 object-cover w-full h-full "
+                  class="absolute inset-0 object-cover w-full h-full animate-fade-in-right" :style="{animationDelay: `1000ms`}"
                 />
               </div>
-              <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left">
+              <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left animate-fade-in-down">
                 <div class="max-w-xl mx-auto lg:ml-0">
                   <p class="text-sm font-medium">Lorem ipsum dolor sit amet.</p>
 
@@ -135,7 +137,7 @@
           </section>
 
           <!-- Quote Screen -->
-          <div class="max-w-5xl px-4 py-8 mx-auto mt-7">
+          <div class="max-w-5xl px-4 py-8 mx-auto mt-7 animate-fade-in-down">
             <section class="p-8 bg-gray-100 rounded-lg shadow-xl">
               <div class="grid grid-cols-1 gap-12 sm:grid-cols-3 sm:items-center">
                 <div class="relative">
@@ -171,7 +173,7 @@
           </div>
 
           <!-- Promo Section -->
-          <section class="text-gray-900">
+          <section class="text-gray-900 animate-fade-in-up">
             <div class="max-w-screen-xl px-4 py-32 mx-auto lg:items-center lg:flex">
               <div class="max-w-3xl mx-auto text-center">
                 <h1

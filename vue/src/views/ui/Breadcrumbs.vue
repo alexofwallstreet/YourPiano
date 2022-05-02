@@ -1,8 +1,8 @@
 <template>
   <div v-if="store.state.song.loading" class="animate-pulse">
-    <div class="bg-white w-1/2 h-4 bg-slate-200 rounded-xl opacity-0 animate-fade-in-right" />
+    <div class="bg-white w-1/2 h-4 bg-slate-200 rounded-xl" />
   </div>
-  <div v-else class="bg-white flex items-center flex-wrap opacity-0 animate-fade-in-right">
+  <div v-else class="bg-white flex items-center flex-wrap">
     <ul class="flex items-center flex-wrap">
 
       <li class="inline-flex items-center">

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="isVisible"
     ref="scrollTopButton"
     class="to-top-btn sticky w-full flex justify-center bottom-0 pb-3 px-5 lg:px-16 transition z-50 opacity-0"
     :class="isVisible ? 'animate-fade-in-up' : 'animate-fade-out-down'"

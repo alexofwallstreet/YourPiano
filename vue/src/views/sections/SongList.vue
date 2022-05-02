@@ -17,7 +17,7 @@
               <img :src="song.imagePath" :alt="song.title"
                    class="w-full h-full object-center object-cover brightness-90"/>
               <div v-if="!onlyBest" class="absolute flex justify-between items-end p-2">
-                <div>
+                <div class="flex justify-center items-center">
                   <UserScore v-if="song.userPoints" :user-points="song.userPoints" :mode="0"></UserScore>
                 </div>
 <!--                <LikeButton :is-favorite="song.isFavorite"></LikeButton>-->

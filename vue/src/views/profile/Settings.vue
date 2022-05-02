@@ -148,20 +148,20 @@
 
                   <div class="col-span-6 sm:col-span-5">
                     <label for="old-password" class="block text-sm font-medium text-gray-700">Текущий пароль</label>
-                    <input type="password" name="old-password" id="old-password" autocomplete="given-name"
+                    <input type="password" required name="old-password" id="old-password" autocomplete="given-name"
                            v-model="changePasswordModel.old_password"
                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                   </div>
                   <div class="col-span-6 sm:col-span-5">
                     <label for="new-password" class="block text-sm font-medium text-gray-700">Новый пароль</label>
-                    <input type="password" name="new-password" id="new-password" autocomplete="given-name"
+                    <input type="password" required name="new-password" id="new-password" autocomplete="given-name"
                            v-model="changePasswordModel.new_password"
                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                   </div>
                   <div class="col-span-6 sm:col-span-5">
                     <label for="new-password-repeat" class="block text-sm font-medium text-gray-700">Повторите новый
                       пароль</label>
-                    <input type="password" name="new-password-repeat" id="new-password-repeat" autocomplete="given-name"
+                    <input type="password" required name="new-password-repeat" id="new-password-repeat" autocomplete="given-name"
                            v-model="changePasswordModel.new_password_confirm"
                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                   </div>
@@ -170,7 +170,7 @@
               <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
                 <button type="submit"
                         class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  Save
+                  Сохранить
                 </button>
               </div>
             </div>
@@ -327,7 +327,7 @@ function changePassword() {
       successPasswordMsg.value = 'Пароль успешно обновлен';
     })
     .catch((err) => {
-      errorPasswordMsg.value = 'Ошибка';
+      errorPasswordMsg.value = err.response.data.error ? 'Неверный пароль' : 'Пароли не совпадают или не соответствуют требованиям';
     })
 }
 
@@ -362,14 +362,16 @@ function update() {
   store.dispatch('updateUser', updateModel.value)
     .then(() => {
       successMsg.value = 'Данные успешно сохранены';
-      loading.value = false;
       isImageUpload.value = false;
       updateModel.value.profile_photo = null;
       updateModel.value.profile_photo_url = null;
       updateStartModel();
     })
     .catch((err) => {
-      errorMsg.value = 'Произошла ошибка';
+      errorMsg.value = (Object.values(err.response.data.errors)).join(', ');
+    })
+    .finally(() => {
+      loading.value = false;
     })
 }
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -40,11 +41,16 @@ class UserController extends Controller
             $emailValidation = '';
         }
 
-        $data = $request->validate([
+        $messages = [
+            'required' => 'Не заполено одно из обязательных полей',
+            'email' => 'Неверный адрес электронной почты',
+        ];
+
+        $data = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => $emailValidation,
             'profile_photo' => 'string|nullable',
-        ]);
+        ], $messages)->validated();
 
         $user->update($data);
 
@@ -65,16 +71,27 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     */
     public function updatePassword(Request $request, User $user)
     {
-        $data = $request->validate([
+        $messages = [
+            'required' => 'Не заполено одно из обязательных полей',
+            'same' => 'Пароли не совпадают',
+            'min' => 'Минимальная длина пароля - 8 символов',
+            'numbers' => 'Пароль должен содержать хотя бы одну цифру',
+            'mixedCase' => 'Пароль должен содержать буквы верхнего и нижнего регистров'
+        ];
+
+        $data = Validator::make($request->all(), [
             'old_password' => 'required|string',
             'new_password' => [
                 'required',
                 'same:new_password_confirm',
                 Password::min(8)->mixedCase()->numbers(),
             ]
-        ]);
+        ], $messages)->validated();
 
         if (Hash::check($data['old_password'], $user->password)) {
             $user->password = bcrypt($data['new_password']);
@@ -83,7 +100,7 @@ class UserController extends Controller
         }
 
         return response([
-            'error' => 'Given password not'
+            'error' => 'Введен неверный пароль'
         ], 422);
     }
 

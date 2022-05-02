@@ -35,7 +35,10 @@
         </div>
         <!-- End Toggle button with Arrows -->
         <div class="song-wrapper" v-if="!isFreePlayMode()">
-          <div class="max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
+          <div class="relative max-w-sm rounded-xl overflow-hidden shadow-lg w-full h-52">
+            <div class="absolute z-50 p-2">
+              <UserScore v-if="song.data.userPoints" :user-points="song.data.userPoints" :mode="0"></UserScore>
+            </div>
             <img class="w-full h-full object-cover" :src="song.data.imagePath" :alt="song.data.title">
           </div>
           <div class="pt-4">
@@ -56,7 +59,7 @@
               ></PlayIcon>
             </button>
 
-            <button v-on:click.prevent="pauseSong">
+            <button v-on:click.prevent="pauseSong" v-if="!isRatingPlayMode()">
               <PauseIcon
                 class="song-control-btn h-10 w-10 cursor-pointer relative"
                 :class="{'fill-white' : isPlaying() && !isCountdown() , 'fill-indigo-400' : !isPlaying() || isCountdown()}"
@@ -200,6 +203,7 @@ import LikeButton from "./ui/LikeButton.vue";
 import Modal from "./ui/Modal.vue";
 import {PlayIcon, PauseIcon, StopIcon, VolumeUpIcon, FastForwardIcon} from '@heroicons/vue/solid'
 import LoadingSpinner from "./ui/LoadingSpinner.vue";
+import UserScore from "./ui/UserScore.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -764,7 +768,8 @@ export default {
     StopIcon,
     PauseIcon,
     VolumeUpIcon,
-    FastForwardIcon
+    FastForwardIcon,
+    UserScore,
   },
   setup() {
     const collapsed = ref(false);

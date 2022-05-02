@@ -1,6 +1,7 @@
 <template>
-  <section>
-    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <SingleSongSkeleton v-if="song.loading"></SingleSongSkeleton>
+  <section v-else>
+    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-right">
       <div class="relative z-10 flex items-baseline justify-between pt-16 pb-6 border-b border-gray-200">
         <Breadcrumbs :page-name="song.data.title"></Breadcrumbs>
       </div>
@@ -10,15 +11,13 @@
         <div class="lg:col-span-3">
 
           <div class="relative mt-4 flex gap-6 flex-wrap lg:justify-start justify-center">
-            <UserScore class="absolute left-3 top-2" :user-points="song.userPoints" :mode="0"></UserScore>
-
             <img
               alt=""
               :src="song.data.imagePath"
-              class="w-64 rounded-xl h-64 object-cover"
+              class="w-64 rounded-xl h-64 object-cover opacity-0 animate-fade-in-right"
             />
 
-            <div class="info flex flex-col justify-between">
+            <div class="info flex flex-col justify-between opacity-0 animate-fade-in-down">
               <div>
                 <DifficultyLabel :level-id="song.data.difficulty"></DifficultyLabel>
                 <span class="w-4 inline-block"></span>
@@ -32,14 +31,14 @@
               <div class="mt-2">
                 <UserScore :mode="1" :song-points="song.data.ratingPoints" :user-points="song.data.userPoints"></UserScore>
               </div>
-              <div class="font-medium">
+              <div class="font-medium mt-2">
                 Эту песню сыграли <span class="font-extrabold text-xl text-white bg-indigo-500 px-2 rounded-full">{{ song.data.totalPlays }}</span> раз
               </div>
             </div>
           </div>
         </div>
 
-        <div class="lg:top-0 lg:sticky">
+        <div class="lg:top-0 lg:sticky opacity-0 animate-fade-in-left">
           <form class="space-y-4 lg:pt-8 text-center lg:text-left">
             <router-link
               :to="{name: 'PianoRatingPlay', params: {id: song.data.id}}"
@@ -59,7 +58,7 @@
             </router-link>
 
             <div
-              class="w-full h-10 p-0 border-0 flex items-center lg:justify-between text-gray-500">
+              class="w-full h-10 p-0 border-0 flex items-center justify-center lg:justify-between text-gray-500">
               <div>
                 Сохрани песню, чтобы не потерять ее:
               </div>
@@ -70,8 +69,10 @@
 
         <div class="lg:col-span-3">
           <div class="prose max-w-none">
-            <p>{{ song.data.description }}</p>
-            <iframe src="https://www.youtube-nocookie.com/embed/Eb-Vfe61W6A?controls=0" frameborder="0"
+            <p class="opacity-0 animate-fade-in-down">{{ song.data.description }}</p>
+            <iframe
+              class="opacity-0 animate-fade-in-up"
+              src="https://www.youtube-nocookie.com/embed/Eb-Vfe61W6A?controls=0" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
           </div>
@@ -91,6 +92,7 @@ import DifficultyLabel from "./ui/DifficultyLabel.vue";
 import GenreLabel from "./ui/GenreLabel.vue";
 import Breadcrumbs from "./ui/Breadcrumbs.vue";
 import UserScore from "./ui/UserScore.vue";
+import SingleSongSkeleton from "./ui/skeletons/single-song-skeleton.vue";
 
 const loading = ref(false);
 

@@ -1,8 +1,10 @@
 <template>
   <p v-if="mode===0"
-    class="inline-block text-md font-extrabold tracking-wider text-white uppercase rounded-full bg-green-600 "
+    class="inline-block text-md font-extrabold text-xl
+    tracking-wider text-white uppercase rounded-full
+    bg-green-600 border-white border-2 circle flex justify-center items-center p-2"
   >
-    <CheckCircleIcon class="h-10 w-10"></CheckCircleIcon>
+    {{userPoints}}
   </p>
   <p v-else
     class="inline-block px-5 py-2 text-md font-extrabold tracking-wider text-white rounded-r-2xl bg-indigo-400"
@@ -30,5 +32,8 @@ export default {
 </script>
 
 <style scoped>
-
+.circle {
+  min-width: 3rem;
+  min-height: 3rem;
+}
 </style>
