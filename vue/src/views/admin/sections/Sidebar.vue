@@ -1,13 +1,13 @@
 <template>
   <!-- give the sidebar z-50 class so its higher than the navbar if you want to see the logo -->
   <!-- you will need to add a little "X" button next to the logo in order to close it though -->
-  <div class="w-1/2 md:w-1/3 lg:w-64 fixed md:top-0 md:left-0 h-screen lg:block z-30 bg-gray-800" :class="adminSideBarOpen ? '' : 'hidden'" id="main-nav">
+  <div class=" fixed md:top-0 md:left-0 h-screen z-30 bg-gray-800" :class="adminSideBarOpen ? 'w-1/2 md:w-1/3 lg:w-64 animate-fade-in-right' : 'hidden w-0 animate-fade-out-right'" id="main-nav">
 
     <div class="flex justify-between items-start w-full px-4 py-4">
       <div class="w-full h-20 flex px-4 items-center">
         <img class="w-14 h-full" src="/logo-min.svg" alt="YourPiano Logo"/>
       </div>
-      <button class="lg:hidden hover:text-blue-500 hover:border-white focus:outline-none navbar-burger py-4" @click="toggleAdminSidebar()">
+      <button class=" hover:text-blue-500 hover:border-white focus:outline-none navbar-burger py-4" @click="toggleAdminSidebar()">
         <XIcon class="h-10 w-10 fill-indigo-50"></XIcon>
       </button>
     </div>

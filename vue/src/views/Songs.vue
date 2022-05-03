@@ -86,7 +86,7 @@
         </Dialog>
       </TransitionRoot>
 
-      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
         <div class="relative z-10 flex items-baseline justify-between pt-16 pb-6 border-b border-gray-200">
           <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">Песни</h1>
 
@@ -95,7 +95,7 @@
               <div>
                 <MenuButton
                   class="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                  Упорядочить
+                  {{sortOptions.find(option => option.current === true).name}}
                   <ChevronDownIcon class="flex-shrink-0 -mr-1 ml-1 h-5 w-5 text-gray-400 group-hover:text-gray-500"
                                    aria-hidden="true"/>
                 </MenuButton>

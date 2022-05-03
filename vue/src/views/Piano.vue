@@ -16,7 +16,10 @@
           <div class="arrow bg-indigo-300"></div>
         </div>
       </div>
-      <div class="menu px-2 pt-5" :class="{'menu-visible': collapsed}">
+
+      <PianoSidebarSkeleton v-if="isLoading && !isFreePlayMode()"></PianoSidebarSkeleton>
+      <div v-else class="menu px-2 pt-5"
+           :class="{'animate-fade-in-right-long': !collapsed, 'animate-fade-out-right': collapsed}">
         <div v-if="!store.state.user.token"
              class="pt-4 text-sm text-gray-200 mb-4 relative whitespace-nowrap font-bold">
           <router-link :to="{name: 'Login'}" class="underline">Войдите</router-link>
@@ -27,8 +30,8 @@
         </div>
         <div v-else-if="gameMode === store.state.gameModes.FREE_PLAY_MODE" class="whitespace-nowrap">
           <router-link
-            class="block w-full px-12 py-3 text-sm font-bold text-white border bg-indigo-400 text-center mb-6 mt-2
-              border-blue-600 rounded-md xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
+            class="block w-full px-12 py-3 text-sm font-bold text-white bg-indigo-400 text-center mb-6 mt-2 transition-all
+              rounded-md xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
             :to="{name: 'Songs'}">
             Играть песни
           </router-link>
@@ -80,20 +83,32 @@
             </div>
           </div>
 
-          <div class="w-full" v-if="isTutorialMode()">
+          <div class="w-full whitespace-nowrap" v-if="isTutorialMode()">
             <FastForwardIcon class="w-6 mr-2 inline-block"></FastForwardIcon>
-            <label for="speed" class="font-bold text-white whitespace-nowrap">Скорость: x{{ songSpeed }}</label>
+            <label for="speed" class="font-bold text-white whitespace-nowrap">Скорость: x{{ songSpeed }}</label><br>
             <input type="range" id="speed" name="range" min="0" max="2" step="0.01"
-                   class="w-full h-2 bg-indigo-100 appearance-none" v-model="songSpeed"/>
+                   class="w-full h-2 bg-indigo-100 appearance-none whitespace-nowrap" v-model="songSpeed"/>
           </div>
         </div>
 
         <div class="w-full whitespace-nowrap">
           <VolumeUpIcon class="w-6 inline-block mr-2"></VolumeUpIcon>
-          <label for="speed" class="font-bold text-white whitespace-nowrap">Громкость: {{ Math.floor(volumeLevel * 10) }}%</label>
+          <label for="speed" class="font-bold text-white whitespace-nowrap">Громкость: {{
+              Math.floor(volumeLevel * 10)
+            }}%</label>
           <br>
           <input type="range" id="volume" name="range" min="0" max="10" step="0.01"
-                 class="w-full h-2 bg-indigo-100 appearance-none" v-model="volumeLevel"/>
+                 class="w-full h-2 bg-indigo-100 appearance-none whitespace-nowrap" v-model="volumeLevel"/>
+        </div>
+
+        <div class="flex items-center my-3 whitespace-nowrap" v-if="!isFreePlayMode()">
+          <div class="form-check form-switch">
+            <input
+              class="whitespace-nowrap form-check-input appearance-none w-9 rounded-full float-left h-5 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm"
+              type="checkbox" role="switch" v-model="pianolaMode"
+              id="flexSwitchCheckDefault">
+          </div>
+          <div class="whitespace-nowrap ml-2 form-check-label inline-block text-white" for="flexSwitchCheckDefault">Воспроизведение</div>
         </div>
 
 
@@ -139,9 +154,13 @@
         <div class="content flex flex-col justify-between h-full">
           <div class="flex h-full">
             <div class="relative notesColumns" ref="notesColumns">
-              <div v-if="gameMode !== store.state.gameModes.FREE_PLAY_MODE" class="absolute text-bold text-white top-0 z-10 p-4 w-full flex justify-end">
-                <div class="text-lg text-gray-400 bg-indigo-50 py-2 pl-5 pr-3 text-center rounded-md opacity-80 text-indigo-600 transition-all">
-                  <span class="font-extrabold text-3xl text-indigo-600">{{currentRatingPoints}}</span><span class="text-xl px-2">/ {{ song.data.ratingPoints }}</span>
+              <div v-if="gameMode !== store.state.gameModes.FREE_PLAY_MODE"
+                   class="absolute text-bold text-white top-0 z-10 p-4 w-full flex justify-end">
+                <LoadingSpinner class="w-10 h-10" v-if="isLoading"></LoadingSpinner>
+                <div v-else
+                     class="text-lg text-gray-400 bg-indigo-50 py-2 pl-5 pr-3 text-center rounded-md opacity-80 text-indigo-600 transition-all">
+                  <span class="font-extrabold text-3xl text-indigo-600">{{ currentRatingPoints }}</span><span
+                  class="text-xl px-2">/ {{ song.data.ratingPoints }}</span>
                 </div>
               </div>
               <div class="flex h-full">
@@ -204,6 +223,7 @@ import Modal from "./ui/Modal.vue";
 import {PlayIcon, PauseIcon, StopIcon, VolumeUpIcon, FastForwardIcon} from '@heroicons/vue/solid'
 import LoadingSpinner from "./ui/LoadingSpinner.vue";
 import UserScore from "./ui/UserScore.vue";
+import PianoSidebarSkeleton from "./ui/skeletons/piano-sidebar-skeleton.vue";
 
 const BLACK_KEY_WIDTH = 22;
 const NOTE_HEIGHT = 38;
@@ -261,7 +281,7 @@ export default {
       keys: keys,
       keysPressed: {},
       keysNotPressed: {},
-      keysPlayed: [],
+      keysPressedKeyboard: {},
       notesColumns: notesColumns,
       activeAudioNodes: {},
       prevGameState: null,
@@ -270,7 +290,7 @@ export default {
       midiDeviceSelected: null,
       songSpeed: 1,
       volumeLevel: 5,
-      inPianolaMode: false,
+      pianolaMode: true,
       stats: {
         perfect: 0,
         good: 0,
@@ -344,14 +364,21 @@ export default {
               ) {
                 if (!note.processed) {
                   const noteId = this.getNoteId(note.note, note.octave);
-                  this.onNoteOn(note.note, note.octave, false);
                   this.keysNotPressed[noteId] = true;
                   let timeOut = (note.endTime - note.time) * 1000 / this.songSpeed;
                   timeOut = timeOut > 500 ? 500 : timeOut;
                   setTimeout(() => {
-                    self.onNoteOff(note.note, note.octave);
                     this.keysNotPressed[noteId] = false;
                   }, timeOut);
+                  if (this.pianolaMode) {
+                    this.onNoteOn(note.note, note.octave, false);
+                    setTimeout(() => {
+                      const key = Object.entries(KEYBOARD_NOTES).find(obj => obj[1].note == note.note && obj[1].octave == note.octave)[0];
+                      if (!this.keysPressedKeyboard[key]) {
+                        self.onNoteOff(note.note, note.octave);
+                      }
+                    }, timeOut);
+                  }
                 }
               }
             }
@@ -452,6 +479,7 @@ export default {
       if (key in KEYBOARD_NOTES) {
         event.preventDefault();
         const noteInfo = KEYBOARD_NOTES[key];
+        this.keysPressedKeyboard[key] = true;
         this.onNoteOn(noteInfo.note, noteInfo.octave);
       }
     },
@@ -460,6 +488,7 @@ export default {
       if (key in KEYBOARD_NOTES) {
         event.preventDefault();
         const noteInfo = KEYBOARD_NOTES[key];
+        this.keysPressedKeyboard[key] = false;
         this.onNoteOff(noteInfo.note, noteInfo.octave);
       }
     },
@@ -486,7 +515,7 @@ export default {
 
       this.keysPressed[noteId] = true;
 
-      if (this.gameState === GAME_STATE.playing || this.gameState === GAME_STATE.playing && !this.inPianolaMode) {
+      if (this.gameState === GAME_STATE.playing || this.gameState === GAME_STATE.playing) {
         const notesColumnIdx =
           (octave - OCTAVE_BASE) * NOTES.length + NOTES.indexOf(note);
         if (this.notesColumns[notesColumnIdx]) {
@@ -647,10 +676,6 @@ export default {
       return "0px";
     },
     computeMissingNotes: function () {
-      if (this.inPianolaMode) {
-        return;
-      }
-
       for (const noteColumns of this.notesColumns) {
         for (const note of noteColumns.notes) {
           if (note.processed) {
@@ -759,6 +784,7 @@ export default {
     }
   },
   components: {
+    PianoSidebarSkeleton,
     LoadingSpinner,
     Modal,
     LikeButton,
@@ -789,7 +815,8 @@ export default {
       const PERFECT_NOTES = this.stats.perfect;
       const GOOD_NOTES = this.stats.good;
       const ONE_NOTE_POINT = MAX_POINTS / TOTAL_NOTES;
-      return parseInt((PERFECT_NOTES * ONE_NOTE_POINT) + (GOOD_NOTES * ONE_NOTE_POINT / 2));
+      const RESULT = parseInt((PERFECT_NOTES * ONE_NOTE_POINT) + (GOOD_NOTES * ONE_NOTE_POINT / 2));
+      return isNaN(RESULT) ? 0 : RESULT;
     }
   },
   props: {
@@ -893,7 +920,7 @@ export default {
   background-color: rgba(199, 210, 254);
 }
 
-.main .content .keyboard .whiteKey.pressed.notPressed {
+.main .content .keyboard .whiteKey.notPressed {
   background-color: rgb(254 202 202);
 }
 
@@ -945,7 +972,7 @@ export default {
 }
 
 .sidebar {
-  transition: 0.3s ease;
+  transition: 0.4s ease;
 }
 
 .collapse-icon {

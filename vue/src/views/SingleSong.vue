@@ -1,7 +1,7 @@
 <template>
   <SingleSongSkeleton v-if="song.loading"></SingleSongSkeleton>
-  <section v-else>
-    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-right">
+  <section v-else class="pb-16">
+    <header class="max-w-7xl mx-auto px-4 opacity-0 animate-fade-in-right">
       <div class="relative z-10 flex items-baseline justify-between pt-16 pb-6 border-b border-gray-200">
         <Breadcrumbs :page-name="song.data.title"></Breadcrumbs>
       </div>
@@ -72,9 +72,10 @@
             <p class="opacity-0 animate-fade-in-down">{{ song.data.description }}</p>
             <iframe
               class="opacity-0 animate-fade-in-up"
-              src="https://www.youtube-nocookie.com/embed/Eb-Vfe61W6A?controls=0" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+              src="https://www.youtube-nocookie.com/embed/Eb-Vfe61W6A?controls=0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
           </div>
         </div>
       </div>
@@ -86,7 +87,6 @@
 import {computed, ref} from "vue";
 import store from "../store";
 import router from "../router";
-import SongItemSkeleton from "./ui/skeletons/sogn-item-skeleton.vue";
 import LikeButton from "./ui/LikeButton.vue";
 import DifficultyLabel from "./ui/DifficultyLabel.vue";
 import GenreLabel from "./ui/GenreLabel.vue";

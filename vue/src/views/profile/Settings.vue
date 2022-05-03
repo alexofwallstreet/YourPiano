@@ -71,10 +71,10 @@
                 <div>
                   <label class="block text-sm font-medium text-gray-700"> Фото профиля </label>
                   <div class="mt-1 flex items-center">
-                  <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
-                     <img v-if="!loading" :src="updateModel.profile_photo_url ?? store.state.user.data.imagePath" alt="New Image"
+                  <span class="inline-flex justify-center items-center h-12 w-12 rounded-full overflow-hidden bg-gray-100">
+                    <LoadingSpinner v-if="loading" class="w-full h-full"></LoadingSpinner>
+                     <img v-else :src="updateModel.profile_photo_url ?? store.state.user.data.imagePath" alt="New Image"
                           class="h-full w-full object-cover">
-                    <LoadingSpinner v-else class="w-12 h-12"></LoadingSpinner>
                   </span>
                     <input type="file" @change="onImageChoose"
                            class="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"/>
@@ -152,11 +152,12 @@
                            v-model="changePasswordModel.old_password"
                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
                   </div>
-                  <div class="col-span-6 sm:col-span-5">
+                  <div class="relative col-span-6 sm:col-span-5">
                     <label for="new-password" class="block text-sm font-medium text-gray-700">Новый пароль</label>
                     <input type="password" required name="new-password" id="new-password" autocomplete="given-name"
                            v-model="changePasswordModel.new_password"
                            class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"/>
+                    <Tooltip class="mt-6" :text="'Минимум 8 символов, цифра, строчная и прописная буквы'"></Tooltip>
                   </div>
                   <div class="col-span-6 sm:col-span-5">
                     <label for="new-password-repeat" class="block text-sm font-medium text-gray-700">Повторите новый
@@ -286,6 +287,7 @@ import SuccessMessage from "../ui/SuccessMessage.vue";
 import DeleteModal from "../admin/sections/DeleteModal.vue";
 import {useRouter} from "vue-router";
 import LoadingSpinner from "../ui/LoadingSpinner.vue";
+import Tooltip from "../ui/Tooltip.vue";
 
 const router = useRouter();
 

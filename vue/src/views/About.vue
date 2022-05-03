@@ -4,7 +4,7 @@
       <h1 class="text-4xl font-extrabold tracking-tight text-gray-900">О сайте</h1>
     </div>
   </header>
-  <main class="bg-indigo-50">
+  <main class="bg-indigo-50 pb-16">
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <!-- Replace with your content -->
       <div class="px-4 py-6 sm:px-0">
@@ -68,24 +68,21 @@
             <div class="relative overflow-hidden text-gray-900 lg:flex">
               <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left">
                 <div class="max-w-xl mx-auto lg:ml-0 animate-fade-in-down">
-                  <p class="text-sm font-medium">Lorem ipsum dolor sit amet.</p>
-
                   <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit
+                    Современный способ обучиться игре на фортепиано
                   </p>
 
-                  <p class="hidden lg:mt-4 lg:block">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et, egestas
-                    tempus tellus etiam sed. Quam a scelerisque amet ullamcorper eu enim et
-                    fermentum, augue. Aliquet amet volutpat quisque ut interdum tincidunt
-                    duis.
+                  <p class="lg:mt-4 lg:block">
+                    Практикуйте ноты и аккорды любимых песен в интерактивном режиме и получайте мгновенную обратную
+                    связь. Все, что вам нужно, это приложение YourPiano и ваше MIDI-пианино или клавиатура компьютера.
+                    Выбирайте песню, которую хотите разучить, заходите в режим обучения
                   </p>
 
                   <router-link
-                    to="about"
+                    :to="{name: 'Register'}"
                     class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
                   >
-                    Get started today
+                    Создать аккаунт
                   </router-link>
                 </div>
               </div>
@@ -94,7 +91,8 @@
                 <img
                   src="/images/pianist.png"
                   alt="Women smiling at college"
-                  class="absolute inset-0 object-contain w-full h-full p-12 animate-fade-in-left" :style="{animationDelay: `1000ms`}"
+                  class="absolute inset-0 object-contain w-full h-full p-12 animate-fade-in-left"
+                  :style="{animationDelay: `1000ms`}"
                 />
               </div>
             </div>
@@ -107,43 +105,76 @@
                 <img
                   src="/images/piano-woman-3.png"
                   alt="Women smiling at college"
-                  class="absolute inset-0 object-cover w-full h-full animate-fade-in-right" :style="{animationDelay: `1000ms`}"
+                  class="absolute inset-0 object-cover w-full h-full animate-fade-in-right"
+                  :style="{animationDelay: `1000ms`}"
                 />
               </div>
               <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left animate-fade-in-down">
                 <div class="max-w-xl mx-auto lg:ml-0">
-                  <p class="text-sm font-medium">Lorem ipsum dolor sit amet.</p>
-
                   <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit
+                    Играйте свои любимые песни
                   </p>
 
-                  <p class="hidden lg:mt-4 lg:block">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Et, egestas
-                    tempus tellus etiam sed. Quam a scelerisque amet ullamcorper eu enim et
-                    fermentum, augue. Aliquet amet volutpat quisque ut interdum tincidunt
-                    duis.
+                  <p class="lg:mt-4 lg:block">
+                    Научитесь играть на фортепиано с песнями, которые вы знаете и любите. Откройте для себя прекрасные
+                    аранжировки на любой вкус, здесь каждый сможет найти для себя песни нужного уровня сложности и
+                    жанра.
                   </p>
 
-                  <a
-                    href=""
+                  <router-link
+                    :to="{name: 'Songs'}"
                     class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
                   >
-                    Get started today
-                  </a>
+                    Найти любимые песни
+                  </router-link>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Second Screen -->
+          <section class="px-4 py-8 mx-auto max-w-screen-2xl sm:px-6 lg:px-8 border shadow">
+            <div class="relative overflow-hidden text-gray-900 lg:flex">
+              <div class="w-full p-12 text-center lg:w-1/2 sm:p-16 lg:p-24 lg:text-left">
+                <div class="max-w-xl mx-auto lg:ml-0 animate-fade-in-down">
+                  <p class="mt-2 text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    Просто, доступно и бесплатно
+                  </p>
+
+                  <p class="lg:mt-4 lg:block">
+                    Приложение разарабатывалось в рамках дипломного проекта, поэтому не несет материальных целей и
+                    призвано лишь помогать пользователям в их творческих начинаниях. Создавайте свой аккаунт, если его
+                    еще нет, чтобы играть песни и участвовать в общем рейтинге пользователей
+                  </p>
+
+                  <router-link
+                    :to="{name: 'Register'}"
+                    class="inline-block px-5 py-3 mt-8 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600"
+                  >
+                    Создать аккаунт
+                  </router-link>
+                </div>
+              </div>
+
+              <div class="relative w-full h-64 sm:h-96 lg:w-1/2 lg:h-auto bg-indigo-800 rounded-3xl">
+                <img
+                  src="/images/piano.png"
+                  alt="Women smiling at college"
+                  class="absolute inset-0 object-cover w-full h-full animate-fade-in-left"
+                  :style="{animationDelay: `1000ms`}"
+                />
               </div>
             </div>
           </section>
 
           <!-- Quote Screen -->
           <div class="max-w-5xl px-4 py-8 mx-auto mt-7 animate-fade-in-down">
-            <section class="p-8 bg-gray-100 rounded-lg shadow-xl">
+            <section class="p-8 bg-gray-50 rounded-lg shadow-xl">
               <div class="grid grid-cols-1 gap-12 sm:grid-cols-3 sm:items-center">
                 <div class="relative">
-                  <div class="aspect-w-1 aspect-h-1">
+                  <div class="aspect-w-1 aspect-h-1 rounded-xl">
                     <img
-                      src="https://www.hyperui.dev/photos/man-5.jpeg"
+                      src="/images/alex.png"
                       alt=""
                       class="object-cover rounded-lg"
                     />
@@ -152,7 +183,8 @@
                   <div
                     class="absolute inline-flex px-4 py-2 bg-white rounded-lg shadow-xl -bottom-4 -right-4"
                   >
-                    <span class="inline-flex items-center justify-center w-12 h-10 bg-gray-100 rounded-lg font-extrabold text-4xl">"</span>
+                    <span
+                      class="inline-flex items-center justify-center w-12 h-10 bg-gray-100 rounded-lg font-extrabold text-4xl">&#8221;</span>
                   </div>
                 </div>
 
@@ -162,9 +194,9 @@
                   </p>
 
                   <cite class="inline-flex items-center mt-8 not-italic">
-                    <span class="hidden w-6 h-px bg-gray-400 sm:inline-block"></span>
-                    <p class="text-sm text-gray-500 uppercase sm:ml-3">
-                      <i>Алексей Волчков</i>, создатель сайта YourPiano
+                    <span class="w-6 h-px bg-gray-400 sm:inline-block"></span>
+                    <p class="text-sm text-gray-500  sm:ml-3">
+                      <span class="text-lg text-gray-900">Алексей Волчков</span>, создатель сайта YourPiano
                     </p>
                   </cite>
                 </blockquote>
@@ -185,22 +217,24 @@
                 </h1>
 
                 <p class="max-w-xl mx-auto mt-4 sm:leading-relaxed sm:text-xl">
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt illo tenetur fuga ducimus numquam
-                  ea!
+                  Если у вас еще нет своего аккаунта, то скорее создавайте его и присоединяйтесь к волшебному миру
+                  музыки YourPiano
                 </p>
 
                 <div class="flex flex-wrap justify-center gap-4 mt-8">
-                  <a
+                  <router-link
+                    :to="{name: 'Login'}"
                     class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600 border border-blue-600 rounded sm:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
                     href="/get-started">
-                    Get Started
-                  </a>
+                    Войти
+                  </router-link>
 
-                  <a
+                  <router-link
+                    :to="{name: 'Register'}"
                     class="block w-full px-12 py-3 text-sm font-medium text-white border bg-indigo-500 border-blue-600 rounded sm:w-auto hover:bg-indigo-600 active:bg-indigo-500 focus:outline-none focus:ring"
                     href="/about">
-                    Learn More
-                  </a>
+                    Создать аккаунт
+                  </router-link>
                 </div>
               </div>
             </div>
@@ -210,12 +244,11 @@
       <!-- /End replace -->
     </div>
   </main>
+  <BackToTopButton></BackToTopButton>
 </template>
 
-<script>
-export default {
-  name: "About"
-}
+<script setup>
+import BackToTopButton from "./ui/BackToTopButton.vue";
 </script>
 
 <style scoped>

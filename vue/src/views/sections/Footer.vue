@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isPianoPage()" class="relative transition-all bg-gray-800 opacity-0 animate-fade-in-up mt-16">
+  <div v-if="!isPianoPage()" class="relative transition-all bg-gray-800 opacity-0 animate-fade-in-up">
     <svg class="absolute top-0 w-full h-6 -mt-5 sm:-mt-10 sm:h-16 " preserveAspectRatio="none" viewBox="0 0 1440 54">
       <path fill="#1F2937" d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"></path>
     </svg>
@@ -11,7 +11,7 @@
       </div>
 
       <div class="container mt-12">
-        <div class="flex justify-center mb-9 gap-10">
+        <div class="flex justify-center mb-9 gap-8">
           <a :href="icon.href" target="_blank" class="text-gray-800 fill-white hover:fill-indigo-200 transition-all hover:scale-150 duration-500 p-1" v-for="icon in socialIcons">
             <svg
               aria-hidden="true"
@@ -32,7 +32,7 @@
       </div>
 
       <div class="sm:flex-row pb-10">
-        <p class="flex justify-center mb-3 text-lg text-gray-500">
+        <p class="flex justify-center mb-3 text-lg text-gray-500 text-center">
           &copy; {{ new Date().getFullYear() }} Алексей Волчков. Все права защищены
         </p>
       </div>

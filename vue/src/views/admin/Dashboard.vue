@@ -1,52 +1,52 @@
 <template>
   <div id="home">
 
-    <div className="lg:flex justify-between items-center mb-6 opacity-0 animate-fade-in-right">
-      <p className="text-gray-800 text-4xl font-extrabold">
+    <div class="lg:flex justify-between items-center mb-6 opacity-0 animate-fade-in-right">
+      <p class="text-gray-800 text-4xl font-extrabold">
         {{greetingMessage()}}, <span class="drop-shadow text-5xl text-gray-600">{{ user.data.name }}</span>!
       </p>
     </div>
 
     <div v-if="stats.loading" class="h-80 bg-slate-200 animate-pulse"></div>
 
-    <div v-else className="flex flex-wrap -mx-3 mb-20 opacity-0 animate-fade-in-down">
-      <div className="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
-        <div className="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6 mb-6 xl:mb-0">
-          <MusicNoteIcon className="w-16 h-16 fill-current mr-4 hidden lg:block" ></MusicNoteIcon>
-          <div className="text-gray-700">
-            <p className="font-extrabold text-6xl text-center">{{ stats.data.songsCount }}</p>
-            <p class="text-center">Всего песен</p>
+    <div v-else class="flex flex-wrap -mx-3 mb-20 opacity-0 animate-fade-in-down">
+      <div class="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
+        <div class="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6 mb-6 xl:mb-0">
+          <MusicNoteIcon ></MusicNoteIcon>
+          <div class="text-gray-700">
+            <p class="font-extrabold text-6xl text-center">{{ formatNumber(stats.data.songsCount) }}</p>
+            <p class="text-center">Песен</p>
           </div>
 
         </div>
       </div>
 
-      <div className="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
-        <div className="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6 mb-6 xl:mb-0">
-          <UsersIcon className="w-16 h-16 fill-current mr-4 hidden lg:block" ></UsersIcon>
-          <div className="text-gray-700">
-            <p className="font-extrabold text-center  text-6xl">{{ stats.data.usersCount }}</p>
-            <p class="text-center">Всего пользователей</p>
+      <div class="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
+        <div class="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6 mb-6 xl:mb-0">
+          <UsersIcon></UsersIcon>
+          <div class="text-gray-700">
+            <p class="font-extrabold text-center  text-6xl">{{ formatNumber(stats.data.usersCount) }}</p>
+            <p class="text-center">Пользователей</p>
           </div>
         </div>
       </div>
 
-      <div className="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
-        <div className="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6">
-          <PlayIcon className="w-16 h-16 fill-current mr-4 hidden lg:block" ></PlayIcon>
-          <div className="text-gray-700">
-            <p className="font-extrabold text-center text-6xl">{{ stats.data.totalRatingPlays }}</p>
-            <p class="text-center">Всего сыграно раз</p>
+      <div class="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
+        <div class="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6">
+          <PlayIcon></PlayIcon>
+          <div class="text-gray-700">
+            <p class="font-extrabold text-center text-6xl">{{ formatNumber(stats.data.totalRatingPlays) }}</p>
+            <p class="text-center">Сыграно раз</p>
           </div>
         </div>
       </div>
 
-      <div className="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
-        <div className="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6">
+      <div class="w-1/2 xl:w-1/4 px-3 h-64 mt-4">
+        <div class="w-full h-full bg-white border text-blue-400 rounded-lg flex flex-col items-center p-6">
           <ChartSquareBarIcon ></ChartSquareBarIcon>
-          <div className="text-gray-700">
-            <p className="font-extrabold text-center text-6xl">{{ stats.data.totalRatingPoints }}</p>
-            <p class="text-center">Всего очков набрано</p>
+          <div class="text-gray-700">
+            <p class="font-extrabold text-center text-6xl">{{ formatNumber(stats.data.totalRatingPoints) }}</p>
+            <p class="text-center">Очков набрано</p>
           </div>
         </div>
       </div>
@@ -76,5 +76,12 @@ function greetingMessage() {
     default:
       return 'Доброй ночи';
   }
+}
+
+function formatNumber(number) {
+  if (number > 1000) {
+    return Number.parseInt(number / 1000) + 'k';
+  }
+  return number;
 }
 </script>

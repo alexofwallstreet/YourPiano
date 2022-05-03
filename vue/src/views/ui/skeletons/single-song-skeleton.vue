@@ -1,6 +1,6 @@
 <template>
   <section class="animate-pulse">
-    <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 opacity-0 animate-fade-in-right">
+    <header class="max-w-7xl mx-auto px-4 opacity-0 animate-fade-in-right">
       <div class="relative z-10 flex items-baseline justify-between pt-16 pb-6 border-b border-gray-200">
         <div class="w-1/2 h-5 bg-slate-200 rounded"></div>
       </div>

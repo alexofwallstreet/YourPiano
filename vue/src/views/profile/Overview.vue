@@ -4,7 +4,7 @@
   </div>
   <div v-else class="w-full mt-6">
     <div class="grid gap-6 mt-4 mb-6 md:grid-cols-2 xl:grid-cols-3">
-      <div class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
+      <div :style="{animationDelay: `50ms`}" class="animate-fade-in-down min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
         <div class="p-4 flex justify-center items-start">
           <div class="p-3 rounded-full text-orange-500 dark:text-orange-100 bg-orange-100 dark:bg-orange-500 mr-4">
             <HashtagIcon class="w-10 h-10"></HashtagIcon>
@@ -19,7 +19,7 @@
           </div>
         </div>
       </div>
-      <div class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
+      <div :style="{animationDelay: `100ms`}"  class="animate-fade-in-down min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
         <div class="p-4 flex justify-center items-start">
           <div class="p-3 rounded-full text-orange-500 dark:text-orange-100 bg-orange-100 dark:bg-orange-500 mr-4">
             <ChartBarIcon class="w-10 h-10"></ChartBarIcon>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <div class="min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
+      <div :style="{animationDelay: `150ms`}"  class="animate-fade-in-down min-w-0 rounded-lg shadow-xs overflow-hidden bg-white dark:bg-gray-800">
         <div class="p-4 flex justify-center items-start">
           <div class="p-3 rounded-full text-orange-500 dark:text-orange-100 bg-orange-100 dark:bg-orange-500 mr-4">
             <PlayIcon class="w-10 h-10"></PlayIcon>

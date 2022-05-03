@@ -42,7 +42,7 @@ const store = createStore({
     uiElements: {
       navbarHeight: '4rem'
     },
-    adminSideBarOpen: false,
+    adminSideBarOpen: true,
     searchOptions: {
       filters: [
         {

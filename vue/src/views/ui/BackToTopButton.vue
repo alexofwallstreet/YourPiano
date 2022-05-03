@@ -2,17 +2,24 @@
   <div
     v-if="isVisible"
     ref="scrollTopButton"
-    class="to-top-btn sticky w-full flex justify-center bottom-0 pb-3 px-5 lg:px-16 transition z-50 opacity-0"
+    class="to-top-btn fixed w-screen flex justify-center bottom-0 transition z-50 opacity-0 bg-transparent"
     :class="isVisible ? 'animate-fade-in-up' : 'animate-fade-out-down'"
   >
     <div
-      class="text-white hover:text-indigo-200 transition"
+      class="text-white hover:text-indigo-400 transition absolute bottom-10 right-20 transition-all"
     >
-      <button @click="scrollToTop"
-              class="bg-indigo-600 rounded-full p-3 animate-bounce"
-              role="button"
-              aria-label="scroll to top of the page">
-        <ArrowUpIcon class="h-3 w-3"></ArrowUpIcon>
+      <button
+        @click="scrollToTop"
+        class="animate-bounce inline-flex items-center px-4 py-4 mt-16 font-medium text-indigo-600 bg-indigo-500 rounded-full hover:bg-indigo-400 transition-all"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="flex-shrink-0 w-4 h-4 -rotate-90 stroke-white"
+          viewBox="0 0 24 24"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
       </button>
     </div>
   </div>
@@ -57,7 +64,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.to-top-btn {
-  right: 100px;
-}
 </style>

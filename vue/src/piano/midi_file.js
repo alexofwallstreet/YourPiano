@@ -151,7 +151,7 @@ export default class {
 
             default:
               /* eslint-disable no-console */
-              console.log(`event: ${eventType} not supported`)
+              //console.log(`event: ${eventType} not supported`)
               /* eslint-enable no-console */
               break
           }

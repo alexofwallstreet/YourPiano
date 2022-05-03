@@ -4,7 +4,7 @@
 
       <Sidebar />
 
-      <div class="w-full flex flex-col justify-between bg-gray-100 pl-0 lg:pl-64 min-h-screen" :class="sideBarOpen ? 'overlay' : ''" id="main-content">
+      <div class="w-full flex flex-col justify-between bg-gray-100 min-h-screen transition-all duration-200" :class="adminSideBarOpen ? 'overlay lg:pl-64' : 'pl-0'" id="main-content">
 
         <Navbar />
 
@@ -29,7 +29,7 @@ import Footer from "../views/admin/sections/Footer.vue";
 export default {
   name: 'Dashboard',
   computed: {
-    ...mapState(['sideBarOpen'])
+    ...mapState(['adminSideBarOpen'])
   },
   components: {
     Sidebar,

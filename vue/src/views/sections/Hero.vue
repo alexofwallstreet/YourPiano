@@ -15,7 +15,7 @@
 
           <div class="flex flex-wrap justify-start gap-4 mt-8">
             <router-link
-              class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600
+              class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600 text-center
               rounded xs:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
               :to="{name: 'PianoFreePlay'}">
               Начать играть

@@ -141,6 +141,8 @@ router.beforeEach((to, from, next) => {
     next({name: 'Login'})
   } else if (to.meta.requiresAdmin && !store.state.user.data?.isAdmin) {
     next({name: 'Home'})
+  } else if (to.meta.isGuest && store.state.user.token) {
+    next({name: 'Profile'})
   } else {
     next();
   }

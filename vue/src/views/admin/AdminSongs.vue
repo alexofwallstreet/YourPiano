@@ -33,11 +33,11 @@
         </div>
 
 
-        <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-          <div v-if="songs.loading" class="p-12 flex justify-center h-96 w-full bg-slate-200 animate-pulse">
-            <LoadingSpinner></LoadingSpinner>
+        <div class="inline-block min-w-full shadow rounded-xl overflow-hidden animate-fade-in-down">
+          <div v-if="songs.loading" class="p-12 flex justify-center h-screen w-full bg-slate-200 animate-pulse">
+            <LoadingSpinner class="w-24 h-24"></LoadingSpinner>
           </div>
-          <table v-else class="min-w-full leading-normal">
+          <table v-else class="min-w-full leading-normal animate-fade-in-down">
             <thead>
             <tr>
               <th

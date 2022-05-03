@@ -1,6 +1,6 @@
 <template>
   <p :class="LEVELS[levelId]?.background + ' ' + LEVELS[levelId]?.text"
-     class="inline-flex items-center px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full"
+     class="inline-flex items-center px-3 py-px text-xs font-semibold tracking-wider text-white uppercase rounded-full"
   >{{ LEVELS[levelId]?.title }}
   </p>
 </template>

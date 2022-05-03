@@ -67,16 +67,29 @@ module.exports = {
             transform: 'translateY(0.75rem)',
             opacity: '0'
           }
-        }
+        },
+        'fade-out-right': {
+          'from': {
+            transform: 'translateX(0rem)',
+            opacity: '1'
+          },
+          'to': {
+            transform: 'translateX(-0.75rem)',
+            opacity: '0'
+          }
+        },
       },
       animation: {
         'fade-in-down': 'fade-in-down 0.2s ease-in-out both',
         'fade-in-up': 'fade-in-up 0.2s ease-in-out both',
         'fade-in-left': 'fade-in-left 0.2s ease-in-out both',
         'fade-in-right': 'fade-in-right 0.2s ease-in-out both',
+        'fade-in-right-long': 'fade-in-right 0.5s ease-in-out both',
 
         'fade-out-left': 'fade-out-left 0.2s ease-in-out both',
         'fade-out-down': 'fade-out-down 0.2s ease-in-out both',
+        'fade-out-right': 'fade-out-right 0.2s ease-in-out both',
+        'fade-out-right-long': 'fade-out-right 0.5s ease-in-out both',
       }
     },
     screens: {

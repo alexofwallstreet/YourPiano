@@ -11,10 +11,10 @@
               <router-link
                 v-for="item in navigation"
                 :key="item.name"
-                :to="item.to"
+                :to="(isPianoPage(item.to.name) && isPianoPage(this.$route.name)) ? {name: $route.name} : item.to"
                 active-class="bg-gray-900 text-white"
                 :class="[
-                    this.$route.name === item.to.name
+                    (this.$route.name === item.to.name) || (isPianoPage(item.to.name && isPianoPage($route.name)))
                     ? ''
                     : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']"
               >{{ item.name }}
@@ -194,6 +194,10 @@ export default {
     const store = useStore();
     const router = useRouter();
 
+    function isPianoPage(route) {
+      return route === 'PianoFreePlay' || route === 'PianoRatingPlay' || route === 'PianoTutorialPlay';
+    }
+
     function logout() {
       store.dispatch('logout')
         .then(() => {
@@ -206,6 +210,7 @@ export default {
 
     return {
       user: computed(() => store.state.user.data),
+      isPianoPage,
       navigation,
       logout
     }

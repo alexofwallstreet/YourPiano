@@ -1,7 +1,7 @@
 <template>
   <DeleteModal :open="isDeleteModalOpen" :item="currentUser"
                :title="'Вы уверены, что хотите удалить пользователя ' + currentUser.name + ' и все его результаты?'"
-               :delete-callback="deleteUser"></DeleteModal>
+               :delete-callback="deleteUser" :toggle-modal-callback="toggleModal"></DeleteModal>
   <div class="py-8 rounded-md w-full">
     <div class="flex items-center justify-center opacity-0 animate-fade-in-up">
       <h2 class="text-gray-600 text-3xl font-extrabold">Пользователи YourPiano</h2>
@@ -17,11 +17,11 @@
                  placeholder="Введите имя пользователя или его почту" />
         </div>
 
-        <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-          <div v-if="users.loading" class="p-12 flex justify-center h-96 w-full bg-slate-200 animate-pulse">
-            <LoadingSpinner></LoadingSpinner>
+        <div class="inline-block min-w-full shadow rounded-xl overflow-hidden animate-fade-in-down">
+          <div v-if="users.loading" class="p-12 flex justify-center h-screen w-full bg-slate-200 animate-pulse">
+            <LoadingSpinner class="w-24 h-24"></LoadingSpinner>
           </div>
-          <table v-else class="min-w-full leading-normal">
+          <table v-else class="min-w-full leading-normal animate-fade-in-down">
             <thead>
             <tr>
               <th
@@ -75,7 +75,7 @@
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                  <button
                   class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  type="button" @click="currentUser = user; isDeleteModalOpen = true;"
+                  type="button" @click="currentUser = user; toggleModal();"
                 >Удалить
                 </button>
               </td>
@@ -114,6 +114,10 @@ function getForPage(link) {
 
 function getUsers() {
   store.dispatch('getUsers', {search: search.value});
+}
+
+function toggleModal() {
+  isDeleteModalOpen.value = !isDeleteModalOpen.value;
 }
 
 function deleteUser() {

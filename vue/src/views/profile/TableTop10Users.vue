@@ -1,7 +1,7 @@
 <template>
   <!-- component -->
   <div class="bg-white py-8 rounded-md w-full">
-    <div class=" flex items-center justify-center">
+    <div class=" flex items-center justify-center animate-fade-in-up">
       <h2 class="text-gray-600 text-3xl font-extrabold">Топ {{ users.length }} пользователей YourPiano</h2>
     </div>
     <div class="w-full">
@@ -29,7 +29,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(user, i) of users" :key="i">
+            <tr v-for="(user, i) of users" :key="i" class="opacity-0 animate-fade-in-down" :style="{animationDelay: `${i * 100}ms`}">
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
                   <div class="ml-3">
