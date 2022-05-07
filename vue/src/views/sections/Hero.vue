@@ -23,7 +23,7 @@
 
             <router-link
               v-if="!store.state.user.token"
-              class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-400
+              class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-400 text-center
               rounded xs:w-auto hover:bg-indigo-700 active:bg-indigo-800 focus:outline-none focus:ring"
               :to="{name: 'Login'}">
               Войти

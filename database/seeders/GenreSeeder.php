@@ -21,7 +21,8 @@ class GenreSeeder extends Seeder
       'Электронная',
       'Классическая',
       'Джаз',
-      'R&B'
+      'R&B',
+      'Народная',
     ];
 
     public function run()

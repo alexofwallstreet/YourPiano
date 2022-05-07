@@ -3,7 +3,7 @@
   <div class="flex bg-indigo-50" :style="{ minHeight: `calc(100vh - ${store.state.uiElements.navbarHeight})`}">
     <!-- Sidebar Start -->
     <div
-      class="sidebar flex flex-col relative bg-gray-900 text-white pb-10 opacity-0 animate-fade-in-right z-10"
+      class="sidebar flex flex-col relative bg-gray-900 text-white pb-10 opacity-0 animate-fade-in-right z-10 select-none"
       :style="{ width: sidebarWidth }">
       <!-- Toggle button with Arrows -->
       <div
@@ -196,7 +196,8 @@
               notPressed: isKeyNotPressed(key[0], key[1]),
               }"
               v-bind:style="{ 'margin-left': getMarginLeftNotesColumn(index) }"
-              v-on:mousedown="playNote(key[0], key[1])"
+              v-on:mousedown="onNoteOn(key[0], key[1])"
+              v-on:mouseup="onNoteOff(key[0], key[1])"
             >
               <div class="keySign text-center font-medium">{{ getKeySign(key[0], key[1]) }}</div>
             </div>
@@ -366,7 +367,7 @@ export default {
                   const noteId = this.getNoteId(note.note, note.octave);
                   this.keysNotPressed[noteId] = true;
                   let timeOut = (note.endTime - note.time) * 1000 / this.songSpeed;
-                  timeOut = timeOut > 500 ? 500 : timeOut;
+                  timeOut = timeOut > 500 ? 500 : timeOut - 50;
                   setTimeout(() => {
                     this.keysNotPressed[noteId] = false;
                   }, timeOut);

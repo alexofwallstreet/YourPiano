@@ -10,7 +10,7 @@
       <div class="grid gap-8 lg:items-start lg:grid-cols-4">
         <div class="lg:col-span-3">
 
-          <div class="relative mt-4 flex gap-6 flex-wrap lg:justify-start justify-center">
+          <div class="relative mt-4 flex gap-6 lg:justify-start justify-center">
             <img
               alt=""
               :src="song.data.imagePath"
@@ -72,7 +72,7 @@
             <p class="opacity-0 animate-fade-in-down">{{ song.data.description }}</p>
             <iframe
               class="opacity-0 animate-fade-in-up"
-              src="https://www.youtube-nocookie.com/embed/Eb-Vfe61W6A?controls=0"
+              :src="song.data.youtubeLink + '?controls=0'"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen
             ></iframe>

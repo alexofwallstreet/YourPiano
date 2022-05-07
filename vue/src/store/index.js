@@ -22,6 +22,7 @@ const store = createStore({
         status: String,
         totalPlays: Number,
         userPlays: Number,
+        youtubeLink: String,
       }
     },
     songs: {

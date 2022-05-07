@@ -14,6 +14,7 @@ const GENRES = {
   6: "Классическая",
   7: "Джаз",
   8: "R&B",
+  9: "Народная",
 }
 let genreId;
 export default {

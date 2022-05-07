@@ -29,6 +29,7 @@ class SongResource extends JsonResource
             'userPoints' => UserSongRatingPlay::where('song_id', $this->id)->where('user_id', $request->user_id)->max('rating_points') ?? null,
             'totalPlays' => UserSongRatingPlay::where('song_id', $this->id)->count(),
             'ratingPoints' => $this->rating_points,
+            'youtubeLink' => $this->youtube_link,
       ];
     }
 }
