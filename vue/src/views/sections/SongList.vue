@@ -29,7 +29,7 @@
             <h3 class="mt-2 text-sm text-gray-700">
               {{ song.author }}
             </h3>
-            <p class="text-2xl font-medium text-gray-900">
+            <p class="song-title text-2xl font-medium text-gray-900">
               {{ song.title }}
             </p>
             <div class="mt-2" v-if="!onlyBest">
@@ -65,5 +65,10 @@ export default {
 </script>
 
 <style scoped>
-
+.song-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 </style>

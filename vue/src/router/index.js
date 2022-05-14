@@ -17,6 +17,7 @@ import AdminUsers from "../views/admin/AdminUsers.vue";
 import AdminSongs from "../views/admin/AdminSongs.vue";
 import About from "../views/About.vue";
 import Settings from "../views/profile/Settings.vue";
+import NotFound from "../views/NotFound.vue";
 
 const routes = [
   {
@@ -28,6 +29,11 @@ const routes = [
         path: '/songs',
         name: 'Songs',
         component: Songs
+      },
+      {
+        path: '/404',
+        name: '404',
+        component: NotFound
       },
       {
         path: '/songs/:id',
@@ -125,6 +131,10 @@ const routes = [
       { path: 'users', name: 'AdminUsers', component: AdminUsers },
       { path: 'songs', name: 'AdminSongs', component: AdminSongs },
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: {name: '404'}
   }
 ];
 
@@ -140,7 +150,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !store.state.user.token) {
     next({name: 'Login'})
   } else if (to.meta.requiresAdmin && !store.state.user.data?.isAdmin) {
-    next({name: 'Home'})
+    next({name: '404'})
   } else if (to.meta.isGuest && store.state.user.token) {
     next({name: 'Profile'})
   } else {
