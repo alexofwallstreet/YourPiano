@@ -79,7 +79,7 @@
                             name="country"
                             autocomplete="country-name"
                             class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <option v-for="i in ['1','2','3','4','5','6','7','8', '9']" :value="i"><GenreLabel :genre-id="i"></GenreLabel></option>
+                            <option v-for="i in ['1','2','3','4','5','6','7','8', '9', '10']" :value="i"><GenreLabel :genre-id="i"></GenreLabel></option>
                           </select>
                         </div>
                       </div>
