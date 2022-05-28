@@ -31,7 +31,8 @@ class SongStoreRequest extends FormRequest
       'difficulty_level_id' => 'required|exists:difficulty_levels,id',
       'image_file' => 'string|nullable',
       'midi_file' => 'required|string',
-      'rating_points' => 'required|numeric'
+      'rating_points' => 'required|numeric',
+      'youtube_link' => 'string|nullable',
     ];
   }
 }

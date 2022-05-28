@@ -47,7 +47,7 @@
                       </div>
                       <div class="py-2">
                         <label for="description">Описание песни:</label>
-                        <textarea id="description" name="description" type="text" autocomplete="description" required=""
+                        <textarea id="description" name="description" type="text" autocomplete="description"
                                   v-model="song.description" rows="10"
                                   class="appearance-none relative block w-full px-3 py-2 border
                                border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1
@@ -94,6 +94,17 @@
                                border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1 text‑transparent
                                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                  placeholder="Количество очков"/>
+                        </div>
+                      </div>
+                      <div class="py-2">
+                        <label class="block text-sm font-medium text-gray-700" for="youtube_link">Ссылка на YouTube ролик (формат: https://www.youtube.com/embed/[[ID видео]])</label>
+                        <div class="relative w-full flex items-center select-none">
+                          <input id="youtube_link" name="youtube_link" type="text"
+                                 autocomplete="youtube_link" v-model="song.youtube_link"
+                                 class="appearance-none relative block w-full px-3 py-2 border
+                               border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1 text‑transparent
+                               focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                 placeholder="https://www.youtube.com/embed/[[ID видео]]"/>
                         </div>
                       </div>
 
@@ -144,7 +155,7 @@
                                      class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                                 <span>Загрузите midi</span>
                                 <input id="midi-upload" @change="onMidiChoose" name="midi-upload" accept=".mid"
-                                       type="file" class="sr-only"/>
+                                       required type="file" class="sr-only"/>
                               </label>
                               <p class="pl-1">или перетяните сюда</p>
                             </div>
@@ -207,6 +218,7 @@ const song = ref({
   title: '',
   author: '',
   description: '',
+  youtube_link: '',
   difficulty_level_id: 1,
   genre_id: 1,
   image_file: null,

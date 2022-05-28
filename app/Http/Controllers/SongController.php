@@ -76,14 +76,12 @@ class SongController extends Controller
         $newSong = new Song();
         $newSong->fill($request->validated());
 
-        if (isset($request['image_file'])) {
+        if (isset($request['image_file']) && !empty($request['image_file'])) {
             $imagePath = $this->saveImage($request['image_file']);
+            $newSong->image_file = $imagePath;
         }
-        $newSong->image_file = $imagePath;
 
-        if (isset($request['midi_file'])) {
-            $midiPath = $this->saveMidi($request['midi_file']);
-        }
+        $midiPath = $this->saveMidi($request['midi_file']);
         $newSong->midi_file = $midiPath;
 
         $newSong->save();

@@ -21,7 +21,7 @@ class CreateSongsTable extends Migration
             $table->foreignIdFor(\App\Models\DifficultyLevel::class);
             $table->string('midi_file');
             $table->string('youtube_link')->nullable();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->integer('rating_points')->default(100);
             $table->string('image_file')->default('storage/songs-images/default.jpg');
             $table->timestamps();

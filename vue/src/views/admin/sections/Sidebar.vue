@@ -19,7 +19,7 @@
                    class="w-full flex items-center text-white h-10 pl-4 hover:bg-gray-700 rounded-lg cursor-pointer"
                    :class="$route.name === 'Dashboard' ? 'bg-gray-700' : ''">
         <HomeIcon class="h-6 w-6 mr-2 fill-white"></HomeIcon>
-        <span class="text-white font-medium">Дашборд</span>
+        <span class="text-white font-medium">Статистика</span>
       </router-link>
 
       <router-link :to="{name: 'AdminUsers'}"

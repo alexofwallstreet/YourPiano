@@ -71,6 +71,7 @@
           <div class="prose max-w-none">
             <p class="opacity-0 animate-fade-in-down">{{ song.data.description }}</p>
             <iframe
+              v-if="song.data.youtubeLink"
               class="opacity-0 animate-fade-in-up"
               :src="song.data.youtubeLink + '?controls=0'"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

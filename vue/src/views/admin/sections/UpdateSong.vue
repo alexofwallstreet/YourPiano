@@ -47,7 +47,7 @@
                       </div>
                       <div class="py-2">
                         <label class="block text-sm font-medium text-gray-700" for="description">Описание песни:</label>
-                        <textarea id="description" name="description" type="text" autocomplete="description" required=""
+                        <textarea id="description" name="description" type="text" autocomplete="description"
                                   v-model="song.description" rows="10"
                                   class="appearance-none relative block w-full px-3 py-2 border
                                border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1
@@ -96,6 +96,18 @@
                                border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1 text‑transparent
                                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                                  placeholder="Количество очков"/>
+                        </div>
+                      </div>
+
+                      <div class="py-2">
+                        <label class="block text-sm font-medium text-gray-700" for="youtube_link">Ссылка на YouTube ролик (формат: https://www.youtube.com/embed/[[ID видео]])</label>
+                        <div class="relative w-full flex items-center select-none">
+                          <input id="youtube_link" name="youtube_link" type="text"
+                                 autocomplete="youtube_link" v-model="song.youtube_link"
+                                 class="appearance-none relative block w-full px-3 py-2 border
+                               border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1 text‑transparent
+                               focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                 placeholder="https://www.youtube.com/embed/[[ID видео]]"/>
                         </div>
                       </div>
 
@@ -219,6 +231,7 @@ const song = ref({
   image_file: null,
   image_file_url: null,
   midi_file: null,
+  youtube_link: '',
   rating_points: 100,
 });
 
@@ -233,6 +246,7 @@ onUpdated(() => {
     image_file: null,
     image_file_url: null,
     midi_file: null,
+    youtube_link: props.item?.youtubeLink,
     rating_points: props.item?.ratingPoints,
   }
 })

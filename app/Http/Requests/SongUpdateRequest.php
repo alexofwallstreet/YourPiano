@@ -26,12 +26,13 @@ class SongUpdateRequest extends FormRequest
         return [
             'title' => 'required|max:255',
             'author' => 'required|max:255',
-            'description' => 'string',
+            'description' => 'string|nullable',
             'genre_id' => 'required|exists:genres,id',
             'difficulty_level_id' => 'required|exists:difficulty_levels,id',
             'image_file' => 'string|nullable',
             'midi_file' => 'string|nullable',
-            'rating_points' => 'required|numeric'
+            'rating_points' => 'required|numeric',
+            'youtube_link' => 'string|nullable',
         ];
     }
 }

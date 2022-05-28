@@ -14,7 +14,7 @@ class Song extends Model
      *
      * @var array
      */
-    protected $fillable = ['title', 'author', 'description', 'genre_id', 'difficulty_level_id', 'rating_points'];
+    protected $fillable = ['title', 'author', 'description', 'genre_id', 'difficulty_level_id', 'rating_points', 'youtube_link'];
 
     public function userSongRatingPlay(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

@@ -23,6 +23,7 @@ class GenreSeeder extends Seeder
       'Джаз',
       'R&B',
       'Народная',
+      'Саундрек',
     ];
 
     public function run()
