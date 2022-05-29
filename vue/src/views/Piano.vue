@@ -46,7 +46,7 @@
           </div>
           <div class="pt-4">
             <div class="font-bold text-sm text-blue-200 whitespace-nowrap">{{ song.data.author }}</div>
-            <div class="font-bold text-xl mb-2 whitespace-nowrap">{{ song.data.title }}</div>
+            <div class="font-bold text-xl mb-2 whitespace-nowrap">{{ song.data.title.length > 23 ? song.data.title.substring(0, 23) + '...' : song.data.title }}</div>
           </div>
           <!-- Slider -->
           <div class="w-full h-2 bg-indigo-400 dark:bg-gray-700 rounded my-1">
@@ -118,8 +118,8 @@
           <select id="instrument" name="instrument" autocomplete="instrument-name" v-model="selectedMidiInstrument"
                   @change="onInstrumentChange"
                   class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white text-indigo-600 font-bold rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-            <option class="text-indigo-600 font-bold" v-for="instrument in midiInstruments" v-bind:value="instrument">{{
-                instrument
+            <option class="text-indigo-600 font-bold" v-for="(instrument, i) in midiInstruments" v-bind:value="instrument">{{
+                allInstruments[i].nameRus
               }}
             </option>
           </select>
@@ -297,8 +297,9 @@ export default {
         good: 0,
         bad: 0,
       },
-      midiInstruments: INSTRUMENTS,
-      selectedMidiInstrument: INSTRUMENTS[2],
+      midiInstruments: INSTRUMENTS.map(item => item.name),
+      allInstruments: INSTRUMENTS,
+      selectedMidiInstrument: INSTRUMENTS[2].name,
       playTime: 0,
       prevPlayTime: 0,
       lastNoteTime: 0,

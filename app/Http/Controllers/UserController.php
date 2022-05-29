@@ -138,7 +138,7 @@ class UserController extends Controller
     public function stats(User $user): array
     {
         # Count of songs that user played
-        $playedSongs = UserSongRatingPlay::where('user_id', $user->id)->groupBy('song_id')->get()->count();
+        $playedSongs = UserSongRatingPlay::where('user_id', $user->id)->where('rating_points', '!=', 0)->groupBy('song_id')->get()->count();
 
         # Count of points that user Get from played songs
         $totalPoints = UserSongRatingPlay::userRatingPoints($user);

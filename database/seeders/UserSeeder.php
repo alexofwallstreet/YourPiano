@@ -24,12 +24,6 @@ class UserSeeder extends Seeder
             'is_admin' => true,
         ]);
         DB::table('users')->insert([
-            'name' => "Алекс Волк",
-            'email' => 'alexwolf@gmail.com',
-            'password' => bcrypt(sha1(time())),
-            'profile_photo' => 'storage/user-profile-images/9QrQr6LBoEXo01Ar.jpeg',
-        ]);
-        DB::table('users')->insert([
             'name' => "Людвиг ван Бетховен",
             'email' => 'beethooven@example.com',
             'password' => bcrypt(sha1(time())),

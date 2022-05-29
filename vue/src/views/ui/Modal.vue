@@ -14,7 +14,7 @@
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div class="sm:flex sm:items-start">
                 <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
-                  <EmojiHappyIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
+                  <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
                 </div>
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                   <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Ваш результат: {{parseInt(ratingPoints.userPoints)}} очков из {{ratingPoints.maxPoints}}</DialogTitle>
@@ -38,7 +38,7 @@
 <script>
 import { ref } from 'vue'
 import { Dialog, DialogOverlay, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { EmojiHappyIcon } from '@heroicons/vue/outline'
+import { EmojiHappyIcon, CheckIcon } from '@heroicons/vue/outline'
 
 export default {
   components: {
@@ -47,7 +47,7 @@ export default {
     DialogTitle,
     TransitionChild,
     TransitionRoot,
-    EmojiHappyIcon,
+    CheckIcon,
   },
   props: {
     open: false,

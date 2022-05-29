@@ -32,7 +32,7 @@
                 <UserScore :mode="1" :song-points="song.data.ratingPoints" :user-points="song.data.userPoints"></UserScore>
               </div>
               <div class="font-medium mt-2">
-                Эту песню сыграли <span class="font-extrabold text-xl text-white bg-indigo-500 px-2 rounded-full">{{ song.data.totalPlays }}</span> раз
+                Количество проигрываний песни: <span class="font-extrabold text-xl text-white bg-indigo-500 px-2 rounded-full">{{ song.data.totalPlays }}</span>
               </div>
             </div>
           </div>

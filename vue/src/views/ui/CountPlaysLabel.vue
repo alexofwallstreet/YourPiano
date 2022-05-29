@@ -1,7 +1,7 @@
 <template>
   <p
      class="bg-gray-100 text-gray-600 inline-block items-end px-3 py-px text-xs font-bold tracking-wider text-white uppercase rounded-full"
-  >{{count}}<span style="font-size: 8px"> проигрываний</span>
+  ><span style="font-size: 8px">проигрываний: </span>{{count}}
   </p>
 </template>
 
