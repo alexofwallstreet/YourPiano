@@ -91,14 +91,14 @@
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <button
                   @click="toggleUpdateModal(song)"
-                  class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto sm:text-sm"
+                  class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mt-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:w-auto sm:text-sm"
                   type="button"
                 >Изменить
                 </button>
 
                 <button
                   @click="currentSong = song; toggleDeleteModal()"
-                  class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  class="w-auto inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 mt-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                   type="button"
                 >Удалить
                 </button>
@@ -127,7 +127,7 @@ const search = ref('');
 const isUpdateModalOpen = ref(false);
 const isAddModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
-
+const isAdminSidebarOpen = computed(() => store.state.adminSideBarOpen);
 const currentSong = ref(null);
 
 const option = store.state.searchOptions.sorting.find(option => option.value === 'oldest');
@@ -152,15 +152,25 @@ function toggleDeleteModal() {
 }
 
 function toggleUpdateModal(song) {
+  console.log(isAdminSidebarOpen.value)
+  if (isAdminSidebarOpen.value) {
+    store.dispatch('toggleAdminSidebar');
+  }
   currentSong.value = song;
   isUpdateModalOpen.value = !isUpdateModalOpen.value;
 }
 
 function toggleAddModal() {
+  if (isAdminSidebarOpen.value) {
+    store.dispatch('toggleAdminSidebar');
+  }
   isAddModalOpen.value = !isAddModalOpen.value;
 }
 
 function deleteSong() {
+  if (isAdminSidebarOpen.value) {
+    store.dispatch('toggleAdminSidebar');
+  }
   store.dispatch('deleteSong', currentSong).then(() => {
     isDeleteModalOpen.value = false;
   });
