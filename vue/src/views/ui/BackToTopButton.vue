@@ -6,7 +6,8 @@
     :class="isVisible ? 'animate-fade-in-up' : 'animate-fade-out-down'"
   >
     <div
-      class="text-white hover:text-indigo-400 transition absolute bottom-10 right-20 transition-all"
+      class="text-white hover:text-indigo-400 transition absolute bottom-10 transition-all"
+      style="right: 10%"
     >
       <button
         @click="scrollToTop"
@@ -54,7 +55,7 @@ export default defineComponent({
 
   methods: {
     handleScroll() {
-      this.isVisible = window.scrollY > 250;
+      this.isVisible = window.scrollY > 500;
     },
     scrollToTop() {
       window.scrollTo({top: 0, behavior: "smooth"});

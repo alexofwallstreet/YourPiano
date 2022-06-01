@@ -1,6 +1,6 @@
 <template>
   <NothingFound></NothingFound>
-  <div class="flex flex-col items-center justify-center pb-12 px-5">
+  <div class="flex flex-col items-center justify-center pb-24 px-5">
     <h1 class="font-bold tracking-tight text-gray-900 sm:text-2xl text-center">
       Ошибка 404<br> <span class="font-medium text-lg">страница не найдена</span>
     </h1>

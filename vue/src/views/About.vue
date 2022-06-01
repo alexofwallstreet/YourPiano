@@ -142,7 +142,7 @@
                   </p>
 
                   <p class="lg:mt-4 lg:block">
-                    Приложение разарабатывалось в рамках дипломного проекта, поэтому не несет материальных целей и
+                    Приложение разрабатывалось в рамках дипломного проекта, поэтому не несет материальных целей и
                     призвано лишь помогать пользователям в их творческих начинаниях. Создавайте свой аккаунт, если его
                     еще нет, чтобы играть песни и участвовать в общем рейтинге пользователей
                   </p>
@@ -221,7 +221,7 @@
                   музыки YourPiano
                 </p>
 
-                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                <div v-if="!store.state.user.token" class="flex flex-wrap justify-center gap-4 mt-8">
                   <router-link
                     :to="{name: 'Login'}"
                     class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600 border border-blue-600 rounded sm:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring"
@@ -234,6 +234,13 @@
                     class="block w-full px-12 py-3 text-sm font-medium text-white border bg-indigo-500 border-blue-600 rounded sm:w-auto hover:bg-indigo-600 active:bg-indigo-500 focus:outline-none focus:ring"
                     href="/about">
                     Создать аккаунт
+                  </router-link>
+                </div>
+                <div v-else class="flex flex-wrap justify-center gap-4 mt-8">
+                  <router-link
+                    :to="{name: 'PianoFreePlay'}"
+                    class="block w-full px-12 py-3 text-sm font-medium text-white bg-indigo-600 border border-blue-600 rounded sm:w-auto active:text-opacity-75 hover:bg-indigo-700 hover:text-white focus:outline-none focus:ring">
+                    Играть на фортепиано
                   </router-link>
                 </div>
               </div>
@@ -249,6 +256,7 @@
 
 <script setup>
 import BackToTopButton from "./ui/BackToTopButton.vue";
+import store from "../store";
 </script>
 
 <style scoped>

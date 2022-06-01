@@ -168,9 +168,6 @@ function toggleAddModal() {
 }
 
 function deleteSong() {
-  if (isAdminSidebarOpen.value) {
-    store.dispatch('toggleAdminSidebar');
-  }
   store.dispatch('deleteSong', currentSong).then(() => {
     isDeleteModalOpen.value = false;
   });

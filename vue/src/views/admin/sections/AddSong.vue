@@ -97,14 +97,14 @@
                         </div>
                       </div>
                       <div class="py-2">
-                        <label class="block text-sm font-medium text-gray-700" for="youtube_link">Ссылка на YouTube ролик (формат: https://www.youtube.com/embed/[[ID видео]])</label>
+                        <label class="block text-sm font-medium text-gray-700" for="youtube_link">Ссылка на YouTube ролик (формат: https://www.youtube.com/embed/ID_видео)</label>
                         <div class="relative w-full flex items-center select-none">
                           <input id="youtube_link" name="youtube_link" type="text"
                                  autocomplete="youtube_link" v-model="song.youtube_link"
                                  class="appearance-none relative block w-full px-3 py-2 border
                                border-gray-300 placeholder-gray-500 text-gray-900 rounded-md mt-1 text‑transparent
                                focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                 placeholder="https://www.youtube.com/embed/[[ID видео]]"/>
+                                 placeholder="https://www.youtube.com/embed/ID_видео"/>
                         </div>
                       </div>
 

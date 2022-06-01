@@ -21,7 +21,8 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $usersQuery = User::with([]);
+        $userId = Auth::user()->id;
+        $usersQuery = User::with([])->where('id', '!=', $userId);
         if ($request->search) {
             $usersQuery->orWhere('name', 'LIKE', '%' . $request->search . '%');
             $usersQuery->orWhere('email', 'LIKE', '%' . $request->search . '%');
@@ -165,7 +166,7 @@ class UserController extends Controller
             'totalPoints' => $totalPoints,
             'userStatus' => UserSongRatingPlay::userStatus($playedSongs),
             'userPlace' => $userPlace,
-            'usersTop10' => array_slice($ratingUsers, 0, 10)
+            'usersTop10' => array_slice($ratingUsers, 0, 5)
         ];
     }
 

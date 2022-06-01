@@ -118,7 +118,7 @@ const DISTIONARY = {
   'The password must contain at least one uppercase and one lowercase letter.': 'Пароль должен содержать хотя бы одну букву верхнего и нижнего регистров.',
   'The password must contain at least one symbol.': 'Пароль должен содержать один символ (!, ?, @ и др.).',
   'The email has already been taken.': 'Данная электронная почта уже занята.',
-  'The password must contain at least one number.': 'Пароль должен содержать хотя бы одну цифру',
+  'The password must contain at least one number.': 'Пароль должен содержать хотя бы одну цифру.',
 }
 
 const router = useRouter();

@@ -35,7 +35,7 @@
                   </div>
 
                   <div class="block mb-4 mt-1">
-                    <StatusLabel :status="store.state.user.data.status"></StatusLabel>
+                    <StatusLabel :is-user="true" :status="store.state.user.data.status"></StatusLabel>
                   </div>
 
                 </div>
