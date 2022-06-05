@@ -196,7 +196,7 @@
                   <cite class="inline-flex items-center mt-8 not-italic">
                     <span class="w-6 h-px bg-gray-400 sm:inline-block"></span>
                     <p class="text-sm text-gray-500  sm:ml-3">
-                      <span class="text-lg text-gray-900">Алексей Волчков</span>, создатель сайта YourPiano
+                      <span class="text-lg text-gray-900">Эдвард Григ</span>, известный норвежский композитор, пианист, дирижёр
                     </p>
                   </cite>
                 </blockquote>

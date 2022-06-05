@@ -517,7 +517,7 @@ export default {
 
       this.keysPressed[noteId] = true;
 
-      if (this.gameState === GAME_STATE.playing || this.gameState === GAME_STATE.playing) {
+      if (this.gameState === GAME_STATE.playing) {
         const notesColumnIdx =
           (octave - OCTAVE_BASE) * NOTES.length + NOTES.indexOf(note);
         if (this.notesColumns[notesColumnIdx]) {
