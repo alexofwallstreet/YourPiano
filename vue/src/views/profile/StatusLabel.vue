@@ -3,7 +3,6 @@
     <div v-else-if="status" class="relative inline-block px-3 py-1 font-semibold leading-tight" :class="STATUSES[status]?.text">
       <span aria-hidden class="absolute inset-0 opacity-50 rounded-full" :class="STATUSES[status]?.background"></span>
       <span class="relative">{{ STATUSES[status]?.title }}</span>
-      <Tooltip class="absolute -right-6" v-if="isUser" :text="'Статус зависит от количества сыгранных вами песен.'"></Tooltip>
     </div>
 </template>
 
@@ -35,5 +34,7 @@ export default {
 </script>
 
 <style scoped>
-
+.user-status {
+  transform: translateX(0px);
+}
 </style>
