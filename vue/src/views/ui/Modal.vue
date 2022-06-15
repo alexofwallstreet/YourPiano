@@ -17,7 +17,7 @@
                   <CheckIcon class="h-6 w-6 text-green-600" aria-hidden="true" />
                 </div>
                 <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                  <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Ваш результат: {{parseInt(ratingPoints.userPoints)}} очков из {{ratingPoints.maxPoints}}</DialogTitle>
+                  <DialogTitle as="h3" class="text-lg leading-6 font-medium text-gray-900"> Очков набрано: {{parseInt(ratingPoints.userPoints)}} из {{ratingPoints.maxPoints}}</DialogTitle>
                   <div class="mt-2">
                     <p class="text-sm text-gray-500">Нажмите продолжить, чтобы сыграть песню еще раз, или выбрать другую песню</p>
                   </div>

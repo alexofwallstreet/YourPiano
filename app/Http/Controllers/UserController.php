@@ -155,6 +155,7 @@ class UserController extends Controller
         }
         foreach ($ratingUsers as $ratingUser) {
             $ratingUserPlayedSongs = UserSongRatingPlay::where('user_id', $ratingUser->id)
+                ->where('rating_points', '!=', 0)
                 ->groupBy('song_id')->get()->count();
             $ratingUser->playedSongs = $ratingUserPlayedSongs;
             $ratingUser->userStatus = UserSongRatingPlay::userStatus($ratingUserPlayedSongs);
